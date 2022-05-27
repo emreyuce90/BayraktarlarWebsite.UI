@@ -1,0 +1,94 @@
+﻿@model TabelaUpdateViewModel
+@{
+    ViewBag.Title = "Tabela Güncelle";
+    Layout = "_AdminLayout";
+}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index">Tabelalar</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tabela Güncelle</li>
+    </ol>
+</nav>
+<div asp-validation-summary="All" class="text-danger">
+</div>
+
+<form method="post" class="shadow p-3" asp-controller="Tabela" asp-action="Update" enctype="multipart/form-data">
+        <div id="baslik" class=" text-center mt-4">
+        <strong><h1 class="lead display-5">@Model.CustomerName </strong> adlı müşterinize ait verileri görüntülemektesiniz</h1>
+    </div>
+    <input type="hidden" asp-for="Id"/>
+    <input type="hidden" asp-for="CustomerId"/>
+    <input type="hidden" asp-for="StatusId"/>
+
+    <div id="brand" class="mt-1">
+        <label>Tabela Yapılacak Marka:</label>
+        <select class="form-control select-brand" asp-for="BrandId" asp-items="@(new SelectList(Model.Brands,"Id","Name"))">
+        </select>
+    </div>
+    <div id="material" class="mt-1">
+        <label>Tabelanın Çeşidi:</label>
+        <select class="form-control select-material" asp-for="MaterialId" asp-items="@(new SelectList(Model.Materials,"Id","Name"))">
+        </select>
+    </div>
+    <div id="images" class="mt-1">
+        <label for="">Mevcut Görsel :</label>
+        <div>
+            <img class="img img-responsive img-thumbnail" src="~/img/tabelaImages/@Model.SmallThumbnail" />
+        </div>
+
+    </div>
+    <div id="images" class="mt-1">
+        <label for="">Yeni Fotoğraf Seç:</label>
+        <div><input type="file" asp-for="Picture"></div>
+
+    </div>
+    <div class="mt-1">
+        <label for="">Notlar :</label>
+        <textarea asp-for="Notes" id="trumbowyg-demo" rows="5" class="form-control" placeholder="Lütfen tabela ile ilgili ekstradan belirtmek istediğiniz detaylar var ise bu alana yazınız."></textarea>
+    </div>
+    <a  class="btn btn-warning mt-3 text-white" asp-action="Index"><i class="fa fa-undo"></i> Geri Dön</a>
+    <button type="submit" class="btn btn-success mt-3"><i class="fas fa-save"></i> Güncelle</button>
+</form>
+
+@section css{
+    @await Html.PartialAsync("_TrumbowygCssPartialView")
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css"> <!-- for live demo page -->
+}
+    @section scripts
+    {
+    @await Html.PartialAsync("_TrumbowygJsPartialView")
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#select-customer').select2({
+                theme: 'bootstrap4',
+                placeholder: "Lütfen bir müşteri seçiniz",
+                allowClear: true
+            });
+            $('#trumbowyg-demo').trumbowyg({
+                btns: [
+                    ['viewHTML'],
+                    ['undo', 'redo'], // Only supported in Blink browsers
+                    ['formatting'],
+                    ['strong', 'em', 'del'],
+                    ['superscript', 'subscript'],
+                    ['link'],
+                    ['insertImage'],
+                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                    ['unorderedList', 'orderedList'],
+                    ['horizontalRule'],
+                    ['removeformat'],
+                    ['fullscreen'],
+                    ['foreColor', 'backColor'],
+                    ['emoji']
+
+                ],
+                lang: 'tr'
+
+            });
+        });
+    </script>
+}

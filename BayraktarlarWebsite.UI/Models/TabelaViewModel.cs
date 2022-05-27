@@ -4,6 +4,7 @@ namespace BayraktarlarWebsite.UI.Models
 {
     public class TabelaViewModel
     {
+        public int Id { get; set; }
         //tabelanın küçük görseli
         public string SmallThumbnail { get; set; }
         //notu

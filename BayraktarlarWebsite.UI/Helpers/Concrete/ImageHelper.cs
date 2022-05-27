@@ -17,6 +17,18 @@ namespace BayraktarlarWebsite.UI.Helpers.Concrete
             _env = env;
         }
 
+        public async Task DeletePhotoAsync(string fileRoot, string oldPicture)
+        {
+
+            string wwwroot = _env.WebRootPath;
+            //silinecek dosya yolu
+            string toBedeletedfile = Path.Combine($"{wwwroot}/img/{fileRoot}/", oldPicture);
+            if (System.IO.File.Exists(toBedeletedfile))
+            {
+                var fileInfo = new FileInfo(toBedeletedfile);
+                System.IO.File.Delete(toBedeletedfile);
+            }
+        }
         public async Task<string> UploadImageAsync(string fileRoot,IFormFile picture)
         {
             //~wwwroot uzantısı

@@ -99,18 +99,13 @@ namespace BayraktarlarWebsite.UI.Controllers
                     Materials = materials
                 });
             }
-
-
-
         }
-
-
 
         [HttpGet]
         public IActionResult Index()
         {
             //databaseden tüm tabelaları çekelim
-            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).ToList();
+            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Where(t => t.IsActive).ToList();
 
             //Liste olarak TabelaViewModel nesnesi  oluşturalım
             List<TabelaViewModel> model = new List<TabelaViewModel>();
@@ -120,6 +115,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             {
                 var t = new TabelaViewModel
                 {
+                    Id = talep.Id,
                     BrandName = talep.Brand.Name,
                     CreatedDate = talep.CreatedDate,
                     CustomerName = talep.Customer.Name,
@@ -138,8 +134,86 @@ namespace BayraktarlarWebsite.UI.Controllers
         public async Task<IActionResult> Update(int tabelaId)
         {
             //parametre ile gelen idye ait tabelayı bul
-            var tabela = await _context.Tabelas.FirstOrDefaultAsync(t => t.Id == tabelaId);
-            return View();
+            var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).FirstOrDefaultAsync(t => t.Id == tabelaId);
+            var model = new TabelaUpdateViewModel
+            {
+                Id = tabelaId,
+                Brands = _context.Brands.ToList(),
+                BrandId = tabela.BrandId,
+                Materials = _context.Materials.ToList(),
+                MaterialId = tabela.MaterialId,
+                Notes = tabela.Notes,
+                SmallThumbnail = tabela.Pictures,
+                CustomerId = tabela.Customer.Id,
+                StatusId = tabela.StatusId,
+                CreatedDate = tabela.CreatedDate,
+                CustomerName = tabela.Customer.Name
+
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(TabelaUpdateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).FirstOrDefaultAsync(t => t.Id == model.Id);
+                //eski görsel
+                var oldPhoto = tabela.Pictures;
+
+                if (model.Picture != null)
+                {
+                    var img = await _imageHelper.UploadImageAsync("tabelaImages", model.Picture);
+                    tabela.Pictures = img;
+                }
+
+                if (oldPhoto != null)
+                {
+                    //eski foto var ise bu fotoyu sil
+                    await _imageHelper.DeletePhotoAsync("tabelaImages", oldPhoto);
+                }
+
+                tabela.MaterialId = model.MaterialId;
+                tabela.BrandId = model.BrandId;
+                tabela.Notes = model.Notes;
+                tabela.ModifiedDate = DateTime.Now;
+                tabela.UserId = 1;
+                tabela.CustomerId = model.CustomerId;
+                tabela.StatusId = model.StatusId;
+                _context.Tabelas.Update(tabela);
+                _context.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Tabela güncelleme işlemi başarılı", new ToastrOptions
+                {
+                    Title = "Güncelleme Başarılı"
+                });
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int tabelaId)
+        {
+            //database deki veriyi çek
+            var tabela = _context.Tabelas.Where(t => t.Id == tabelaId);
+            //eğer veritabanında böyle bir kayıt var ise 
+            if (tabela != null)
+            {
+                _context.Tabelas.Remove(new Tabela { Id = tabelaId });
+                await _context.SaveChangesAsync();
+                _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
+                {
+                    Title = "İşlem Başarılı"
+                });
+                return NoContent();
+            }
+            _toastNotification.AddErrorToastMessage("Tabela silme işlemi başarısız", new ToastrOptions
+            {
+                Title = "İşlem Başarızı"
+            });
+            return NotFound();
         }
     }
 }

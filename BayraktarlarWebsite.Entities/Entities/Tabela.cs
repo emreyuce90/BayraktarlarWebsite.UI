@@ -29,7 +29,7 @@ namespace BayraktarlarWebsite.Entities.Entities
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         //Aktif mi?
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         //Silinmiş mi?
         public bool IsDeleted { get; set; }
         //Tabelanın durumu nedir? 
