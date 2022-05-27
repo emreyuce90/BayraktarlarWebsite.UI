@@ -1,0 +1,93 @@
+﻿@model Talep
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Tabela Ekle";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mt-4">
+    <li class="breadcrumb-item"><a asp-action="Index">Tabelalar</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Tabela Ekle</li>
+  </ol>
+</nav>
+<div asp-validation-summary="All" class="text-danger">
+
+</div>
+<form method="post" class="shadow p-3" asp-controller="Tabela" asp-action="Add" enctype="multipart/form-data">
+    <div id="baslik" class=" text-center mt-4">
+        <h1 class="lead display-5">Tabela Talep Formu</h1>
+    </div>
+    <div id="customer">
+        <label>Tabela Yapılacak Müşteri:</label>
+        <select class="form-control" asp-for="CustomerId" id="select-customer" asp-items="@(new SelectList(Model.CustomerViewModel,"Id","Name"))">
+        </select>
+    </div>
+    <div id="brand" class="mt-1">
+        <label>Tabela Yapılacak Marka:</label>
+        <select class="form-control select-brand" asp-for="BrandId" asp-items="@(new SelectList(Model.Brands,"Id","Name"))">
+        </select>
+    </div>
+    <div id="material" class="mt-1">
+        <label>Tabelanın Çeşidi:</label>
+        <select class="form-control select-material" asp-for="MaterialId" asp-items="@(new SelectList(Model.Materials,"Id","Name"))">
+        </select>
+    </div>
+    <div id="images" class="mt-1">
+        <label for="">Uygulama Yapılacak Alanın Fotoğrafları:</label>
+        <div><input type="file" asp-for="Picture"></div>
+
+    </div>
+    <div  class="mt-1">
+        <label for="">Notlar :</label>
+        <textarea asp-for="Notes" id="trumbowyg-demo" rows="5" class="form-control" placeholder="Lütfen tabela ile ilgili ekstradan belirtmek istediğiniz detaylar var ise bu alana yazınız."></textarea>
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Gönder</button>
+</form>
+
+@section css{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/ui/trumbowyg.min.css" integrity="sha512-nwpMzLYxfwDnu68Rt9PqLqgVtHkIJxEPrlu3PfTfLQKVgBAlTKDmim1JvCGNyNRtyvCx1nNIVBfYm8UZotWd4Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/plugins/colors/ui/trumbowyg.colors.min.css" integrity="sha512-aE073TwNBnCl/Y99fSlH/29MS7CzKgrliM9rTVDURKiiGvapXN+hTmept74zsbcadVEzJ2RtfcyEyzySiYeJuA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/plugins/emoji/ui/trumbowyg.emoji.min.css" integrity="sha512-xpR3G7LZbpAnoUgES2Xu2Z/mK8NwejLjJpNHQtmdU36yGP2AS5kgpflPwv6vEurEeruDcghOtHkWNsOkwVx2ig==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css"> <!-- for live demo page -->
+}
+@section scripts
+{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/trumbowyg.min.js" integrity="sha512-t4CFex/T+ioTF5y0QZnCY9r5fkE8bMf9uoNH2HNSwsiTaMQMO0C9KbKPMvwWNdVaEO51nDL3pAzg4ydjWXaqbg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/langs/tr.min.js" integrity="sha512-+HGzdrYvtA0U9cp5kJad8OpjTvUi6ywZ9z9kXFGiV3EaAR1II5X6lfulUm6/F9GKesHW+jHFfAqwXK0juybvMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/plugins/colors/trumbowyg.colors.min.js" integrity="sha512-4QranVVhd9HLb3yDUL6q+zlHc5mEIcUrR5pfhdyyGzsqcH9vSROL0BgN8wW47mZ1tZ44tUvFkk/JXvhfNlzvHw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/plugins/emoji/trumbowyg.emoji.min.js" integrity="sha512-PPEK09bmt7tQg/qdNokvbckNVB4EqXTu+qi4X/j9XoFag6YspjU5xO/FXXCEjBxo1+Z41oOFvIyz5QkjSuTNsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#select-customer').select2({
+        theme: 'bootstrap4',
+        placeholder: "Lütfen bir müşteri seçiniz",
+        allowClear: true
+        });
+         $('#trumbowyg-demo').trumbowyg({
+             btns: [
+            ['viewHTML'],
+            ['undo', 'redo'], // Only supported in Blink browsers
+            ['formatting'],
+            ['strong', 'em', 'del'],
+            ['superscript', 'subscript'],
+            ['link'],
+            ['insertImage'],
+            ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+            ['unorderedList', 'orderedList'],
+            ['horizontalRule'],
+            ['removeformat'],
+            ['fullscreen'],
+            ['foreColor', 'backColor'],
+            ['emoji']
+
+        ],
+        lang: 'tr'
+    
+         });
+    });
+    
+</script>
+}
+

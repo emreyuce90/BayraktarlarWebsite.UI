@@ -1,0 +1,22 @@
+﻿using System;
+
+namespace BayraktarlarWebsite.UI.Models
+{
+    public class TabelaViewModel
+    {
+        //tabelanın küçük görseli
+        public string SmallThumbnail { get; set; }
+        //notu
+        public string Notes { get; set; }
+        //marka adı
+        public string BrandName { get; set; }
+        //materyal adı
+        public string MaterialName { get; set; }
+        //istekte bulunulan tarih
+        public DateTime CreatedDate { get; set; }
+        //durumu
+        public string StatusName { get; set; }
+        //talep edilen müşteri
+        public string CustomerName { get; set; }
+    }
+}
