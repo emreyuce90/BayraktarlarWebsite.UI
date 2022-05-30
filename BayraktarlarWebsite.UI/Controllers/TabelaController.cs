@@ -215,5 +215,15 @@ namespace BayraktarlarWebsite.UI.Controllers
             });
             return NotFound();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ReadNote(int tabelaId)
+        {
+            //db den tabelaya ait notu çek
+            var note = await _context.Tabelas.FirstOrDefaultAsync(a => a.Id == tabelaId);
+            var model = new NoteViewModel();
+            model.Note = note.Notes;
+            return PartialView("ReadTabelaNotesPartialView",model);
+        }
     }
 }
