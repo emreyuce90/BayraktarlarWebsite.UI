@@ -9,8 +9,7 @@ namespace BayraktarlarWebsite.Entities.Entities
     public class Tabela
     {
         public int Id { get; set; }
-        public string Pictures { get; set; }
-
+        public IList<TabelaImages> Images { get; set; }
         public string Notes { get; set; }
         //Müşteri 
         public int CustomerId { get; set; }

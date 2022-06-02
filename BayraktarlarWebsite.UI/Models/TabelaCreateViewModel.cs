@@ -4,13 +4,16 @@ using System.Collections.Generic;
 
 namespace BayraktarlarWebsite.UI.Models
 {
-    public class Talep
+    public class TabelaCreateViewModel
     {
+        public List<TabelaImages> TabelaImages { get; set; }
+        //Müşteriler
         public List<CustomerViewModel> CustomerViewModel { get; set; }
+        //Markalar
         public List<Brand> Brands { get; set; }
+        //Malzemeler
         public List<Material> Materials { get; set; }
-        //Tabelanın görseli
-        public IFormFile Picture { get; set; }
+        //Seçilen Görseller
         //Varsa notlar
         public string Notes { get; set; }
         //Müşterinin Idsi
@@ -21,7 +24,8 @@ namespace BayraktarlarWebsite.UI.Models
         public int MaterialId { get; set; }
         //Oluşturan kullanıcı
         public int UserId { get; set; }
-        public string PicturePath { get; set; }
+        //Kayıt edilecek alan
+   
 
     }
 }

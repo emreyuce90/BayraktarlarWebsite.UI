@@ -16,14 +16,13 @@ namespace BayraktarlarWebsite.UI.Models
         public int MaterialId { get; set; }
         public List<Material> Materials { get; set; }
         //Tabelanın görseli
-        public IFormFile Picture { get; set; }
-        //Mevcut Görsel
-        public string SmallThumbnail { get; set; }
-        //Varsa notlar
         public string Notes { get; set; }
         public string CustomerName { get; set; }
         public int CustomerId { get; set; }
         public int StatusId { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public List<TabelaImages> Pictures { get; set; }
+        public List<IFormFile> AddedPictures { get; set; }
     }
 }

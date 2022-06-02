@@ -4,14 +4,16 @@ using BayraktarlarWebsite.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BayraktarlarWebsite.DAL.Migrations
 {
     [DbContext(typeof(DatabaseConnection))]
-    partial class DatabaseConnectionModelSnapshot : ModelSnapshot
+    [Migration("20220531112035_MultipleImagesDbSet")]
+    partial class MultipleImagesDbSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,10 +310,10 @@ namespace BayraktarlarWebsite.DAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("PictureUrl")
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TabelaId")
+                    b.Property<int>("TabelaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -544,8 +546,10 @@ namespace BayraktarlarWebsite.DAL.Migrations
             modelBuilder.Entity("BayraktarlarWebsite.Entities.Entities.TabelaImages", b =>
                 {
                     b.HasOne("BayraktarlarWebsite.Entities.Entities.Tabela", "Tabela")
-                        .WithMany("Images")
-                        .HasForeignKey("TabelaId");
+                        .WithMany("TabelaImages")
+                        .HasForeignKey("TabelaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Tabela");
                 });
@@ -603,7 +607,7 @@ namespace BayraktarlarWebsite.DAL.Migrations
 
             modelBuilder.Entity("BayraktarlarWebsite.Entities.Entities.Tabela", b =>
                 {
-                    b.Navigation("Images");
+                    b.Navigation("TabelaImages");
                 });
 
             modelBuilder.Entity("BayraktarlarWebsite.Entities.Entities.User", b =>

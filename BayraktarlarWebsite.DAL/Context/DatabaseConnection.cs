@@ -17,6 +17,7 @@ namespace BayraktarlarWebsite.DAL.Context
         public DbSet<Material> Materials { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Tabela> Tabelas { get; set; }
+        public DbSet<TabelaImages> TabelaImages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

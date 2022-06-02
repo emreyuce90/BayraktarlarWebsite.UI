@@ -16,7 +16,7 @@
 <table class="table-hover table-striped" id="tableList" width="100%">
     <thead>
         <tr>
-            <th>Görsel</th>
+            <th>Görseller</th>
             <th>Müşteri</th>
             <th>Markası</th>
             <th>Malzeme Cinsi</th>
@@ -30,7 +30,16 @@
         @foreach (var t in Model)
         {
             <tr>
-                <td><a href="~/img/tabelaImages/@t.SmallThumbnail"><img style="max-width:140px;max-height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.SmallThumbnail" /></a></td>
+                <td>
+                    @{
+                        if(t.Thumbnail != null)
+                        {
+                            <a href="~/img/tabelaImages/@t.Thumbnail"><img style="max-width:140px;max-height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
+                        }
+                    }
+                     
+                    
+                </td>
                 <td>@t.CustomerName</td>
                 <td>@t.BrandName</td>
                 <td>@t.MaterialName</td>
@@ -40,7 +49,7 @@
                 <td>
                     <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
                     <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
-
+                   
                 </td>
             </tr>
         }
@@ -60,7 +69,7 @@
                         "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
                         "<'row'<'col-sm-12'tr>>" +
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                 
+
                     language:
                     {
                         "emptyTable": "Tabloda herhangi bir veri mevcut değil",

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BayraktarlarWebsite.Entities.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace BayraktarlarWebsite.UI.Models
 {
@@ -6,7 +8,7 @@ namespace BayraktarlarWebsite.UI.Models
     {
         public int Id { get; set; }
         //tabelanın küçük görseli
-        public string SmallThumbnail { get; set; }
+        public string Thumbnail { get; set; }
         //notu
         public string Notes { get; set; }
         //marka adı
@@ -19,5 +21,7 @@ namespace BayraktarlarWebsite.UI.Models
         public string StatusName { get; set; }
         //talep edilen müşteri
         public string CustomerName { get; set; }
+
+
     }
 }

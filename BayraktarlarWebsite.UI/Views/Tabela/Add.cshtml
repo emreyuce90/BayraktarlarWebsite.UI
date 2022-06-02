@@ -1,4 +1,4 @@
-﻿@model Talep
+﻿@model TabelaAddViewModel
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Tabela Ekle";
@@ -19,27 +19,27 @@
     </div>
     <div id="customer">
         <label>Tabela Yapılacak Müşteri:</label>
-        <select class="form-control" asp-for="CustomerId" id="select-customer" asp-items="@(new SelectList(Model.CustomerViewModel,"Id","Name"))">
+        <select class="form-control" asp-for="TabelaCreateViewModel.CustomerId" id="select-customer" asp-items="@(new SelectList(Model.TabelaCreateViewModel.CustomerViewModel,"Id","Name"))">
         </select>
     </div>
     <div id="brand" class="mt-1">
         <label>Tabela Yapılacak Marka:</label>
-        <select class="form-control select-brand" asp-for="BrandId" asp-items="@(new SelectList(Model.Brands,"Id","Name"))">
+        <select class="form-control select-brand" asp-for="TabelaCreateViewModel.BrandId" asp-items="@(new SelectList(Model.TabelaCreateViewModel.Brands,"Id","Name"))">
         </select>
     </div>
     <div id="material" class="mt-1">
         <label>Tabelanın Çeşidi:</label>
-        <select class="form-control select-material" asp-for="MaterialId" asp-items="@(new SelectList(Model.Materials,"Id","Name"))">
+        <select class="form-control select-material" asp-for="TabelaCreateViewModel.MaterialId" asp-items="@(new SelectList(Model.TabelaCreateViewModel.Materials,"Id","Name"))">
         </select>
     </div>
     <div id="images" class="mt-1">
         <label for="">Uygulama Yapılacak Alanın Fotoğrafları:</label>
-        <div><input type="file" asp-for="Picture"></div>
+        <div><input type="file" asp-for="TabelaImages" multiple></div>
 
     </div>
     <div  class="mt-1">
         <label for="">Notlar :</label>
-        <textarea asp-for="Notes" id="trumbowyg-demo" rows="5" class="form-control" placeholder="Lütfen tabela ile ilgili ekstradan belirtmek istediğiniz detaylar var ise bu alana yazınız."></textarea>
+        <textarea asp-for="TabelaCreateViewModel.Notes" id="trumbowyg-demo" rows="5" class="form-control" placeholder="Lütfen tabela ile ilgili ekstradan belirtmek istediğiniz detaylar var ise bu alana yazınız."></textarea>
     </div>
     <button type="submit" class="btn btn-success mt-3">Gönder</button>
 </form>

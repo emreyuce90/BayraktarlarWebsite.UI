@@ -28,6 +28,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            //müşteri datası
             //müşteri adlarını ve idsini  çek ve customer 
             var customers = _context.Customers.Select(c => new CustomerViewModel
             {
@@ -35,47 +36,62 @@ namespace BayraktarlarWebsite.UI.Controllers
                 Name = c.Name,
 
             }).ToList();
-
-
+            //markalar
             var brands = _context.Brands.ToList();
+            //malzemeler
             var materials = _context.Materials.ToList();
-            return View(new Talep
+            //modelleri dolu olarak view a return eder
+            return View(new TabelaAddViewModel
             {
-                CustomerViewModel = customers,
-                Brands = brands,
-                Materials = materials
+               TabelaCreateViewModel = new TabelaCreateViewModel
+               {
+                   CustomerViewModel=customers,
+                   Brands=brands,
+                   Materials=materials
+               }
             });
-
-
         }
+
         [HttpPost]
-        public async Task<IActionResult> Add(Talep talep)
+        public async Task<IActionResult> Add(TabelaAddViewModel model)
         {
+            //Eğer seçilen bilgiler doğru ise
             if (ModelState.IsValid)
             {
-                var tabela = new Tabela();
-                //eğer kullanıcı tabela resmi seçtiyse
-                //gelen dosya adını kayıt et
-                if (talep.Picture != null)
+                //Yeni bir tabela nesnesi oluştur
+                var table = new Tabela
                 {
-                    var fileName = await _imageHelper.UploadImageAsync("tabelaImages", talep.Picture);
-                    tabela.Pictures = fileName;
+                    BrandId = model.TabelaCreateViewModel.BrandId,
+                    CreatedDate = DateTime.Now,
+                    CustomerId = model.TabelaCreateViewModel.CustomerId,
+                    MaterialId = model.TabelaCreateViewModel.MaterialId,
+                    Notes = model.TabelaCreateViewModel.Notes,
+                    StatusId = 1,
+                    UserId = 1,
+                    //Tabelanın görsellerini boş nesne olarak oluştur
+                    Images = new List<TabelaImages> { }
+
+                };
+
+                //Eğer resim seçildiyse
+                if (model.TabelaImages !=null)
+                {
+                    string fileName;
+                    //resimleri dön
+                    foreach (var image in model.TabelaImages)
+                    {
+                        //fotoğrafı upload et
+                        fileName = await _imageHelper.UploadImageAsync("tabelaImages", image);
+                        //oluşturduğun tabela nesnesine bu fotoğrafları ekle
+                        table.Images.Add(new TabelaImages { PictureUrl = fileName });
+                    }
+                    //fotoğraflar bittiğinde tabela nesnesini db ye ekle
+                    await _context.Tabelas.AddAsync(table);
+                    await _context.SaveChangesAsync();
                 }
 
-                tabela.BrandId = talep.BrandId;
-                tabela.CreatedDate = DateTime.Now;
-                tabela.CustomerId = talep.CustomerId;
-                tabela.MaterialId = talep.MaterialId;
-                tabela.Notes = talep.Notes;
-                tabela.StatusId = 1;
-                tabela.UserId = 1;
-
-                _context.Tabelas.Add(tabela);
-                _context.SaveChanges();
                 _toastNotification.AddSuccessToastMessage("Tabela ekleme işlemi başarılı");
                 return RedirectToAction("Index");
-
-
             }
             else
             {
@@ -92,7 +108,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 {
                     Title = "İşlem Başarılı"
                 });
-                return View(new Talep
+                return View(new TabelaCreateViewModel
                 {
                     CustomerViewModel = customers,
                     Brands = brands,
@@ -105,7 +121,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         public IActionResult Index()
         {
             //databaseden tüm tabelaları çekelim
-            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Where(t => t.IsActive).ToList();
+            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t=>t.Images).Where(t => t.IsActive).ToList();
 
             //Liste olarak TabelaViewModel nesnesi  oluşturalım
             List<TabelaViewModel> model = new List<TabelaViewModel>();
@@ -121,9 +137,16 @@ namespace BayraktarlarWebsite.UI.Controllers
                     CustomerName = talep.Customer.Name,
                     MaterialName = talep.Material.Name,
                     Notes = talep.Notes,
-                    SmallThumbnail = talep.Pictures,
+                    
                     StatusName = talep.Status.Name
                 };
+                var picture = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
+
+                if(picture != null)
+                {
+                    var res = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
+                    t.Thumbnail = res.PictureUrl;
+                }
                 model.Add(t);
             }
 
@@ -134,7 +157,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         public async Task<IActionResult> Update(int tabelaId)
         {
             //parametre ile gelen idye ait tabelayı bul
-            var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).FirstOrDefaultAsync(t => t.Id == tabelaId);
+             var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).Include(t=>t.Images).FirstOrDefaultAsync(t => t.Id == tabelaId);
             var model = new TabelaUpdateViewModel
             {
                 Id = tabelaId,
@@ -143,13 +166,18 @@ namespace BayraktarlarWebsite.UI.Controllers
                 Materials = _context.Materials.ToList(),
                 MaterialId = tabela.MaterialId,
                 Notes = tabela.Notes,
-                SmallThumbnail = tabela.Pictures,
                 CustomerId = tabela.Customer.Id,
                 StatusId = tabela.StatusId,
                 CreatedDate = tabela.CreatedDate,
-                CustomerName = tabela.Customer.Name
-
+                CustomerName = tabela.Customer.Name,
+                Pictures = new List<TabelaImages> { }
+                
             };
+
+            foreach (var image in tabela.Images)
+            {
+                model.Pictures.Add(new TabelaImages { PictureUrl=image.PictureUrl,Id =image.Id});
+            }
             return View(model);
         }
 
@@ -158,21 +186,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).FirstOrDefaultAsync(t => t.Id == model.Id);
-                //eski görsel
-                var oldPhoto = tabela.Pictures;
-
-                if (model.Picture != null)
-                {
-                    var img = await _imageHelper.UploadImageAsync("tabelaImages", model.Picture);
-                    tabela.Pictures = img;
-                }
-
-                if (oldPhoto != null)
-                {
-                    //eski foto var ise bu fotoyu sil
-                    await _imageHelper.DeletePhotoAsync("tabelaImages", oldPhoto);
-                }
+                var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).Include(t=>t.Images).FirstOrDefaultAsync(t => t.Id == model.Id);
 
                 tabela.MaterialId = model.MaterialId;
                 tabela.BrandId = model.BrandId;
@@ -181,6 +195,24 @@ namespace BayraktarlarWebsite.UI.Controllers
                 tabela.UserId = 1;
                 tabela.CustomerId = model.CustomerId;
                 tabela.StatusId = model.StatusId;
+               
+                
+                //eğer yeni fotoğraflar seçildiyse
+                if(model.AddedPictures != null)
+                {
+
+                    string fileName;
+                    //yeni bir tabela images oluştur 
+                    //var images = new List<TabelaImages> { };
+                    foreach (var item in model.AddedPictures)
+                    {
+                        //tüm eklenen görselleri upload et
+                        fileName = await _imageHelper.UploadImageAsync("tabelaImages", item);
+                        //images değişkenine tüm görselleri ata
+                        tabela.Images.Add(new TabelaImages { PictureUrl =fileName});
+                    };
+                                
+                }
                 _context.Tabelas.Update(tabela);
                 _context.SaveChanges();
                 _toastNotification.AddSuccessToastMessage("Tabela güncelleme işlemi başarılı", new ToastrOptions
@@ -223,7 +255,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             var note = await _context.Tabelas.FirstOrDefaultAsync(a => a.Id == tabelaId);
             var model = new NoteViewModel();
             model.Note = note.Notes;
-            return PartialView("ReadTabelaNotesPartialView",model);
+            return PartialView("ReadTabelaNotesPartialView", model);
         }
     }
 }

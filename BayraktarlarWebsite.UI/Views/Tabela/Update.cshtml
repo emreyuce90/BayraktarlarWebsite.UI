@@ -15,13 +15,13 @@
 </div>
 
 <form method="post" class="shadow p-3" asp-controller="Tabela" asp-action="Update" enctype="multipart/form-data">
-        <div id="baslik" class=" text-center mt-4">
+    <div id="baslik" class=" text-center mt-4">
         <strong><h1 class="lead display-5">@Model.CustomerName </strong> adlı müşterinize ait verileri görüntülemektesiniz</h1>
     </div>
-    <input type="hidden" asp-for="Id"/>
-    <input type="hidden" asp-for="CustomerId"/>
-    <input type="hidden" asp-for="StatusId"/>
-
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CustomerId" />
+    <input type="hidden" asp-for="StatusId" />
+    <input type="hidden" asp-for="Pictures"/>
     <div id="brand" class="mt-1">
         <label>Tabela Yapılacak Marka:</label>
         <select class="form-control select-brand" asp-for="BrandId" asp-items="@(new SelectList(Model.Brands,"Id","Name"))">
@@ -32,23 +32,35 @@
         <select class="form-control select-material" asp-for="MaterialId" asp-items="@(new SelectList(Model.Materials,"Id","Name"))">
         </select>
     </div>
-    <div id="images" class="mt-1">
-        <label for="">Mevcut Görsel :</label>
-        <div>
-            <img class="img img-responsive img-thumbnail" src="~/img/tabelaImages/@Model.SmallThumbnail" />
-        </div>
+    <div class="mt-2">
+        @{
+            if (Model.Pictures != null)
+            {
+                        @foreach (var item in Model.Pictures)
+                {
+                            <a id="imgDelete" data-tabelaId="@item.Id" asp-route-tabelaId="@item.Id" asp-action="DeleteImage" class="btn btn-danger btn-sm text-white p-1"><i class=" fa fa-minus-circle" aria-hidden="true"></i><img style="max-width:140px;max-height:100px;" class="ml-2 img img-responsive img-thumbnail" src="~/img/tabelaImages/@item.PictureUrl" /></a>
 
-    </div>
-    <div id="images" class="mt-1">
-        <label for="">Yeni Fotoğraf Seç:</label>
-        <div><input type="file" asp-for="Picture"></div>
+                }
+                        <div class="mt-4">
+                        <label>Resim Ekle:</label>
+                        <input asp-for="AddedPictures" type="file" multiple /></div>
+                
 
+            }
+            else
+            {
+                       <div class="mt-4">
+                        <label>Resim Ekle:</label>
+                        <input asp-for="AddedPictures" type="file" multiple /></div>
+            }
+        }
     </div>
+
     <div class="mt-1">
         <label for="">Notlar :</label>
         <textarea asp-for="Notes" id="trumbowyg-demo" rows="5" class="form-control" placeholder="Lütfen tabela ile ilgili ekstradan belirtmek istediğiniz detaylar var ise bu alana yazınız."></textarea>
     </div>
-    <a  class="btn btn-warning mt-3 text-white" asp-action="Index"><i class="fa fa-undo"></i> Geri Dön</a>
+    <a class="btn btn-warning mt-3 text-white" asp-action="Index"><i class="fa fa-undo"></i> Geri Dön</a>
     <button type="submit" class="btn btn-success mt-3"><i class="fas fa-save"></i> Güncelle</button>
 </form>
 
@@ -88,6 +100,10 @@
                 ],
                 lang: 'tr'
 
+            });
+            $(document).on('click','#imgDelete',function(event){
+                event.preventDefault();
+                alert('You hit the button!')
             });
         });
     </script>
