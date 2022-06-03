@@ -21,7 +21,7 @@
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="CustomerId" />
     <input type="hidden" asp-for="StatusId" />
-    <input type="hidden" asp-for="Pictures"/>
+    <input type="hidden" asp-for="Pictures" />
     <div id="brand" class="mt-1">
         <label>Tabela Yapılacak Marka:</label>
         <select class="form-control select-brand" asp-for="BrandId" asp-items="@(new SelectList(Model.Brands,"Id","Name"))">
@@ -36,22 +36,24 @@
         @{
             if (Model.Pictures != null)
             {
-                        @foreach (var item in Model.Pictures)
+                @foreach (var item in Model.Pictures)
                 {
-                            <a id="imgDelete" data-tabelaId="@item.Id" asp-route-tabelaId="@item.Id" asp-action="DeleteImage" class="btn btn-danger btn-sm text-white p-1"><i class=" fa fa-minus-circle" aria-hidden="true"></i><img style="max-width:140px;max-height:100px;" class="ml-2 img img-responsive img-thumbnail" src="~/img/tabelaImages/@item.PictureUrl" /></a>
+                    <a id="imgDelete" data-imgId="@item.Id" class="btn btn-danger btn-sm text-white p-1"><i class=" fa fa-minus-circle" aria-hidden="true"></i><img style="max-width:140px;max-height:100px;" class="ml-2 img img-responsive img-thumbnail" src="~/img/tabelaImages/@item.PictureUrl" /></a>
 
                 }
-                        <div class="mt-4">
-                        <label>Resim Ekle:</label>
-                        <input asp-for="AddedPictures" type="file" multiple /></div>
-                
+                <div class="mt-4">
+                    <label>Resim Ekle:</label>
+                    <input asp-for="AddedPictures" type="file" multiple />
+                </div>
+
 
             }
             else
             {
-                       <div class="mt-4">
-                        <label>Resim Ekle:</label>
-                        <input asp-for="AddedPictures" type="file" multiple /></div>
+                <div class="mt-4">
+                    <label>Resim Ekle:</label>
+                    <input asp-for="AddedPictures" type="file" multiple />
+                </div>
             }
         }
     </div>
@@ -72,6 +74,7 @@
     @section scripts
     {
     @await Html.PartialAsync("_TrumbowygJsPartialView")
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -101,10 +104,58 @@
                 lang: 'tr'
 
             });
-            $(document).on('click','#imgDelete',function(event){
-                event.preventDefault();
-                alert('You hit the button!')
+            $(document).on('click', '#imgDelete', function(e) {
+                e.preventDefault();
+                const id = $(this).attr("data-imgId");
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Bu görseli silmek istediğinize emin misiniz?',
+                    text: "Eğer silerseniz veriyi geri alamazsınız",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet,sil',
+                    cancelButtonText: 'Hayır silme',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //Sil butonuna tıklandı
+                        $.ajax({
+                            url: '/Tabela/ImageDelete',
+                            method: 'POST',
+                            data: { imgId: id },
+                            success: function(message) {
+                                //sayfayı yenile
+                                window.location.reload()
+                                //alert ver
+
+                            }
+                        });
+                        swalWithBootstrapButtons.fire(
+                            'Silindi!',
+                            'Silme işlemi başarılı',
+                            'success'
+                        )
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'İptal Edildi',
+                            'Silme işlemi iptal edildi',
+                            'error'
+                        )
+                    }
+                })
+
             });
         });
     </script>
+
 }
