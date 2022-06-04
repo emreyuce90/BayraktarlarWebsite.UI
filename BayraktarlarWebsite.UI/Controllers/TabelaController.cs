@@ -195,7 +195,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 tabela.UserId = 1;
                 tabela.CustomerId = model.CustomerId;
                 tabela.StatusId = model.StatusId;
-
+                tabela.ModifiedDate = DateTime.Now;
 
                 //eğer yeni fotoğraflar seçildiyse
                 if (model.AddedPictures != null)
@@ -266,6 +266,29 @@ namespace BayraktarlarWebsite.UI.Controllers
             _context.SaveChanges();
             return NoContent();
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TabelaDetail(int tabelaId)
+        {
+            var tabela = await _context.Tabelas.FirstOrDefaultAsync(t=>t.Id == tabelaId);
+            if (tabela != null)
+            {
+                var vm = new TabelaDetailViewModel
+                {
+                    BrandName = tabela.Brand.Name,
+                    CreatedDate = tabela.CreatedDate,
+                    CustomerName = tabela.Customer.Name,
+                    MaterialName = tabela.Material.Name,
+                    Notes = tabela.Notes,
+                    StatusName = tabela.Status.Name,
+                    TabelaImages = tabela.Images,
+                    
+                };
+                return View();
+            }
+
+            return View();
         }
     }
 }
