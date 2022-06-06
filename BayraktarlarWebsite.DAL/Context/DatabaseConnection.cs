@@ -31,6 +31,10 @@ namespace BayraktarlarWebsite.DAL.Context
             builder.ApplyConfiguration(new MaterialMap());
             builder.ApplyConfiguration(new StatusMap());
             builder.ApplyConfiguration(new TabelaMap());
+            builder.Entity<Tabela>()
+       .HasMany(b => b.Images)
+       .WithOne(a => a.Tabela)
+       .OnDelete(DeleteBehavior.Cascade);
             base.OnModelCreating(builder);
         }
     }

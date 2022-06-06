@@ -1,0 +1,73 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Tabela Detayı";
+}
+@model TabelaDetailViewModel
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Tabela Taleplerim</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tabela Detayı</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-4">
+        <h5 class="text-center">Uygulama Öncesi Fotoğrafları</h5>
+        <div class="fotorama" data-nav="thumbs" data-width="100%" data-ratio="800/600">
+            @foreach (var image in Model.TabelaImages)
+            {
+                <img src="~/img/tabelaImages/@image">
+            }
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Müşteri Adı :</label>
+            <input class="form-control" asp-for="CustomerName" disabled />
+        </div>
+
+        <div class="form-group">
+            <label>Marka Adı :</label>
+            <input class="form-control" asp-for="BrandName" disabled />
+        </div>
+        <div class="form-group">
+            <label>Malzeme Cinsi :</label>
+            <input class="form-control" asp-for="MaterialName" disabled />
+        </div>
+        <div class="form-group">
+            <label>Durumu :</label>
+            <input class="form-control" asp-for="StatusName" disabled />
+        </div>
+        <div class="form-group">
+            <label>Oluşturulma Tarihi :</label>
+            <input class="form-control" asp-for="CreatedDate" disabled />
+        </div>
+        <div class="form-group">
+            <label>Notlar :</label>
+            @Html.Raw(Model.Notes)
+        </div>
+        <a class="btn btn-warning mt-3 text-white" asp-action="Index"><i class="fa fa-undo"></i> Geri Dön</a>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.thumbnail').on('click', function() {
+                var clicked = $(this);
+                var newSelection = clicked.data('big');
+                var $img = $('.primary').css("background-image", "url(" + newSelection + ")");
+                clicked.parent().find('.thumbnail').removeClass('selected');
+                clicked.addClass('selected');
+                $('.primary').empty().append($img.hide().fadeIn('slow'));
+            });
+        });
+    </script>
+}

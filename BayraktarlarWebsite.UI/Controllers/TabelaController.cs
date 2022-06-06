@@ -121,7 +121,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         public IActionResult Index()
         {
             //databaseden tüm tabelaları çekelim
-            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Where(t => t.IsActive).ToList();
+            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Where(t => t.IsDeleted == false).ToList();
 
             //Liste olarak TabelaViewModel nesnesi  oluşturalım
             List<TabelaViewModel> model = new List<TabelaViewModel>();
@@ -226,14 +226,33 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpPost]
+        public IActionResult HardDelete(int tabelaId)
+        {
+            if (tabelaId != 0)
+            {
+                _context.Tabelas.Remove(new Tabela { Id = tabelaId });
+                _context.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
+                {
+                    Title = "İşlem Başarılı"
+                });
+                return NoContent();
+            }
+            return NotFound();
+
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int tabelaId)
         {
             //database deki veriyi çek
-            var tabela = _context.Tabelas.Where(t => t.Id == tabelaId);
+            var tabela = await _context.Tabelas.FirstOrDefaultAsync(t => t.Id == tabelaId);
             //eğer veritabanında böyle bir kayıt var ise 
             if (tabela != null)
             {
-                _context.Tabelas.Remove(new Tabela { Id = tabelaId });
+                tabela.IsDeleted = true;
+                _context.Update(tabela);
                 await _context.SaveChangesAsync();
                 _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
                 {
@@ -271,9 +290,14 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> TabelaDetail(int tabelaId)
         {
-            var tabela = await _context.Tabelas.FirstOrDefaultAsync(t=>t.Id == tabelaId);
+            var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).Include(t => t.Images).Include(t => t.Status).FirstOrDefaultAsync(t => t.Id == tabelaId);
             if (tabela != null)
             {
+                var listOfString = new List<string>();
+                foreach (var images in tabela.Images)
+                {
+                    listOfString.Add(images.PictureUrl);
+                }
                 var vm = new TabelaDetailViewModel
                 {
                     BrandName = tabela.Brand.Name,
@@ -282,13 +306,53 @@ namespace BayraktarlarWebsite.UI.Controllers
                     MaterialName = tabela.Material.Name,
                     Notes = tabela.Notes,
                     StatusName = tabela.Status.Name,
-                    TabelaImages = tabela.Images,
-                    
+                    TabelaImages = listOfString
                 };
-                return View();
+
+
+
+                return View(vm);
             }
 
-            return View();
+            return NotFound();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DeletedTabelas()
+        {
+
+            //databaseden tüm tabelaları çekelim
+            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Where(t => t.IsDeleted == true).ToList();
+
+            //Liste olarak TabelaViewModel nesnesi  oluşturalım
+            List<TabelaViewModel> model = new List<TabelaViewModel>();
+
+            //databasedeki verileri gezelim ve boş olan modelimize ekleyelim
+            foreach (var talep in tabelalar)
+            {
+                var t = new TabelaViewModel
+                {
+                    Id = talep.Id,
+                    BrandName = talep.Brand.Name,
+                    CreatedDate = talep.CreatedDate,
+                    CustomerName = talep.Customer.Name,
+                    MaterialName = talep.Material.Name,
+                    Notes = talep.Notes,
+
+                    StatusName = talep.Status.Name
+                };
+                var picture = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
+
+                if (picture != null)
+                {
+                    var res = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
+                    t.Thumbnail = res.PictureUrl;
+                }
+                model.Add(t);
+            }
+
+            return View(model);
+        }
+
     }
 }

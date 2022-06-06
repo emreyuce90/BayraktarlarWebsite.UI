@@ -21,6 +21,8 @@ namespace BayraktarlarWebsite.DAL.Mappings
             builder.Property(t => t.CustomerId).IsRequired();
             builder.Property(t => t.UserId).IsRequired();
 
+            
+
         }
     }
 }

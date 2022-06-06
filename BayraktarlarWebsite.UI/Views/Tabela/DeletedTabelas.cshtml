@@ -7,7 +7,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mt-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
-        <li class="breadcrumb-item"><a asp-action="Index">Tabela Taleplerim</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Silinmiş Tabelalar</a></li>
     </ol>
 </nav>
 
@@ -48,7 +48,7 @@
                 <td>@t.CreatedDate.ToShortDateString()</td>
                 <td><button id="readNote" data-tabelaId="@t.Id" class="btn btn-success"><i class="fa fa-book" aria-hidden="true"></i> Oku</button></td>
                 <td>
-                    <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
+                   
                     <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
                    <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
                 </td>
@@ -303,8 +303,8 @@
                     if (result.isConfirmed) {
                         //Sil butonuna tıklandı
                         $.ajax({
-                            url: '/Tabela/Delete',
-                            method: 'Get',
+                            url: '/Tabela/HardDelete',
+                            method: 'post',
                             data: { tabelaId: id },
                             success: function(message) {
                                 //sayfayı yenile
@@ -339,7 +339,7 @@
                 e.preventDefault();
                 //tabela read note a get istek at data olarak tabela id gönder gelen datayı modalda göster
                 $.ajax({
-                    url: 'Tabela/ReadNote/',
+                    url: '/Tabela/ReadNote/',
                     method: "get",
                     data: { tabelaId: id },
                     success: function(d) {
