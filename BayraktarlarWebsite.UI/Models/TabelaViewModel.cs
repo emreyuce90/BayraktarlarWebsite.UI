@@ -22,6 +22,8 @@ namespace BayraktarlarWebsite.UI.Models
         //talep edilen müşteri
         public string CustomerName { get; set; }
 
+        public string Username { get; set; }
+
 
     }
 }

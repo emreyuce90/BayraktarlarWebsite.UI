@@ -23,6 +23,7 @@
             <th>Malzeme Cinsi</th>
             <th>Durumu</th>
             <th>Tarihi</th>
+            <th>Kullanıcı</th>
             <th>Notlar</th>
             <th>İşlemler</th>
         </tr>
@@ -33,24 +34,26 @@
             <tr>
                 <td>
                     @{
-                        if(t.Thumbnail != null)
+                        if (t.Thumbnail != null)
                         {
-                            <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
+                                    <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
                         }
                     }
-                     
-                    
+
+
                 </td>
                 <td>@t.CustomerName</td>
                 <td>@t.BrandName</td>
                 <td>@t.MaterialName</td>
-                <td>@t.StatusName</td>
+                <td><a id="btnChange" data-tabelaId="@t.Id" class="btn btn-info btn-sm text-white"><i class="fa fa-edit" aria-hidden="true"></i>@t.StatusName</a></td>
                 <td>@t.CreatedDate.ToShortDateString()</td>
+                <td>@t.Username</td>
                 <td><button id="readNote" data-tabelaId="@t.Id" class="btn btn-success"><i class="fa fa-book" aria-hidden="true"></i> Oku</button></td>
                 <td>
+
                     <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
                     <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
-                   <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
+                    <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
                 </td>
             </tr>
         }
@@ -331,7 +334,18 @@
                 })
 
             });
-            $(document).on('click', '#readNote', function(e) {
+
+            $(document).on('click', '#btnSave', function(e) {
+                //formu seçelim
+                const form = $(#'statusChangeForm');
+                //gönderilecek data olarak işaretleyelim
+                const dataToSend = new FormData(form.get(0));
+                //ajax ile post işlemine başlayalım
+                $.ajax({
+                    url:"/Tabela/ChangeStatus "
+                });
+            });
+            $(document).on('click', '#btnChange', function(e) {
                 //modalın açılacağı alan
                 const placeHolderDiv = $('#modal-area');
                 //tıklanılan butonun idsi
@@ -339,7 +353,7 @@
                 e.preventDefault();
                 //tabela read note a get istek at data olarak tabela id gönder gelen datayı modalda göster
                 $.ajax({
-                    url: 'Tabela/ReadNote/',
+                    url: 'Tabela/ChangeStatus/',
                     method: "get",
                     data: { tabelaId: id },
                     success: function(d) {

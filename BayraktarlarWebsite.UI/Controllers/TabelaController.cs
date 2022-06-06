@@ -121,7 +121,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         public IActionResult Index()
         {
             //databaseden tüm tabelaları çekelim
-            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Where(t => t.IsDeleted == false).ToList();
+            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Include(t=>t.User).Where(t => t.IsDeleted == false).ToList();
 
             //Liste olarak TabelaViewModel nesnesi  oluşturalım
             List<TabelaViewModel> model = new List<TabelaViewModel>();
@@ -137,7 +137,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     CustomerName = talep.Customer.Name,
                     MaterialName = talep.Material.Name,
                     Notes = talep.Notes,
-
+                    Username=talep.User.UserName,
                     StatusName = talep.Status.Name
                 };
                 var picture = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
@@ -353,6 +353,47 @@ namespace BayraktarlarWebsite.UI.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<PartialViewResult> ChangeStatus(int tabelaId)
+        {
+            var updatedTabela =await _context.Tabelas.Include(t=>t.Status).FirstOrDefaultAsync(t=>t.Id == tabelaId);
+            if(updatedTabela !=null)
+            {
+                var viewmodel = new ChangeStatusViewModel
+                {
+                    StatusId = updatedTabela.StatusId,
+                    StatusName = updatedTabela.Status.Name,
+                    Statuses =await _context.Statuses.ToListAsync(),
+                    TabelaId  =updatedTabela.Id
+                };
+                
+                return PartialView("ChangeStatusPartialView", viewmodel);
+            }
+            return PartialView("ChangeStatusPartialView");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var tabela = await _context.Tabelas.Include(t => t.Status).FirstOrDefaultAsync(t=>t.Id == model.TabelaId);
+                if(tabela != null)
+                {
+                    tabela.StatusId = model.StatusId;
+                    _context.Update(tabela);
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            return NotFound();
+        }
+
 
     }
 }
