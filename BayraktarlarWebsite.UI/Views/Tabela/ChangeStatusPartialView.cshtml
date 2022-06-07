@@ -11,10 +11,12 @@
             </div>
             <div class="modal-body">
                 <form id="statusChangeForm" method="post" asp-action="ChangeStatus" asp-controller="Tabela">
+                    <input type="hidden" asp-for="TabelaId"/>
                 <div class="form-group">
                     <label>Seçilen durum :</label>
                     <select class="form-control" asp-items="@(new SelectList(Model.Statuses,"Id","Name"))" asp-for="StatusId"></select>
                 </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button id="btnSave" type="button" class="btn btn-success" data-dismiss="modal"><span class="fas fa-save"></span> Kaydet</button>
@@ -22,7 +24,7 @@
 
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-times"></span> İptal</button>
             </div>
-            </form>
+            
         </div>
     </div>
 </div>
