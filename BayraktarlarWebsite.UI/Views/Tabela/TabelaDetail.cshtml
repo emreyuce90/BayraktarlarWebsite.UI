@@ -60,7 +60,7 @@
             <div class="fotorama" data-nav="thumbs" data-width="100%" data-ratio="800/600">
                 @foreach (var image in Model.TabelaImages)
                 {
-                    <img src="~/img/appliedImages/@image">
+                    <a href="~/img/appliedImages/@image"><img src="~/img/appliedImages/@image"></a>
                 }
             </div>
             </div>

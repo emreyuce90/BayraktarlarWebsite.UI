@@ -75,8 +75,16 @@
                 <td>@t.Username</td>
                 <td><button id="readNote" data-tabelaId="@t.Id" class="btn btn-success"><i class="fa fa-book" aria-hidden="true"></i> Oku</button></td>
                 <td>
+                    @{
+                        if(t.StatusName == "Uygulandı")
+                        {
+                            
+                        }else{
 
-                    <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
+                             <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
+                        }
+                    }
+                   
 
                     <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
                     <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
