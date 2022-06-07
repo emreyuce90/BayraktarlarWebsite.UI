@@ -36,17 +36,40 @@
                     @{
                         if (t.Thumbnail != null)
                         {
-                            <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
+                                <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
                         }
                     }
 
 
                 </td>
-                <td>@t.CustomerName</td>
+                
+                    @{
+                        if(t.CustomerName.Length <= 25)
+                        {
+                              <td>@t.CustomerName</td>
+                        }else
+                        {
+                                <td>@t.CustomerName.Substring(0,25)</td>
+                        }
+                    }
+               
                 <td>@t.BrandName</td>
                 <td>@t.MaterialName</td>
                 <td>
-                    <a id="btnChange" data-tabelaId="@t.Id" class="btn btn-info btn-sm text-white"><i class="fa fa-edit" aria-hidden="true"></i>@t.StatusName</a>
+                    @if (t.StatusName.ToString() == "Uygulandı")
+                    {
+                       <div class="text-success"><i class="fa fa-check" aria-hidden="true"></i> @t.StatusName</div>
+                    }
+                    else if(t.StatusName.ToString() == "Reddedildi")
+                    {
+                        <span class="text-danger">@t.StatusName</span>
+                        <a id="btnChange" data-tabelaId="@t.Id" class="btn btn-info btn-sm text-white"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                        
+                    }else{
+                          <span class="text-info">@t.StatusName</span>
+                        <a id="btnChange" data-tabelaId="@t.Id" class="btn btn-info btn-sm text-white"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                    }
+
                 </td>
                 <td>@t.CreatedDate.ToShortDateString()</td>
                 <td>@t.Username</td>
@@ -54,6 +77,7 @@
                 <td>
 
                     <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
+
                     <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
                     <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
                 </td>
@@ -278,6 +302,23 @@
                         }
                     }
                 }
+            });
+
+            $(document).on('click', '#readNote', function() {
+                const placeHolder = $('#modal-area');
+                const id = $(this).attr('data-tabelaId');
+                const url = '/Tabela/ReadNote/';
+                //modalı aç
+                $.ajax({
+                    url: url,
+                    method: "get",
+                    data: { tabelaId: id },
+                    success: function(d) {
+                        placeHolder.html(d);
+                        placeHolder.find('.modal').modal('show');
+
+                    },
+                });
             });
 
             $(document).on('click', '#btnDelete', function(e) {

@@ -121,7 +121,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         public IActionResult Index()
         {
             //databaseden tüm tabelaları çekelim
-            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Include(t=>t.User).Where(t => t.IsDeleted == false).ToList();
+            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Include(t => t.User).Where(t => t.IsDeleted == false).ToList();
 
             //Liste olarak TabelaViewModel nesnesi  oluşturalım
             List<TabelaViewModel> model = new List<TabelaViewModel>();
@@ -137,7 +137,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     CustomerName = talep.Customer.Name,
                     MaterialName = talep.Material.Name,
                     Notes = talep.Notes,
-                    Username=talep.User.UserName,
+                    Username = talep.User.UserName,
                     StatusName = talep.Status.Name
                 };
                 var picture = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
@@ -206,8 +206,17 @@ namespace BayraktarlarWebsite.UI.Controllers
                     //var images = new List<TabelaImages> { };
                     foreach (var item in model.AddedPictures)
                     {
-                        //tüm eklenen görselleri upload et
-                        fileName = await _imageHelper.UploadImageAsync("tabelaImages", item);
+                        //eğer tabelanın statüsü uygulandı ise o zaman upload edilen görselleri uygulama sonrası görseller olarak kaydedeceğiz
+                        if(tabela.StatusId == 5)
+                        {
+                            fileName = await _imageHelper.UploadImageAsync("appliedImages", item);
+                        }
+                        else
+                        {
+                            //tüm eklenen görselleri upload et
+                            fileName = await _imageHelper.UploadImageAsync("tabelaImages", item);
+                        }
+                       
                         //images değişkenine tüm görselleri ata
                         tabela.Images.Add(new TabelaImages { PictureUrl = fileName });
                     };
@@ -357,17 +366,17 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<PartialViewResult> ChangeStatus(int tabelaId)
         {
-            var updatedTabela =await _context.Tabelas.Include(t=>t.Status).FirstOrDefaultAsync(t=>t.Id == tabelaId);
-            if(updatedTabela !=null)
+            var updatedTabela = await _context.Tabelas.Include(t => t.Status).FirstOrDefaultAsync(t => t.Id == tabelaId);
+            if (updatedTabela != null)
             {
                 var viewmodel = new ChangeStatusViewModel
                 {
                     StatusId = updatedTabela.StatusId,
                     StatusName = updatedTabela.Status.Name,
-                    Statuses =await _context.Statuses.ToListAsync(),
-                    TabelaId  =updatedTabela.Id
+                    Statuses = await _context.Statuses.ToListAsync(),
+                    TabelaId = updatedTabela.Id
                 };
-                
+
                 return PartialView("ChangeStatusPartialView", viewmodel);
             }
             return PartialView("ChangeStatusPartialView");
@@ -378,8 +387,8 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var tabela = await _context.Tabelas.Include(t => t.Status).FirstOrDefaultAsync(t=>t.Id == model.TabelaId);
-                if(tabela != null)
+                var tabela = await _context.Tabelas.Include(t => t.Status).FirstOrDefaultAsync(t => t.Id == model.TabelaId);
+                if (tabela != null)
                 {
                     tabela.StatusId = model.StatusId;
                     _context.Update(tabela);
@@ -394,6 +403,18 @@ namespace BayraktarlarWebsite.UI.Controllers
             return NotFound();
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> UndoDelete(int tabelaId)
+        {
+            var tabela = await _context.Tabelas.FirstOrDefaultAsync(t => t.Id == tabelaId);
+            if (tabela != null)
+            {
+                tabela.IsDeleted = false;
+                _context.Tabelas.Update(tabela);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            return NotFound();
+        }
     }
 }

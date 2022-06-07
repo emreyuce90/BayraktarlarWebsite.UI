@@ -33,13 +33,13 @@
             <tr>
                 <td>
                     @{
-                        if(t.Thumbnail != null)
+                        if (t.Thumbnail != null)
                         {
-                            <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
+                                                                    <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
                         }
                     }
-                     
-                    
+
+
                 </td>
                 <td>@t.CustomerName</td>
                 <td>@t.BrandName</td>
@@ -48,9 +48,10 @@
                 <td>@t.CreatedDate.ToShortDateString()</td>
                 <td><button id="readNote" data-tabelaId="@t.Id" class="btn btn-success"><i class="fa fa-book" aria-hidden="true"></i> Oku</button></td>
                 <td>
-                   
+
                     <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
-                   <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
+                    <a data-tabelaId="@t.Id" id="btnUndo" class="btn btn-warning text-white"><i class="fas fa-undo"></i></a>
+                    <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
                 </td>
             </tr>
         }
@@ -63,6 +64,59 @@
     <script>
         $(document).ready(function() {
 
+            $(document).on('click', '#btnUndo', function(e) {
+                e.preventDefault();
+                const url = "/Tabela/UndoDelete"
+                const id = $(this).attr('data-tabelaId');
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Emin misiniz ?',
+                    text: "Seçtiğiniz tabela çöp kutusundan geri yüklenecektir",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet, geri yükle',
+                    cancelButtonText: 'Hayır , geri yükleme',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                           $.ajax({
+                               method:'get',
+                               url:url,
+                               data: {tabelaId:id},
+                               success: function(d) {
+                                   window.location.reload()
+                               }
+                            });
+                        swalWithBootstrapButtons.fire(
+
+                         
+
+                            'Geri Yüklendi!',
+                            'Seçtiğiniz kayıt çöp kutusundan geri yüklendi',
+                            'success'
+
+                           
+                        )
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'İptal edildi',
+                            'Geri yüklemeyi iptal ettiniz',
+                            'info'
+                        )
+                    }
+                })
+            });
 
             $(document).ready(function() {
                 $('#tableList').DataTable({
@@ -277,9 +331,6 @@
                     }
                 });
             });
-
-
-
             $(document).on('click', '#btnDelete', function(e) {
                 e.preventDefault();
                 const id = $(this).attr("data-id");

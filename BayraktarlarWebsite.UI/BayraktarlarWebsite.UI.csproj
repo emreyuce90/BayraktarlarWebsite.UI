@@ -68,4 +68,8 @@
     <ProjectReference Include="..\BayraktarlarWebsite.Entities\BayraktarlarWebsite.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\appliedImages\" />
+  </ItemGroup>
+
 </Project>

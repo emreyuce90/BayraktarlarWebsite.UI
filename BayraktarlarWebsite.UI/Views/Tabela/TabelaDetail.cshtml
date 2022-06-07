@@ -7,14 +7,14 @@
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mt-4">
-         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
         <li class="breadcrumb-item"><a asp-action="Index">Tabela Taleplerim</a></li>
         <li class="breadcrumb-item active" aria-current="page">Tabela Detayı</li>
     </ol>
 </nav>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h5 class="text-center">Uygulama Öncesi Fotoğrafları</h5>
         <div class="fotorama" data-nav="thumbs" data-width="100%" data-ratio="800/600">
             @foreach (var image in Model.TabelaImages)
@@ -51,6 +51,23 @@
         </div>
         <a class="btn btn-warning mt-3 text-white" asp-action="Index"><i class="fa fa-undo"></i> Geri Dön</a>
     </div>
+    @if (Model.StatusName.ToString() == "Uygulandı" && Model.TabelaImages.Count >= 1)
+    {
+       
+        <div class="col-md-12 mt-4">
+            <div class="col-md-6">
+            <h5 class="text-center">Uygulama Sonrası Fotoğrafları</h5>
+            <div class="fotorama" data-nav="thumbs" data-width="100%" data-ratio="800/600">
+                @foreach (var image in Model.TabelaImages)
+                {
+                    <img src="~/img/appliedImages/@image">
+                }
+            </div>
+            </div>
+        </div>
+    
+    }
+    
 </div>
 
 
