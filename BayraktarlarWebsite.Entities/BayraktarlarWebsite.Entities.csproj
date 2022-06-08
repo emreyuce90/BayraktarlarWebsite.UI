@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BayraktarlarWebsite.Shared\BayraktarlarWebsite.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

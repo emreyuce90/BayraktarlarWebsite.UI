@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BayraktarlarWebsite.Entities\BayraktarlarWebsite.Entities.csproj" />
+    <ProjectReference Include="..\BayraktarlarWebsite.Shared\BayraktarlarWebsite.Shared.csproj" />
   </ItemGroup>
 
 </Project>
