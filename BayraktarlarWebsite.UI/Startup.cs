@@ -1,3 +1,4 @@
+using BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC;
 using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
@@ -5,6 +6,7 @@ using BayraktarlarWebsite.UI.Helpers.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -17,33 +19,20 @@ namespace BayraktarlarWebsite.UI
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+       
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            //Runtime servisi
+            services.AddDependencies(_configuration.GetConnectionString("db1"));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
-            //Veritabaný baðlantý servisi
-            services.AddDbContext<DatabaseConnection>();
-
-            //imagehelper servisi
             services.AddScoped<IImageHelper, ImageHelper>();
-            //Identity servisi
-            services.AddIdentity<User, Role>(opt =>
-            {
-                //User settings
-                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                opt.User.RequireUniqueEmail = true;
-                //Password Settings
-                opt.Password.RequireUppercase = true;
-                opt.Password.RequireDigit = true;
-                opt.Password.RequireLowercase = true;
-                opt.Password.RequiredUniqueChars = 1;
-                opt.Password.RequireNonAlphanumeric = true;
-                opt.Password.RequiredLength = 5;
-            }
-
-           ).AddEntityFrameworkStores<DatabaseConnection>();
+            services.AddSession();
             //cookie servisi
             services.ConfigureApplicationCookie(opt =>
             {
@@ -62,24 +51,22 @@ namespace BayraktarlarWebsite.UI
                 opt.SlidingExpiration = true;
                 opt.ExpireTimeSpan = TimeSpan.FromDays(7);
             });
-            services.AddSession();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+                app.UseSession();
+                app.UseStaticFiles();
+                app.UseRouting();
+                app.UseAuthentication();
+                app.UseAuthorization();
+                app.UseNToastNotify();
+                app.UseEndpoints(builder => builder.MapDefaultControllerRoute());
             }
-            app.UseSession();
-            app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseNToastNotify();
-            app.UseEndpoints(builder =>builder.MapDefaultControllerRoute());
         }
     }
-}

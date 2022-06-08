@@ -13,6 +13,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
     {
         private readonly DatabaseConnection _context;
         private readonly EfTabelaRepository _tabelaRepository;
+        private readonly EfTabelaImagesRepository _tabelaImagesRepository;
         public UnitOfWork(DatabaseConnection context, EfTabelaRepository tabelaRepository)
         {
             _context = context;
@@ -20,7 +21,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         }
       
         public ITabelaRepository Tabelas => _tabelaRepository ?? new EfTabelaRepository(_context);
-
+        public ITabelaImagesRepository TabelaImages => _tabelaImagesRepository ?? new EfTabelaImagesRepository(_context);
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync();

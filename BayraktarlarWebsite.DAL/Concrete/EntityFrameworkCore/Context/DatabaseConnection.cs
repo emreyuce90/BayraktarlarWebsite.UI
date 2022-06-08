@@ -19,9 +19,9 @@ namespace BayraktarlarWebsite.DAL.Context
         public DbSet<Tabela> Tabelas { get; set; }
         public DbSet<TabelaImages> TabelaImages { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public DatabaseConnection(DbContextOptions<DatabaseConnection> options):base(options)
         {
-            optionsBuilder.UseSqlServer(connectionString: "server=localhost;database=bayraktarlarDb;integrated security =true");
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
