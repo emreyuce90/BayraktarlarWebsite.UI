@@ -50,6 +50,7 @@
             @Html.Raw(Model.Notes)
         </div>
         <a class="btn btn-warning mt-3 text-white" asp-action="Index"><i class="fa fa-undo"></i> Geri Dön</a>
+                <a class="btn btn-info mt-3 text-white" asp-action="Index"><i class="fa fa-info"></i> Excel Çıktısı Al</a>
     </div>
     @if (Model.StatusName.ToString() == "Uygulandı" && Model.TabelaImages.Count >= 1)
     {
