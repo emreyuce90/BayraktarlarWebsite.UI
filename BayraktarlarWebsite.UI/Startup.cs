@@ -20,16 +20,10 @@ namespace BayraktarlarWebsite.UI
     public class Startup
     {
        
-        private readonly IConfiguration _configuration;
-
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
+      
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDependencies(_configuration.GetConnectionString("db1"));
+            services.AddDependencies();
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddSession();

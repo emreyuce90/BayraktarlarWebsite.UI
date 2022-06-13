@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.BLL.Interfaces
 {
-    public interface ITabelaService
+    public interface ICustomerService
     {
-
+        Task<int> CountAsync(int statusId);
     }
 }

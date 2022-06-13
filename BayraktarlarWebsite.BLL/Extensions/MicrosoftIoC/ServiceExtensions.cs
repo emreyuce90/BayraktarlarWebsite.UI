@@ -1,7 +1,10 @@
 ﻿using BayraktarlarWebsite.BLL.Concrete;
 using BayraktarlarWebsite.BLL.Interfaces;
+using BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore;
 using BayraktarlarWebsite.DAL.Context;
+using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,9 +16,9 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddDependencies(this IServiceCollection services,string connectionString)
+        public static IServiceCollection AddDependencies(this IServiceCollection services)
         {
-            services.AddDbContext<DatabaseConnection>();
+            services.AddDbContext<DatabaseConnection>(opt=>opt.UseSqlServer("server=localhost;database=bayraktarlarDb;integrated security =true"));
             services.AddIdentity<User, Role>(opt =>
             {
                 //User settings
@@ -33,6 +36,9 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
            ).AddEntityFrameworkStores<DatabaseConnection>();
             
             services.AddScoped<ITabelaService, TabelaManager>();
+            services.AddScoped<ITabelaImagesService, TabelaImagesManager>();
+            services.AddScoped<ICustomerService, CustomerManager>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
