@@ -1,4 +1,5 @@
-﻿using BayraktarlarWebsite.Entities.Entities;
+﻿using BayraktarlarWebsite.Entities.Dtos;
+using BayraktarlarWebsite.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -6,13 +7,13 @@ namespace BayraktarlarWebsite.UI.Models
 {
     public class TabelaCreateViewModel
     {
-        public List<TabelaImages> TabelaImages { get; set; }
+        public TabelaImagesListDto TabelaImages { get; set; }
         //Müşteriler
-        public List<CustomerViewModel> CustomerViewModel { get; set; }
+        public CustomerListDto CustomerViewModel { get; set; }
         //Markalar
-        public List<Brand> Brands { get; set; }
+        public BrandListDto Brands { get; set; }
         //Malzemeler
-        public List<Material> Materials { get; set; }
+        public MaterialListDto Materials { get; set; }
         //Seçilen Görseller
         //Varsa notlar
         public string Notes { get; set; }

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.BLL.Interfaces
 {
-    public interface ITabelaService
+    public interface IMaterialService
     {
-        Task AddAsync(TabelaAddDto tabelaAddDto);
+        Task<MaterialListDto> GetAllAsync();
     }
 }

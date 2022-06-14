@@ -1,5 +1,6 @@
 ﻿using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.DAL.Context;
+using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
 using BayraktarlarWebsite.UI.Models;
@@ -16,30 +17,34 @@ namespace BayraktarlarWebsite.UI.Controllers
 {
     public class TabelaController : Controller
     {
+        private readonly ITabelaService _tabelaService;
+        private readonly IMaterialService _materialService;
         private readonly IBrandService _brandService;
         private readonly IToastNotification _toastNotification;
         private readonly IImageHelper _imageHelper;
         private readonly ICustomerService _customerService;
 
-        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService,IBrandService brandService)
+        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService)
         {
-           
+
             _toastNotification = toastNotification;
             _imageHelper = imageHelper;
             _customerService = customerService;
             _brandService = brandService;
+            _materialService = materialService;
+            _tabelaService = tabelaService;
         }
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
             //müşteri datası
             //müşteri adlarını ve idsini  çek ve customer 
 
-            var customers = _customerService.GetAllAsync();
+            var customers = await _customerService.GetAllAsync();
             //markalar
-            var brands = _brandService.GetAllAsync(); 
+            var brands = await _brandService.GetAllAsync(); 
             //malzemeler
-            var materials = _context.Materials.ToList();
+            var materials = await _materialService.GetAllAsync();
             //modelleri dolu olarak view a return eder
             return View(new TabelaAddViewModel
             {
@@ -59,7 +64,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             if (ModelState.IsValid)
             {
                 //Yeni bir tabela nesnesi oluştur
-                var table = new Tabela
+                var table = new TabelaAddDto
                 {
                     BrandId = model.TabelaCreateViewModel.BrandId,
                     CreatedDate = DateTime.Now,
@@ -86,8 +91,8 @@ namespace BayraktarlarWebsite.UI.Controllers
                         table.Images.Add(new TabelaImages { PictureUrl = fileName });
                     }
                     //fotoğraflar bittiğinde tabela nesnesini db ye ekle
-                    await _context.Tabelas.AddAsync(table);
-                    await _context.SaveChangesAsync();
+                    await _tabelaService.AddAsync(table);
+                   
                 }
 
                 _toastNotification.AddSuccessToastMessage("Tabela ekleme işlemi başarılı");
@@ -95,25 +100,27 @@ namespace BayraktarlarWebsite.UI.Controllers
             }
             else
             {
-                var customers = _context.Customers.Select(c => new CustomerViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-
-                }).ToList();
-
-                var brands = _context.Brands.ToList();
-                var materials = _context.Materials.ToList();
+                var customers = await _customerService.GetAllAsync();
+                //markalar
+                var brands = await _brandService.GetAllAsync();
+                //malzemeler
+                var materials = await _materialService.GetAllAsync();
+                //modelleri dolu olarak view a return eder
                 _toastNotification.AddErrorToastMessage("Bir hata meydana geldi", new ToastrOptions
                 {
-                    Title = "İşlem Başarılı"
+                    Title = "Hata"
                 });
-                return View(new TabelaCreateViewModel
+                return View(new TabelaAddViewModel
                 {
-                    CustomerViewModel = customers,
-                    Brands = brands,
-                    Materials = materials
+                    TabelaCreateViewModel = new TabelaCreateViewModel
+                    {
+                        CustomerViewModel = customers,
+                        Brands = brands,
+                        Materials = materials
+                    }
                 });
+                
+               
             }
         }
 

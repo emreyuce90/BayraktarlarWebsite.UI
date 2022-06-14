@@ -11,6 +11,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private readonly EfMaterialRepository _efMaterialRepository;
         private readonly DatabaseConnection _context;
         private readonly EfTabelaRepository _tabelaRepository;
         private readonly EfTabelaImagesRepository _tabelaImagesRepository;
@@ -21,11 +22,14 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
             _context = context;
             
         }
+
         public IBrandRepository Brands => _brandRepository ?? new EfBrandRepository(_context);
         public ITabelaRepository Tabelas => _tabelaRepository ?? new EfTabelaRepository(_context);
         public ITabelaImagesRepository TabelaImages => _tabelaImagesRepository ?? new EfTabelaImagesRepository(_context);
 
         public ICustomerRepository Customer => _customerRepository ?? new EfCustomerRepository(_context);
+
+        public IMaterialRepository Materials => _efMaterialRepository ?? new EfMaterialRepository(_context);
 
         public async ValueTask DisposeAsync()
         {

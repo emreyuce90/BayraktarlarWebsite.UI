@@ -2,7 +2,6 @@
 using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Dtos;
-using BayraktarlarWebsite.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +10,19 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.BLL.Concrete
 {
-    public class TabelaManager : ITabelaService
+    public class MaterialManager : IMaterialService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public TabelaManager(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public MaterialManager(IMapper mapper, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-
-        public async Task AddAsync(TabelaAddDto tabelaAddDto)
+        public async Task<MaterialListDto> GetAllAsync()
         {
-            await _unitOfWork.Tabelas.AddAsync(_mapper.Map<Tabela>(tabelaAddDto));
-            await _unitOfWork.SaveAsync();
+            var materials = await _unitOfWork.Materials.GetAllAsync();
+            return _mapper.Map<MaterialListDto>(materials);
         }
     }
 }
