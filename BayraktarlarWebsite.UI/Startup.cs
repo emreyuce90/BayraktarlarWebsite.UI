@@ -1,4 +1,5 @@
 using BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC;
+using BayraktarlarWebsite.BLL.Mappings;
 using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
@@ -20,12 +21,20 @@ namespace BayraktarlarWebsite.UI
     public class Startup
     {
        
-      
+      private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDependencies();
+
+            services.AddDependencies(_configuration.GetConnectionString("db1"));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
             services.AddScoped<IImageHelper, ImageHelper>();
+            services.AddAutoMapper(typeof(BrandMap),typeof(CustomerMap),typeof(TabelaImagesMap));
             services.AddSession();
             //cookie servisi
             services.ConfigureApplicationCookie(opt =>

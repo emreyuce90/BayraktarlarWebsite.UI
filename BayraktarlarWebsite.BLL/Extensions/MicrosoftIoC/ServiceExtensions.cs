@@ -16,9 +16,10 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddDependencies(this IServiceCollection services)
+        public static IServiceCollection AddDependencies(this IServiceCollection services,string connectionString)
         {
-            services.AddDbContext<DatabaseConnection>(opt=>opt.UseSqlServer("server=localhost;database=bayraktarlarDb;integrated security =true"));
+            //opt=>opt.UseSqlServer("server=localhost;database=bayraktarlarDb;integrated security =true"
+            services.AddDbContext<DatabaseConnection>(opt => opt.UseSqlServer(connectionString));
             services.AddIdentity<User, Role>(opt =>
             {
                 //User settings
