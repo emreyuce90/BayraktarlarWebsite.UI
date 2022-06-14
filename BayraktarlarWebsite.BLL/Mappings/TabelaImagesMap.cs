@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,11 @@ namespace BayraktarlarWebsite.BLL.Mappings
     {
         public TabelaImagesMap()
         {
-            CreateMap<TabelaImagesDto, TabelaImages>();
-            CreateMap<TabelaImages, TabelaImagesDto>();
+            CreateMap<TabelaImagesListDto, TabelaImages>();
+            CreateMap<TabelaImages, TabelaImagesListDto>();
+            CreateMap<TabelaImages, TabelaImageAddDto>();
+            CreateMap<TabelaImageAddDto, TabelaImages>();
+
         }
     }
 }

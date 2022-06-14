@@ -4,6 +4,7 @@ using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
 using BayraktarlarWebsite.UI.Helpers.Concrete;
+using BayraktarlarWebsite.UI.Mappings.AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ namespace BayraktarlarWebsite.UI
             services.AddDependencies(_configuration.GetConnectionString("db1"));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
             services.AddScoped<IImageHelper, ImageHelper>();
-            services.AddAutoMapper(typeof(BrandMap),typeof(CustomerMap),typeof(TabelaImagesMap));
+            services.AddAutoMapper(typeof(BrandMap),typeof(CustomerMap),typeof(TabelaImagesMap),typeof(TabelaViewModelMap),typeof(MaterialMap));
             services.AddSession();
             //cookie servisi
             services.ConfigureApplicationCookie(opt =>

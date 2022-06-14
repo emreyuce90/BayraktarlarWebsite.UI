@@ -1,4 +1,5 @@
-﻿using BayraktarlarWebsite.BLL.Interfaces;
+﻿using AutoMapper;
+using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
@@ -23,8 +24,8 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly IToastNotification _toastNotification;
         private readonly IImageHelper _imageHelper;
         private readonly ICustomerService _customerService;
-
-        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService)
+        private readonly IMapper _mapper;
+        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper)
         {
 
             _toastNotification = toastNotification;
@@ -33,6 +34,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             _brandService = brandService;
             _materialService = materialService;
             _tabelaService = tabelaService;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -125,16 +127,14 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //databaseden tüm tabelaları çekelim
-            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Include(t => t.User).Where(t => t.IsDeleted == false).ToList();
-
-            //Liste olarak TabelaViewModel nesnesi  oluşturalım
+            var tabelalar = await _tabelaService.GetAllAsync();
+            
             List<TabelaViewModel> model = new List<TabelaViewModel>();
 
             //databasedeki verileri gezelim ve boş olan modelimize ekleyelim
-            foreach (var talep in tabelalar)
+            foreach (var talep in tabelalar.Tabela)
             {
                 var t = new TabelaViewModel
                 {
@@ -163,29 +163,9 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int tabelaId)
         {
-            //parametre ile gelen idye ait tabelayı bul
-            var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).Include(t => t.Images).FirstOrDefaultAsync(t => t.Id == tabelaId);
-            var model = new TabelaUpdateViewModel
-            {
-                Id = tabelaId,
-                Brands = _context.Brands.ToList(),
-                BrandId = tabela.BrandId,
-                Materials = _context.Materials.ToList(),
-                MaterialId = tabela.MaterialId,
-                Notes = tabela.Notes,
-                CustomerId = tabela.Customer.Id,
-                StatusId = tabela.StatusId,
-                CreatedDate = tabela.CreatedDate,
-                CustomerName = tabela.Customer.Name,
-                Pictures = new List<TabelaImages> { }
-
-            };
-
-            foreach (var image in tabela.Images)
-            {
-                model.Pictures.Add(new TabelaImages { PictureUrl = image.PictureUrl, Id = image.Id });
-            }
-            return View(model);
+            //tabeladddto
+            var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
+            return View(_mapper.Map<TabelaViewModel>(tabela));
         }
 
         [HttpPost]

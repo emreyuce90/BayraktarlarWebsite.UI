@@ -27,5 +27,17 @@ namespace BayraktarlarWebsite.BLL.Concrete
             await _unitOfWork.Tabelas.AddAsync(_mapper.Map<Tabela>(tabelaAddDto));
             await _unitOfWork.SaveAsync();
         }
+
+        public async Task<TabelaListDto> GetAllAsync()
+        {
+            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t=>t.IsDeleted==false,t=>t.Brand,t=>t.Customer,t=>t.Material,t=>t.Status,t=>t.Images);
+            return _mapper.Map<TabelaListDto>(tabelas);
+        }
+
+        public async Task<TabelaDto> GetTabelaByTabelaIdAsync(int tabelaId)
+        {
+            var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.IsDeleted == false && t.Id ==tabelaId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            return _mapper.Map<TabelaDto>(tabela);
+        }
     }
 }

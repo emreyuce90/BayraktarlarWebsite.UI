@@ -1,4 +1,5 @@
-﻿using BayraktarlarWebsite.Entities.Entities;
+﻿using BayraktarlarWebsite.Entities.Dtos;
+using BayraktarlarWebsite.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ namespace BayraktarlarWebsite.UI.Models
     {
         public int Id { get; set; }
         //liste olarak markalar
-        public List<Brand> Brands { get; set; }
+        public BrandListDto Brands { get; set; }
         //Markanın Idsi
         public int BrandId { get; set; }
         //Malzemenin Idsi
         public int MaterialId { get; set; }
-        public List<Material> Materials { get; set; }
+        public MaterialListDto Materials { get; set; }
         //Tabelanın görseli
         public string Notes { get; set; }
         public string CustomerName { get; set; }
@@ -22,7 +23,7 @@ namespace BayraktarlarWebsite.UI.Models
         public int StatusId { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public List<TabelaImages> Pictures { get; set; }
+        public TabelaImagesListDto Pictures { get; set; }
         public List<IFormFile> AddedPictures { get; set; }
     }
 }
