@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.BLL.Interfaces
 {
-    public interface ICustomerService
+    public interface IBrandService
     {
-        Task<int> CountAsync(int statusId);
-        Task<CustomerListDto> GetAllAsync();
+        Task<BrandListDto> GetAllAsync();
     }
 }

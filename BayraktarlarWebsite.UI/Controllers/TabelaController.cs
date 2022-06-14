@@ -1,4 +1,5 @@
-﻿using BayraktarlarWebsite.DAL.Context;
+﻿using BayraktarlarWebsite.BLL.Interfaces;
+using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
 using BayraktarlarWebsite.UI.Models;
@@ -15,29 +16,28 @@ namespace BayraktarlarWebsite.UI.Controllers
 {
     public class TabelaController : Controller
     {
-        private readonly DatabaseConnection _context;
+        private readonly IBrandService _brandService;
         private readonly IToastNotification _toastNotification;
         private readonly IImageHelper _imageHelper;
+        private readonly ICustomerService _customerService;
 
-        public TabelaController(DatabaseConnection context, IToastNotification toastNotification, IImageHelper imageHelper)
+        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService,IBrandService brandService)
         {
-            _context = context;
+           
             _toastNotification = toastNotification;
             _imageHelper = imageHelper;
+            _customerService = customerService;
+            _brandService = brandService;
         }
         [HttpGet]
         public IActionResult Add()
         {
             //müşteri datası
             //müşteri adlarını ve idsini  çek ve customer 
-            var customers = _context.Customers.Select(c => new CustomerViewModel
-            {
-                Id = c.Id,
-                Name = c.Name,
 
-            }).ToList();
+            var customers = _customerService.GetAllAsync();
             //markalar
-            var brands = _context.Brands.ToList();
+            var brands = _brandService.GetAllAsync(); 
             //malzemeler
             var materials = _context.Materials.ToList();
             //modelleri dolu olarak view a return eder

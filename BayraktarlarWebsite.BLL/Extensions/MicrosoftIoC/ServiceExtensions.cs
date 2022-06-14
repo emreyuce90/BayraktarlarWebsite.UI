@@ -38,6 +38,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddScoped<ITabelaService, TabelaManager>();
             services.AddScoped<ITabelaImagesService, TabelaImagesManager>();
             services.AddScoped<ICustomerService, CustomerManager>();
+            services.AddScoped<IBrandService, BrandManager>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

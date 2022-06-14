@@ -15,12 +15,13 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         private readonly EfTabelaRepository _tabelaRepository;
         private readonly EfTabelaImagesRepository _tabelaImagesRepository;
         private readonly EfCustomerRepository _customerRepository;
+        private readonly EfBrandRepository _brandRepository;
         public UnitOfWork(DatabaseConnection context)
         {
             _context = context;
             
         }
-      
+        public IBrandRepository Brands => _brandRepository ?? new EfBrandRepository(_context);
         public ITabelaRepository Tabelas => _tabelaRepository ?? new EfTabelaRepository(_context);
         public ITabelaImagesRepository TabelaImages => _tabelaImagesRepository ?? new EfTabelaImagesRepository(_context);
 
