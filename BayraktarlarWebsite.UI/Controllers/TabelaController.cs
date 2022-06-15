@@ -18,6 +18,8 @@ namespace BayraktarlarWebsite.UI.Controllers
 {
     public class TabelaController : Controller
     {
+        private readonly IStatusService _statusService;
+        private readonly ITabelaImagesService _tabelaImagesService;
         private readonly ITabelaService _tabelaService;
         private readonly IMaterialService _materialService;
         private readonly IBrandService _brandService;
@@ -25,7 +27,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly IImageHelper _imageHelper;
         private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
-        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper)
+        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper, ITabelaImagesService tabelaImagesService, IStatusService statusService)
         {
 
             _toastNotification = toastNotification;
@@ -35,19 +37,20 @@ namespace BayraktarlarWebsite.UI.Controllers
             _materialService = materialService;
             _tabelaService = tabelaService;
             _mapper = mapper;
+            _tabelaImagesService = tabelaImagesService;
+            _statusService = statusService;
         }
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            //müşteri datası
-            //müşteri adlarını ve idsini  çek ve customer 
 
             var customers = await _customerService.GetAllAsync();
-            //markalar
-            var brands = await _brandService.GetAllAsync(); 
-            //malzemeler
+
+            var brands = await _brandService.GetAllAsync();
+
             var materials = await _materialService.GetAllAsync();
-            //modelleri dolu olarak view a return eder
+
+
             return View(new TabelaAddViewModel
             {
                 TabelaCreateViewModel = new TabelaCreateViewModel
@@ -94,7 +97,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     }
                     //fotoğraflar bittiğinde tabela nesnesini db ye ekle
                     await _tabelaService.AddAsync(table);
-                   
+
                 }
 
                 _toastNotification.AddSuccessToastMessage("Tabela ekleme işlemi başarılı");
@@ -121,16 +124,17 @@ namespace BayraktarlarWebsite.UI.Controllers
                         Materials = materials
                     }
                 });
-                
-               
+
+
             }
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            //db deki tabelalar
             var tabelalar = await _tabelaService.GetAllAsync();
-            
+            //vm
             List<TabelaViewModel> model = new List<TabelaViewModel>();
 
             //databasedeki verileri gezelim ve boş olan modelimize ekleyelim
@@ -173,16 +177,16 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).Include(t => t.Images).FirstOrDefaultAsync(t => t.Id == model.Id);
+                var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(model.Id);
 
-                tabela.MaterialId = model.MaterialId;
-                tabela.BrandId = model.BrandId;
-                tabela.Notes = model.Notes;
-                tabela.ModifiedDate = DateTime.Now;
-                tabela.UserId = 1;
-                tabela.CustomerId = model.CustomerId;
-                tabela.StatusId = model.StatusId;
-                tabela.ModifiedDate = DateTime.Now;
+                tabela.Tabela.MaterialId = model.MaterialId;
+                tabela.Tabela.BrandId = model.BrandId;
+                tabela.Tabela.Notes = model.Notes;
+                tabela.Tabela.ModifiedDate = DateTime.Now;
+                tabela.Tabela.UserId = 1;
+                tabela.Tabela.CustomerId = model.CustomerId;
+                tabela.Tabela.StatusId = model.StatusId;
+                tabela.Tabela.ModifiedDate = DateTime.Now;
 
                 //eğer yeni fotoğraflar seçildiyse
                 if (model.AddedPictures != null)
@@ -194,7 +198,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     foreach (var item in model.AddedPictures)
                     {
                         //eğer tabelanın statüsü uygulandı ise o zaman upload edilen görselleri uygulama sonrası görseller olarak kaydedeceğiz
-                        if(tabela.StatusId == 5)
+                        if (tabela.Tabela.StatusId == 5)
                         {
                             fileName = await _imageHelper.UploadImageAsync("appliedImages", item);
                         }
@@ -203,14 +207,14 @@ namespace BayraktarlarWebsite.UI.Controllers
                             //tüm eklenen görselleri upload et
                             fileName = await _imageHelper.UploadImageAsync("tabelaImages", item);
                         }
-                       
+
                         //images değişkenine tüm görselleri ata
-                        tabela.Images.Add(new TabelaImages { PictureUrl = fileName });
+                        tabela.Tabela.Images.Add(new TabelaImages { PictureUrl = fileName });
                     };
 
                 }
-                _context.Tabelas.Update(tabela);
-                _context.SaveChanges();
+                await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(model));
+
                 _toastNotification.AddSuccessToastMessage("Tabela güncelleme işlemi başarılı", new ToastrOptions
                 {
                     Title = "Güncelleme Başarılı"
@@ -222,12 +226,11 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult HardDelete(int tabelaId)
+        public async Task<IActionResult> HardDelete(int tabelaId)
         {
             if (tabelaId != 0)
             {
-                _context.Tabelas.Remove(new Tabela { Id = tabelaId });
-                _context.SaveChanges();
+                await _tabelaService.HardDeleteAsync(tabelaId);
                 _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
                 {
                     Title = "İşlem Başarılı"
@@ -243,13 +246,12 @@ namespace BayraktarlarWebsite.UI.Controllers
         public async Task<IActionResult> Delete(int tabelaId)
         {
             //database deki veriyi çek
-            var tabela = await _context.Tabelas.FirstOrDefaultAsync(t => t.Id == tabelaId);
+            var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
             //eğer veritabanında böyle bir kayıt var ise 
             if (tabela != null)
             {
-                tabela.IsDeleted = true;
-                _context.Update(tabela);
-                await _context.SaveChangesAsync();
+                tabela.Tabela.IsDeleted = true;
+                await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(tabela));
                 _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
                 {
                     Title = "İşlem Başarılı"
@@ -267,41 +269,42 @@ namespace BayraktarlarWebsite.UI.Controllers
         public async Task<IActionResult> ReadNote(int tabelaId)
         {
             //db den tabelaya ait notu çek
-            var note = await _context.Tabelas.FirstOrDefaultAsync(a => a.Id == tabelaId);
+            var note = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
             var model = new NoteViewModel();
-            model.Note = note.Notes;
+            model.Note = note.Tabela.Notes;
             return PartialView("ReadTabelaNotesPartialView", model);
         }
 
         [HttpPost]
-        public IActionResult ImageDelete(int imgId)
+        public async Task<IActionResult> ImageDelete(int imgId)
         {
-
-            _context.TabelaImages.Remove(new TabelaImages { Id = imgId });
-            _context.SaveChanges();
-            return NoContent();
-
+            if (imgId != 0)
+            {
+                await _tabelaImagesService.RemoveAsync(imgId);
+            }
+           
+                return NoContent();
         }
 
         [HttpGet]
         public async Task<IActionResult> TabelaDetail(int tabelaId)
         {
-            var tabela = await _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Customer).Include(t => t.Images).Include(t => t.Status).FirstOrDefaultAsync(t => t.Id == tabelaId);
+            var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
             if (tabela != null)
             {
                 var listOfString = new List<string>();
-                foreach (var images in tabela.Images)
+                foreach (var images in tabela.Tabela.Images)
                 {
                     listOfString.Add(images.PictureUrl);
                 }
                 var vm = new TabelaDetailViewModel
                 {
-                    BrandName = tabela.Brand.Name,
-                    CreatedDate = tabela.CreatedDate,
-                    CustomerName = tabela.Customer.Name,
-                    MaterialName = tabela.Material.Name,
-                    Notes = tabela.Notes,
-                    StatusName = tabela.Status.Name,
+                    BrandName = tabela.Tabela.Brand.Name,
+                    CreatedDate = tabela.Tabela.CreatedDate,
+                    CustomerName = tabela.Tabela.Customer.Name,
+                    MaterialName = tabela.Tabela.Material.Name,
+                    Notes = tabela.Tabela.Notes,
+                    StatusName = tabela.Tabela.Status.Name,
                     TabelaImages = listOfString
                 };
 
@@ -316,52 +319,22 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> DeletedTabelas()
         {
-
-            //databaseden tüm tabelaları çekelim
-            var tabelalar = _context.Tabelas.Include(t => t.Brand).Include(t => t.Material).Include(t => t.Status).Include(t => t.Customer).Include(t => t.Images).Where(t => t.IsDeleted == true).ToList();
-
-            //Liste olarak TabelaViewModel nesnesi  oluşturalım
-            List<TabelaViewModel> model = new List<TabelaViewModel>();
-
-            //databasedeki verileri gezelim ve boş olan modelimize ekleyelim
-            foreach (var talep in tabelalar)
-            {
-                var t = new TabelaViewModel
-                {
-                    Id = talep.Id,
-                    BrandName = talep.Brand.Name,
-                    CreatedDate = talep.CreatedDate,
-                    CustomerName = talep.Customer.Name,
-                    MaterialName = talep.Material.Name,
-                    Notes = talep.Notes,
-
-                    StatusName = talep.Status.Name
-                };
-                var picture = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
-
-                if (picture != null)
-                {
-                    var res = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
-                    t.Thumbnail = res.PictureUrl;
-                }
-                model.Add(t);
-            }
-
-            return View(model);
+            var tabelalar = await _tabelaService.DeletedTabelasAsync();
+            return View(_mapper.Map<TabelaViewModel>(tabelalar));
         }
 
         [HttpGet]
         public async Task<PartialViewResult> ChangeStatus(int tabelaId)
         {
-            var updatedTabela = await _context.Tabelas.Include(t => t.Status).FirstOrDefaultAsync(t => t.Id == tabelaId);
+            var updatedTabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
             if (updatedTabela != null)
             {
                 var viewmodel = new ChangeStatusViewModel
                 {
-                    StatusId = updatedTabela.StatusId,
-                    StatusName = updatedTabela.Status.Name,
-                    Statuses = await _context.Statuses.ToListAsync(),
-                    TabelaId = updatedTabela.Id
+                    StatusId = updatedTabela.Tabela.StatusId,
+                    StatusName = updatedTabela.Tabela.Status.Name,
+                    Statuses = await _statusService.GetAllAsync(),
+                    TabelaId = updatedTabela.Tabela.Id
                 };
 
                 return PartialView("ChangeStatusPartialView", viewmodel);
@@ -374,18 +347,15 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var tabela = await _context.Tabelas.Include(t => t.Status).FirstOrDefaultAsync(t => t.Id == model.TabelaId);
+                var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(model.TabelaId);
                 if (tabela != null)
                 {
-                    tabela.StatusId = model.StatusId;
-                    _context.Update(tabela);
-                    await _context.SaveChangesAsync();
+                    tabela.Tabela.StatusId = model.StatusId;
+                    await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(tabela));
+                   
                     return NoContent();
                 }
-                else
-                {
-                    return NotFound();
-                }
+
             }
             return NotFound();
         }
@@ -393,12 +363,11 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> UndoDelete(int tabelaId)
         {
-            var tabela = await _context.Tabelas.FirstOrDefaultAsync(t => t.Id == tabelaId);
+            var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
             if (tabela != null)
             {
-                tabela.IsDeleted = false;
-                _context.Tabelas.Update(tabela);
-                await _context.SaveChangesAsync();
+                tabela.Tabela.IsDeleted = false;
+                await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(tabela));
                 return NoContent();
             }
             return NotFound();

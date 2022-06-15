@@ -25,5 +25,11 @@ namespace BayraktarlarWebsite.BLL.Concrete
         {
             await _unitOfWork.TabelaImages.AddAsync(_mapper.Map<TabelaImages>(tabelaImageAddDto));
         }
+
+        public async Task RemoveAsync(int imageId)
+        {
+            await _unitOfWork.TabelaImages.DeleteAsync(new TabelaImages { Id = imageId });
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

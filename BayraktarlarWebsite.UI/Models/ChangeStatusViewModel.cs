@@ -1,4 +1,5 @@
-﻿using BayraktarlarWebsite.Entities.Entities;
+﻿using BayraktarlarWebsite.Entities.Dtos;
+using BayraktarlarWebsite.Entities.Entities;
 using System.Collections.Generic;
 
 namespace BayraktarlarWebsite.UI.Models
@@ -9,6 +10,6 @@ namespace BayraktarlarWebsite.UI.Models
         public int StatusId { get; set; }
         public string StatusName { get; set; }
 
-        public List<Status> Statuses { get; set; }
+        public StatusListDto Statuses { get; set; }
     }
 }

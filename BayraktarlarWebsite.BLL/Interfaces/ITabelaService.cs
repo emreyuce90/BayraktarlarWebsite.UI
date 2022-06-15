@@ -9,8 +9,11 @@ namespace BayraktarlarWebsite.BLL.Interfaces
 {
     public interface ITabelaService
     {
+        Task<TabelaListDto> DeletedTabelasAsync();
+        Task UpdateAsync(TabelaUpdateDto tabelaUpdateDto);
         Task<TabelaDto> GetTabelaByTabelaIdAsync(int tabelaId);
         Task<TabelaListDto> GetAllAsync();
         Task AddAsync(TabelaAddDto tabelaAddDto);
+        Task HardDeleteAsync(int tabelaId);
     }
 }

@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.BLL.Interfaces
 {
-    public interface ITabelaImagesService
+    public interface IStatusService
     {
-        Task RemoveAsync(int imageId);
-        Task AddAsync(TabelaImageAddDto tabelaImageAddDto);
+        Task<StatusListDto> GetAllAsync();
     }
 }

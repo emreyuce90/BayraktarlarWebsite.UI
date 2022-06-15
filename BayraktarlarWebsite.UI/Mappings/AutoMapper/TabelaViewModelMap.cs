@@ -9,6 +9,10 @@ namespace BayraktarlarWebsite.UI.Mappings.AutoMapper
         public TabelaViewModelMap()
         {
             CreateMap<TabelaDto, TabelaUpdateViewModel>().ReverseMap();
+            CreateMap<TabelaUpdateDto, TabelaUpdateViewModel>().ReverseMap();
+            CreateMap<TabelaListDto, TabelaViewModel>().ReverseMap();
+           
+
         }
     }
 }

@@ -28,6 +28,12 @@ namespace BayraktarlarWebsite.BLL.Concrete
             await _unitOfWork.SaveAsync();
         }
 
+        public async Task<TabelaListDto> DeletedTabelasAsync()
+        {
+            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == true, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            return _mapper.Map<TabelaListDto>(tabelas);
+        }
+
         public async Task<TabelaListDto> GetAllAsync()
         {
             var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t=>t.IsDeleted==false,t=>t.Brand,t=>t.Customer,t=>t.Material,t=>t.Status,t=>t.Images);
@@ -38,6 +44,22 @@ namespace BayraktarlarWebsite.BLL.Concrete
         {
             var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.IsDeleted == false && t.Id ==tabelaId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
             return _mapper.Map<TabelaDto>(tabela);
+        }
+
+        public async Task HardDeleteAsync(int tabelaId)
+        {
+            var id = await _unitOfWork.Tabelas.AnyAsync(t=>t.Id ==tabelaId);
+            if(id)
+            {
+                await _unitOfWork.Tabelas.DeleteAsync(new Tabela { Id = tabelaId });
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        public async Task UpdateAsync(TabelaUpdateDto tabelaUpdateDto)
+        {
+            await _unitOfWork.Tabelas.UpdateAsync(_mapper.Map<Tabela>(tabelaUpdateDto));
+            await _unitOfWork.SaveAsync();
         }
     }
 }
