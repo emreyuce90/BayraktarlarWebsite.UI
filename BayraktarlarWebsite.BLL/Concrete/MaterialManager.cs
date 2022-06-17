@@ -22,7 +22,10 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task<MaterialListDto> GetAllAsync()
         {
             var materials = await _unitOfWork.Materials.GetAllAsync();
-            return _mapper.Map<MaterialListDto>(materials);
+            return new MaterialListDto
+            {
+                Materials = materials
+            };
         }
     }
 }

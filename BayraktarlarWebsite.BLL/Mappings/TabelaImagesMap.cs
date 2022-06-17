@@ -13,8 +13,7 @@ namespace BayraktarlarWebsite.BLL.Mappings
     {
         public TabelaImagesMap()
         {
-            CreateMap<TabelaImagesListDto, TabelaImages>();
-            CreateMap<TabelaImages, TabelaImagesListDto>();
+
             CreateMap<TabelaImages, TabelaImageAddDto>();
             CreateMap<TabelaImageAddDto, TabelaImages>();
 

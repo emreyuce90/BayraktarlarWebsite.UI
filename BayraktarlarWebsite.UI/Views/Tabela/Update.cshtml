@@ -1,4 +1,4 @@
-﻿@model TabelaUpdateViewModel
+﻿@model TabelaUpdateDto
 @{
     ViewBag.Title = "Tabela Güncelle";
     Layout = "_AdminLayout";
@@ -16,26 +16,24 @@
 </div>
 
 <form method="post" class="shadow p-3" asp-controller="Tabela" asp-action="Update" enctype="multipart/form-data">
-    <div id="baslik" class=" text-center mt-4">
+   @* <div id="baslik" class=" text-center mt-4">
         <strong><h1 class="lead display-5">@Model.CustomerName </strong> adlı müşterinize ait verileri görüntülemektesiniz</h1>
-    </div>
+    </div>*@
     <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="CustomerId" />
-    <input type="hidden" asp-for="StatusId" />
-    <input type="hidden" asp-for="Pictures" />
+    <input type="hidden" asp-for="Images" />
     <div id="brand" class="mt-1">
         <label>Tabela Yapılacak Marka:</label>
-        <select class="form-control select-brand" asp-for="BrandId" asp-items="@(new SelectList(Model.Brands,"Id","Name"))">
+        <select class="form-control select-brand" asp-for="BrandId" asp-items="@(new SelectList(Model.Brands.Brands,"Id","Name"))">
         </select>
     </div>
     <div id="material" class="mt-1">
         <label>Tabelanın Çeşidi:</label>
-        <select class="form-control select-material" asp-for="MaterialId" asp-items="@(new SelectList(Model.Materials,"Id","Name"))">
+        <select class="form-control select-material" asp-for="MaterialId" asp-items="@(new SelectList(Model.Materials.Materials,"Id","Name"))">
         </select>
     </div>
     <div class="mt-2">
 
-        @foreach (var item in Model.Pictures)
+        @foreach (var item in Model.Images)
         {
             <a id="imgDelete" data-imgId="@item.Id" class="btn btn-danger btn-sm text-white p-1"><i class=" fa fa-minus-circle" aria-hidden="true"></i><img style="max-width:140px;max-height:100px;" class="ml-2 img img-responsive img-thumbnail" src="~/img/tabelaImages/@item.PictureUrl" /></a>
 

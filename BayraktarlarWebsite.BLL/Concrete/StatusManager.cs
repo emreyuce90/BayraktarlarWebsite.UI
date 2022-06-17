@@ -22,7 +22,13 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<StatusListDto> GetAllAsync()
         {
-            return _mapper.Map<StatusListDto>(await _unitOfWork.StatusRepository.GetAllAsync());
+            var status = await _unitOfWork.Status.GetAllAsync();
+            return new StatusListDto
+            {
+                Statuses = status
+            };
         }
+
+
     }
 }

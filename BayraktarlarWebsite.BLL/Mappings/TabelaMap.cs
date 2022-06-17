@@ -13,9 +13,9 @@ namespace BayraktarlarWebsite.BLL.Mappings
     {
         public TabelaMap()
         {
-            CreateMap<TabelaListDto, Tabela>().ReverseMap();           
-            CreateMap<TabelaDto, Tabela>().ReverseMap();
-            CreateMap<Tabela, TabelaUpdateDto>().ReverseMap();
+            CreateMap<Tabela,TabelaAddDto>().ReverseMap();
+            CreateMap<TabelaDto,Tabela>().ReverseMap();
+            CreateMap<Tabela,TabelaUpdateDto>().ReverseMap();
         }
     }
 }

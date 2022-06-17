@@ -10,5 +10,10 @@ namespace BayraktarlarWebsite.Entities.Dtos
     public class TabelaImagesListDto
     {
         public IList<TabelaImages> TabelaImages { get; set; }
+
+        public static implicit operator TabelaImagesListDto(List<TabelaImages> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

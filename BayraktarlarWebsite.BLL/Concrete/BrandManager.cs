@@ -24,7 +24,10 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task<BrandListDto> GetAllAsync()
         {
             var brands =await _unitOfWork.Brands.GetAllAsync();
-            return _mapper.Map<BrandListDto>(brands);
+            return new BrandListDto
+            {
+                Brands = brands
+            };
         }
     }
 }

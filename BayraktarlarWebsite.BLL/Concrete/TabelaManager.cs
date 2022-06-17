@@ -31,25 +31,41 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task<TabelaListDto> DeletedTabelasAsync()
         {
             var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == true, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
-            return _mapper.Map<TabelaListDto>(tabelas);
+            return new TabelaListDto
+            {
+                Tabela = tabelas
+            };
         }
 
         public async Task<TabelaListDto> GetAllAsync()
         {
-            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t=>t.IsDeleted==false,t=>t.Brand,t=>t.Customer,t=>t.Material,t=>t.Status,t=>t.Images);
-            return _mapper.Map<TabelaListDto>(tabelas);
+            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == false, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            return new TabelaListDto
+            {
+                Tabela = tabelas
+            };
+        }
+
+        public async Task<bool> GetStatusCodeGivenTabelaAsync(int tabelaId)
+        {
+            var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.Id == tabelaId);
+            if(tabela.StatusId == 5)
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<TabelaDto> GetTabelaByTabelaIdAsync(int tabelaId)
         {
-            var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.IsDeleted == false && t.Id ==tabelaId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
-            return _mapper.Map<TabelaDto>(tabela);
+            var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.IsDeleted == false && t.Id == tabelaId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            return new TabelaDto { Tabela = tabela};
         }
 
         public async Task HardDeleteAsync(int tabelaId)
         {
-            var id = await _unitOfWork.Tabelas.AnyAsync(t=>t.Id ==tabelaId);
-            if(id)
+            var id = await _unitOfWork.Tabelas.AnyAsync(t => t.Id == tabelaId);
+            if (id)
             {
                 await _unitOfWork.Tabelas.DeleteAsync(new Tabela { Id = tabelaId });
                 await _unitOfWork.SaveAsync();
@@ -58,7 +74,10 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task UpdateAsync(TabelaUpdateDto tabelaUpdateDto)
         {
-            await _unitOfWork.Tabelas.UpdateAsync(_mapper.Map<Tabela>(tabelaUpdateDto));
+            var oldTabela = await _unitOfWork.Tabelas.GetAsync(t => t.Id == tabelaUpdateDto.Id, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            var newTabela = _mapper.Map<TabelaUpdateDto, Tabela>(tabelaUpdateDto, oldTabela);
+            newTabela.ModifiedDate = DateTime.Now;
+            await _unitOfWork.Tabelas.UpdateAsync(newTabela);
             await _unitOfWork.SaveAsync();
         }
     }

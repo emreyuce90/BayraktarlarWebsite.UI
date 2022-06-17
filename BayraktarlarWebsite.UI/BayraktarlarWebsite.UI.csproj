@@ -67,6 +67,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BayraktarlarWebsite.BLL\BayraktarlarWebsite.BLL.csproj" />
+    <ProjectReference Include="..\BayraktarlarWebsite.Entities\BayraktarlarWebsite.Entities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

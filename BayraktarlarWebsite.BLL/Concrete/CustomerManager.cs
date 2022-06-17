@@ -32,7 +32,10 @@ namespace BayraktarlarWebsite.BLL.Concrete
             //db den gelen müşteriler
             var customers =await _unitOfWork.Customer.GetAllAsync();
             //db den gelen Customer listesini map ile dto ya çevirip return et
-            return _mapper.Map<CustomerListDto>(customers);
+            return new CustomerListDto
+            {
+                Customers = customers
+            };
         }
     }
 }

@@ -43,11 +43,11 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-
+            //customerlistdto
             var customers = await _customerService.GetAllAsync();
-
+            //brandlistdto
             var brands = await _brandService.GetAllAsync();
-
+            //materiallistdto
             var materials = await _materialService.GetAllAsync();
 
 
@@ -148,7 +148,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     CustomerName = talep.Customer.Name,
                     MaterialName = talep.Material.Name,
                     Notes = talep.Notes,
-                    Username = talep.User.UserName,
+                    Username = "1",
                     StatusName = talep.Status.Name
                 };
                 var picture = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
@@ -167,38 +167,40 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int tabelaId)
         {
-            //tabeladddto
+            //tabela dto
             var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
-            return View(_mapper.Map<TabelaViewModel>(tabela));
+            var tbl = new TabelaUpdateDto
+            {
+                BrandId = tabela.Tabela.BrandId,
+                Brands = await _brandService.GetAllAsync(),
+                Id = tabela.Tabela.Id,
+                MaterialId = tabela.Tabela.MaterialId,
+                Materials = await _materialService.GetAllAsync(),
+                Notes = tabela.Tabela.Notes,
+                Images = (List<TabelaImages>)tabela.Tabela.Images
+
+            };
+            return View(tbl);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(TabelaUpdateViewModel model)
+        public async Task<IActionResult> Update(TabelaUpdateDto model)
         {
             if (ModelState.IsValid)
             {
-                var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(model.Id);
-
-                tabela.Tabela.MaterialId = model.MaterialId;
-                tabela.Tabela.BrandId = model.BrandId;
-                tabela.Tabela.Notes = model.Notes;
-                tabela.Tabela.ModifiedDate = DateTime.Now;
-                tabela.Tabela.UserId = 1;
-                tabela.Tabela.CustomerId = model.CustomerId;
-                tabela.Tabela.StatusId = model.StatusId;
-                tabela.Tabela.ModifiedDate = DateTime.Now;
-
                 //eğer yeni fotoğraflar seçildiyse
                 if (model.AddedPictures != null)
                 {
-
+                    //TabelaImages listesi oluştur
+                    var tablImages = new List<TabelaImages> { };
                     string fileName;
                     //yeni bir tabela images oluştur 
                     //var images = new List<TabelaImages> { };
                     foreach (var item in model.AddedPictures)
                     {
                         //eğer tabelanın statüsü uygulandı ise o zaman upload edilen görselleri uygulama sonrası görseller olarak kaydedeceğiz
-                        if (tabela.Tabela.StatusId == 5)
+                        var applied = await _tabelaService.GetStatusCodeGivenTabelaAsync(model.Id);
+                        if (applied)
                         {
                             fileName = await _imageHelper.UploadImageAsync("appliedImages", item);
                         }
@@ -207,13 +209,15 @@ namespace BayraktarlarWebsite.UI.Controllers
                             //tüm eklenen görselleri upload et
                             fileName = await _imageHelper.UploadImageAsync("tabelaImages", item);
                         }
-
-                        //images değişkenine tüm görselleri ata
-                        tabela.Tabela.Images.Add(new TabelaImages { PictureUrl = fileName });
+                        //upload edilen görsellerin hepsini Pictures nesnesine ekle
+                        var tbl = new TabelaImages { PictureUrl = fileName };
+                        tablImages.Add(tbl);
+                       
                     };
+                    model.Images = tablImages;
 
                 }
-                await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(model));
+                await _tabelaService.UpdateAsync(model);
 
                 _toastNotification.AddSuccessToastMessage("Tabela güncelleme işlemi başarılı", new ToastrOptions
                 {
@@ -282,8 +286,8 @@ namespace BayraktarlarWebsite.UI.Controllers
             {
                 await _tabelaImagesService.RemoveAsync(imgId);
             }
-           
-                return NoContent();
+
+            return NoContent();
         }
 
         [HttpGet]
@@ -352,7 +356,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 {
                     tabela.Tabela.StatusId = model.StatusId;
                     await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(tabela));
-                   
+
                     return NoContent();
                 }
 

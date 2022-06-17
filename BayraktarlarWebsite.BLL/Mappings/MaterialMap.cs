@@ -13,8 +13,7 @@ namespace BayraktarlarWebsite.BLL.Mappings
     {
         public MaterialMap()
         {
-            CreateMap<Material, MaterialListDto>();
-            CreateMap<MaterialListDto, Material>();
+         
         }
     }
 }

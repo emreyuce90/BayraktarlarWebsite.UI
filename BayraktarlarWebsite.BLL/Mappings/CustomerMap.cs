@@ -13,8 +13,7 @@ namespace BayraktarlarWebsite.BLL.Mappings
     {
         public CustomerMap()
         {
-            CreateMap<Customer, CustomerListDto>();
-            CreateMap<CustomerListDto, Customer>();
+            
         }
     }
 }

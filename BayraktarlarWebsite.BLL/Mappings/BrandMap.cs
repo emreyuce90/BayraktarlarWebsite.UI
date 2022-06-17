@@ -13,8 +13,7 @@ namespace BayraktarlarWebsite.BLL.Mappings
     {
         public BrandMap()
         {
-            CreateMap<Brand, BrandListDto>();
-            CreateMap<BrandListDto, Brand>();
+        
         }
     }
 }

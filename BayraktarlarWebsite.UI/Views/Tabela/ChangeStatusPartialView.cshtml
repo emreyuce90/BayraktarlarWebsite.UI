@@ -14,7 +14,7 @@
                     <input type="hidden" asp-for="TabelaId"/>
                 <div class="form-group">
                     <label>Seçilen durum :</label>
-                    <select class="form-control" asp-items="@(new SelectList(Model.Statuses,"Id","Name"))" asp-for="StatusId"></select>
+                    <select class="form-control" asp-items="@(new SelectList(Model.Statuses.Statuses,"Id","Name"))" asp-for="StatusId"></select>
                 </div>
                 </form>
             </div>

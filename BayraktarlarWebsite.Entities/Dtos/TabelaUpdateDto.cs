@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BayraktarlarWebsite.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,8 @@ namespace BayraktarlarWebsite.Entities.Dtos
         public MaterialListDto Materials { get; set; }
         //Tabelanın görseli
         public string Notes { get; set; }
-        public string CustomerName { get; set; }
-        public int CustomerId { get; set; }
-        public int StatusId { get; set; }
-        public DateTime CreatedDate { get; set; }
 
-        public TabelaImagesListDto Pictures { get; set; }
+        public List<TabelaImages> Images { get; set; }
         public List<IFormFile> AddedPictures { get; set; }
 
     }

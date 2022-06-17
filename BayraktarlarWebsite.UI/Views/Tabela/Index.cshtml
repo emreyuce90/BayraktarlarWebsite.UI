@@ -58,13 +58,13 @@
                 <td>
                     @if (t.StatusName.ToString() == "Uygulandı")
                     {
-                       <div class="text-success"><i class="fa fa-check" aria-hidden="true"></i> @t.StatusName</div>
+                       <span class="text-success"><i class="fa fa-check" aria-hidden="true"></i> @t.StatusName</span>
                     }
                     else if(t.StatusName.ToString() == "Reddedildi")
                     {
 
-                        <span class="text-danger">@t.StatusName</span>
-                        <a id="btnChange" data-tabelaId="@t.Id" class="btn btn-info btn-sm text-white"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                        <span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>@t.StatusName</span>
+                       
                         
                     }else{
                           <span class="text-info">@t.StatusName</span>

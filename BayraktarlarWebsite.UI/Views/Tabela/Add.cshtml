@@ -19,17 +19,17 @@
     </div>
     <div id="customer">
         <label>Tabela Yapılacak Müşteri:</label>
-        <select class="form-control" asp-for="TabelaCreateViewModel.CustomerId" id="select-customer" asp-items="@(new SelectList(Model.TabelaCreateViewModel.CustomerViewModel,"Id","Name"))">
+        <select class="form-control" asp-for="TabelaCreateViewModel.CustomerId" id="select-customer" asp-items="@(new SelectList(Model.TabelaCreateViewModel.CustomerViewModel.Customers,"Id","Name"))">
         </select>
     </div>
     <div id="brand" class="mt-1">
         <label>Tabela Yapılacak Marka:</label>
-        <select class="form-control select-brand" asp-for="TabelaCreateViewModel.BrandId" asp-items="@(new SelectList(Model.TabelaCreateViewModel.Brands,"Id","Name"))">
+        <select class="form-control select-brand" asp-for="TabelaCreateViewModel.BrandId" asp-items="@(new SelectList(Model.TabelaCreateViewModel.Brands.Brands,"Id","Name"))">
         </select>
     </div>
     <div id="material" class="mt-1">
         <label>Tabelanın Çeşidi:</label>
-        <select class="form-control select-material" asp-for="TabelaCreateViewModel.MaterialId" asp-items="@(new SelectList(Model.TabelaCreateViewModel.Materials,"Id","Name"))">
+        <select class="form-control select-material" asp-for="TabelaCreateViewModel.MaterialId" asp-items="@(new SelectList(Model.TabelaCreateViewModel.Materials.Materials,"Id","Name"))">
         </select>
     </div>
     <div id="images" class="mt-1">

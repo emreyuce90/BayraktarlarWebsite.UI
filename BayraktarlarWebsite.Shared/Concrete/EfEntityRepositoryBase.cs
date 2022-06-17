@@ -108,7 +108,7 @@ namespace BayraktarlarWebsite.Shared.Concrete
         public async Task UpdateAsync(Tentity t)
         {
             await Task.Run(() => { _context.Set<Tentity>().Update(t); });
-            
+
         }
     }
 }
