@@ -1,10 +1,12 @@
-﻿using BayraktarlarWebsite.Entities.Dtos;
-using BayraktarlarWebsite.Entities.Entities;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BayraktarlarWebsite.UI.Models
+namespace BayraktarlarWebsite.Entities.Dtos
 {
-    public class ChangeStatusViewModel
+    public class ChangeStatusDto
     {
         public int TabelaId { get; set; }
         public int StatusId { get; set; }

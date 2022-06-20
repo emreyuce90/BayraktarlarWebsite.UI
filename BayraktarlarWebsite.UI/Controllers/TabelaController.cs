@@ -212,7 +212,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                         //upload edilen görsellerin hepsini Pictures nesnesine ekle
                         var tbl = new TabelaImages { PictureUrl = fileName };
                         tablImages.Add(tbl);
-                       
+
                     };
                     model.Images = tablImages;
 
@@ -249,13 +249,10 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int tabelaId)
         {
-            //database deki veriyi çek
-            var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
-            //eğer veritabanında böyle bir kayıt var ise 
-            if (tabela != null)
+
+            if (tabelaId != 0)
             {
-                tabela.Tabela.IsDeleted = true;
-                await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(tabela));
+                await _tabelaService.SoftDeleteAsync(tabelaId);
                 _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
                 {
                     Title = "İşlem Başarılı"
@@ -323,8 +320,32 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> DeletedTabelas()
         {
+            //tabelaListDto
             var tabelalar = await _tabelaService.DeletedTabelasAsync();
-            return View(_mapper.Map<TabelaViewModel>(tabelalar));
+            var model = new List<TabelaViewModel>();
+            foreach (var tbl in tabelalar.Tabela)
+            {
+                var shortModel = new TabelaViewModel
+                {
+                    Id = tbl.Id,
+                    BrandName = tbl.Brand.Name,
+                    CreatedDate = tbl.CreatedDate,
+                    CustomerName = tbl.Customer.Name,
+                    MaterialName = tbl.Material.Name,
+                    Notes = tbl.Notes,
+                    StatusName = tbl.Status.Name,
+                    Username = tbl.User.UserName
+                };
+                var picture = tbl.Images.FirstOrDefault(t => t.TabelaId == tbl.Id);
+
+                if (picture != null)
+                {
+                    var res = tbl.Images.FirstOrDefault(t => t.TabelaId == tbl.Id);
+                    shortModel.Thumbnail = res.PictureUrl;
+                }
+                model.Add(shortModel);
+            }
+            return View(model);
         }
 
         [HttpGet]
@@ -333,7 +354,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             var updatedTabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
             if (updatedTabela != null)
             {
-                var viewmodel = new ChangeStatusViewModel
+                var viewmodel = new ChangeStatusDto
                 {
                     StatusId = updatedTabela.Tabela.StatusId,
                     StatusName = updatedTabela.Tabela.Status.Name,
@@ -347,31 +368,33 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeStatus(ChangeStatusViewModel model)
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto model)
         {
             if (ModelState.IsValid)
             {
-                var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(model.TabelaId);
-                if (tabela != null)
+                await _tabelaService.ChangeStatusAsync(model);
+                _toastNotification.AddSuccessToastMessage("Durum güncelleme başarılı", new ToastrOptions
                 {
-                    tabela.Tabela.StatusId = model.StatusId;
-                    await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(tabela));
-
-                    return NoContent();
-                }
-
+                    Title = "İşlem Başarılı"
+                });
+                return NoContent();
             }
+            _toastNotification.AddErrorToastMessage("Durum güncelleme işlemi başarısız oldu", new ToastrOptions
+            {
+                Title = "İşlem Başarısız"
+            });
             return NotFound();
+
         }
 
         [HttpGet]
         public async Task<IActionResult> UndoDelete(int tabelaId)
         {
-            var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
-            if (tabela != null)
+
+            if (tabelaId != 0)
             {
-                tabela.Tabela.IsDeleted = false;
-                await _tabelaService.UpdateAsync(_mapper.Map<TabelaUpdateDto>(tabela));
+
+                await _tabelaService.UndoDeleteAsync(tabelaId);
                 return NoContent();
             }
             return NotFound();

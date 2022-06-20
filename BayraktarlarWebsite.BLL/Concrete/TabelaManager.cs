@@ -28,9 +28,21 @@ namespace BayraktarlarWebsite.BLL.Concrete
             await _unitOfWork.SaveAsync();
         }
 
+        public async Task ChangeStatusAsync(ChangeStatusDto model)
+        {
+            var tabela =await _unitOfWork.Tabelas.GetAsync(t=>t.Id == model.TabelaId);
+            if(tabela !=null)
+            {
+                tabela.StatusId = model.StatusId;
+                await _unitOfWork.Tabelas.UpdateAsync(tabela);
+                await _unitOfWork.SaveAsync();
+            }
+            
+        }
+
         public async Task<TabelaListDto> DeletedTabelasAsync()
         {
-            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == true, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == true, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images,t=>t.User);
             return new TabelaListDto
             {
                 Tabela = tabelas
@@ -58,7 +70,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<TabelaDto> GetTabelaByTabelaIdAsync(int tabelaId)
         {
-            var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.IsDeleted == false && t.Id == tabelaId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            var tabela = await _unitOfWork.Tabelas.GetAsync(t=>t.Id == tabelaId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
             return new TabelaDto { Tabela = tabela};
         }
 
@@ -70,6 +82,29 @@ namespace BayraktarlarWebsite.BLL.Concrete
                 await _unitOfWork.Tabelas.DeleteAsync(new Tabela { Id = tabelaId });
                 await _unitOfWork.SaveAsync();
             }
+        }
+
+        public async Task SoftDeleteAsync(int tabelaId)
+        {
+            //gelen idye ait olan tabela
+            var id = await _unitOfWork.Tabelas.GetAsync(t => t.Id == tabelaId);
+            id.IsDeleted = true;
+            await _unitOfWork.Tabelas.UpdateAsync(id);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task UndoDeleteAsync(int tabelaId)
+        {
+            var undoDeleteTabela = await _unitOfWork.Tabelas.GetAsync(t => t.Id == tabelaId);
+            if(undoDeleteTabela != null)
+            {
+                undoDeleteTabela.IsDeleted = false;
+                await _unitOfWork.Tabelas.UpdateAsync(undoDeleteTabela);
+                await _unitOfWork.SaveAsync();
+            }
+
+            
+
         }
 
         public async Task UpdateAsync(TabelaUpdateDto tabelaUpdateDto)
