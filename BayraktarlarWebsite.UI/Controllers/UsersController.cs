@@ -9,10 +9,11 @@ namespace BayraktarlarWebsite.UI.Controllers
     public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;
-
-        public UsersController(UserManager<User> userManager)
+        private readonly SignInManager<User> _signInManager;
+        public UsersController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
         [HttpGet]
         public IActionResult Add()
@@ -57,9 +58,38 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Success()
+        public IActionResult Login()
         {
-            return View();
+            return View(new UserLoginViewModel());
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.Code);
+                if(user != null)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                }
+                ModelState.AddModelError("", "Kullanıcı adı veya şifreniz yanlıştır");
+
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SignoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
+        }
+
     }
 }
