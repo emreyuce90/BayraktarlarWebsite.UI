@@ -14,7 +14,7 @@
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand" href="index.html">Tabela Takip Yazılımı</a>
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">Tabela Takip Yazılımı</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -29,9 +29,9 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    
-                        <a asp-action="Signout" asp-controller="Users" class="dropdown-item">Çıkış Yap</a>
-                  
+
+                    <a asp-action="Signout" asp-controller="Users" class="dropdown-item">Çıkış Yap</a>
+
 
                 </div>
             </li>
@@ -90,7 +90,19 @@
 
                             </nav>
                         </div>
+                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayoutas" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fa fa-list-alt" aria-hidden="true"></i></div>
+                            Rol Yönetimi
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayoutas" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-action="Index" asp-controller="Roles">Roller</a>
+                                <a class="nav-link">Rol Atama</a>
 
+
+                            </nav>
+                        </div>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
