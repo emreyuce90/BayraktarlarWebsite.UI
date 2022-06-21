@@ -20,10 +20,10 @@ namespace BayraktarlarWebsite.BLL.Concrete
             _mapper = mapper;
         }
 
-        public async Task<int> CountAsync(int statusId)
+        public async Task<int> CountAsync(int statusId,int userId)
         {
             //sana gelen status id ye ait kayıtları say
-            return await _unitOfWork.Tabelas.CountAsync(t => t.StatusId == statusId);
+            return await _unitOfWork.Tabelas.CountAsync(t => t.StatusId == statusId && t.UserId == userId);
 
         }
 

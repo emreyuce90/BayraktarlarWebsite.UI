@@ -40,18 +40,18 @@ namespace BayraktarlarWebsite.BLL.Concrete
             
         }
 
-        public async Task<TabelaListDto> DeletedTabelasAsync()
+        public async Task<TabelaListDto> DeletedTabelasAsync(int userId)
         {
-            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == true, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images,t=>t.User);
+            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == true && t.UserId == userId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images,t=>t.User);
             return new TabelaListDto
             {
                 Tabela = tabelas
             };
         }
 
-        public async Task<TabelaListDto> GetAllAsync()
+        public async Task<TabelaListDto> GetAllAsync(int userId)
         {
-            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == false, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
+            var tabelas = await _unitOfWork.Tabelas.GetAllAsync(t => t.IsDeleted == false && t.UserId== userId, t => t.Brand, t => t.Customer, t => t.Material, t => t.Status, t => t.Images);
             return new TabelaListDto
             {
                 Tabela = tabelas

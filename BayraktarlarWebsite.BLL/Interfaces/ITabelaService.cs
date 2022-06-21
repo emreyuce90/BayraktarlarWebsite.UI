@@ -11,10 +11,10 @@ namespace BayraktarlarWebsite.BLL.Interfaces
     {
         Task SoftDeleteAsync(int tabelaId);
         Task<bool> GetStatusCodeGivenTabelaAsync(int tabelaId);
-        Task<TabelaListDto> DeletedTabelasAsync();
+        Task<TabelaListDto> DeletedTabelasAsync(int userId);
         Task UpdateAsync(TabelaUpdateDto tabelaUpdateDto);
         Task<TabelaDto> GetTabelaByTabelaIdAsync(int tabelaId);
-        Task<TabelaListDto> GetAllAsync();
+        Task<TabelaListDto> GetAllAsync(int userId);
         Task AddAsync(TabelaAddDto tabelaAddDto);
         Task HardDeleteAsync(int tabelaId);
         Task UndoDeleteAsync(int tabelaId);

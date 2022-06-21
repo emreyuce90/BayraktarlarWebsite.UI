@@ -6,6 +6,7 @@ using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
 using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Identity;
 namespace BayraktarlarWebsite.UI.Controllers
 {
-    [Authorize]
+    
     public class TabelaController : Controller
     {
+        private readonly UserManager<User> _userManager;
         private readonly IStatusService _statusService;
         private readonly ITabelaImagesService _tabelaImagesService;
         private readonly ITabelaService _tabelaService;
@@ -29,7 +31,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly IImageHelper _imageHelper;
         private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
-        public TabelaController(IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper, ITabelaImagesService tabelaImagesService, IStatusService statusService)
+        public TabelaController(UserManager<User> userManager,IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper, ITabelaImagesService tabelaImagesService, IStatusService statusService)
         {
 
             _toastNotification = toastNotification;
@@ -41,6 +43,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             _mapper = mapper;
             _tabelaImagesService = tabelaImagesService;
             _statusService = statusService;
+            _userManager = userManager;
         }
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -70,6 +73,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             //Eğer seçilen bilgiler doğru ise
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 //Yeni bir tabela nesnesi oluştur
                 var table = new TabelaAddDto
                 {
@@ -79,7 +83,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     MaterialId = model.TabelaCreateViewModel.MaterialId,
                     Notes = model.TabelaCreateViewModel.Notes,
                     StatusId = 1,
-                    UserId = 1,
+                    UserId = user.Id,
                     //Tabelanın görsellerini boş nesne olarak oluştur
                     Images = new List<TabelaImages> { }
 
@@ -134,8 +138,9 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             //db deki tabelalar
-            var tabelalar = await _tabelaService.GetAllAsync();
+            var tabelalar = await _tabelaService.GetAllAsync(user.Id);
             //vm
             List<TabelaViewModel> model = new List<TabelaViewModel>();
 
@@ -150,7 +155,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     CustomerName = talep.Customer.Name,
                     MaterialName = talep.Material.Name,
                     Notes = talep.Notes,
-                    Username = "1",
+                    Username = talep.User.UserName,
                     StatusName = talep.Status.Name
                 };
                 var picture = talep.Images.FirstOrDefault(t => t.TabelaId == talep.Id);
@@ -322,8 +327,9 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> DeletedTabelas()
         {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             //tabelaListDto
-            var tabelalar = await _tabelaService.DeletedTabelasAsync();
+            var tabelalar = await _tabelaService.DeletedTabelasAsync(user.Id);
             var model = new List<TabelaViewModel>();
             foreach (var tbl in tabelalar.Tabela)
             {
