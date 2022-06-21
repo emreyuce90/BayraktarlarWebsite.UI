@@ -1,0 +1,45 @@
+﻿@model List<UserWithRolesViewModel>
+@{
+    Layout = "_AdminLayout";
+}
+
+<table class="table table-hover table-responsive">
+
+    <thead>
+        <tr>
+            <th scope="col">Kullanıcı Adı </th>
+            <th scope="col">Kullanıcı EMail </th>
+            <th scope="col">Kullanıcı Rolleri </th>
+            <th scope="col">Rol Atama İşlemleri </th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.Username</td>
+                <td>@item.EMail</td>
+                <td>
+                    @if (item.Roles.Count > 0)
+                    {
+
+                        @foreach (var role in item.Roles)
+                        {
+                            <p>@role.RoleName</p>
+                        }
+
+                    }
+
+
+
+
+                </td>
+                <td>                         <a asp-route-userId="@item.UserId" class="text-white btn btn-success"><i class="fas fa-plus"></i> Rol Ata</a></td>
+            </tr>
+        }
+
+
+</table>

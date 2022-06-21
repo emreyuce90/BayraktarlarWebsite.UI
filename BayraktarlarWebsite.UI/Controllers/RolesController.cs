@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,14 +15,16 @@ namespace BayraktarlarWebsite.UI.Controllers
     [Authorize]
     public class RolesController : Controller
     {
+        private readonly UserManager<User> _userManager;
         private readonly IToastNotification _toastNotification;
         private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapper;
-        public RolesController(RoleManager<Role> roleManager, IMapper mapper, IToastNotification toastNotification)
+        public RolesController(RoleManager<Role> roleManager, IMapper mapper, IToastNotification toastNotification, UserManager<User> userManager)
         {
             _roleManager = roleManager;
             _mapper = mapper;
             _toastNotification = toastNotification;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -29,7 +32,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             var roles = await _roleManager.Roles.ToListAsync();
 
-            return View(new RoleListDto { Roles = roles});
+            return View(new RoleListDto { Roles = roles });
         }
 
         [HttpGet]
@@ -51,7 +54,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 var result = await _roleManager.CreateAsync(role);
                 if (result.Succeeded)
                 {
-                    _toastNotification.AddSuccessToastMessage("Rol ekleme başarılı",new ToastrOptions
+                    _toastNotification.AddSuccessToastMessage("Rol ekleme başarılı", new ToastrOptions
                     {
                         Title = "İşlem Başarılı"
                     });
@@ -66,9 +69,46 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AssignRole()
+        public async Task<IActionResult> UserWithRoles()
+        {
+            var userRole = new List<UserWithRolesViewModel> { };
+            //Tüm kullanıcılar
+            var allUsers = await _userManager.Users.ToListAsync();
+            var roles = await _roleManager.Roles.ToListAsync();
+            //Tüm kullanıcıları dön
+            foreach (var user in allUsers)
+            {
+                var usr = new UserWithRolesViewModel
+                {
+                    Username = user.UserName,
+                    EMail = user.Email,
+                    UserId = user.Id,
+                    Roles = new List<RoleViewModel> { }
+                };
+                foreach (var role in roles)
+                {
+                    //01 admin rolüne sahip mi
+                    bool r =await _userManager.IsInRoleAsync(user, role.Name);
+                    //evet ise 
+                    if (r)
+                    {
+                        var rr = new RoleViewModel { RoleId = role.Id,RoleName = role.Name };
+                        usr.Roles.Add(rr);
+                    }
+                }
+                userRole.Add(usr);
+            };
+            return View(userRole);
+
+
+        }
+
+        [HttpGet]
+        public IActionResult AssignRoles()
         {
             return View();
         }
+
     }
 }
+
