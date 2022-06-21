@@ -1,11 +1,13 @@
 ﻿using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
 {
+    
     public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -56,13 +58,13 @@ namespace BayraktarlarWebsite.UI.Controllers
                 return View(model);
             
         }
-
+        
         [HttpGet]
         public IActionResult Login()
         {
             return View(new UserLoginViewModel());
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel model)
         {
@@ -85,7 +87,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SignoutAsync()
+        public async Task<IActionResult> Signout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");

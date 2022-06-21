@@ -5,6 +5,7 @@ using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
 using BayraktarlarWebsite.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
 {
+    [Authorize]
     public class TabelaController : Controller
     {
         private readonly IStatusService _statusService;

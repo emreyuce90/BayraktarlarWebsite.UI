@@ -1,12 +1,14 @@
 ﻿using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ICustomerService _customerService;
