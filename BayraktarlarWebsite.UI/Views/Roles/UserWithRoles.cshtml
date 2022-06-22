@@ -2,7 +2,13 @@
 @{
     Layout = "_AdminLayout";
 }
-
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Roles">Roller</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Kullanıcı Rolleri</li>
+    </ol>
+</nav>
 <table class="table table-hover table-responsive">
 
     <thead>
@@ -37,7 +43,7 @@
 
 
                 </td>
-                <td>                         <a asp-route-userId="@item.UserId" class="text-white btn btn-success"><i class="fas fa-plus"></i> Rol Ata</a></td>
+                <td>                         <a asp-action="AssignRoles" asp-route-userId="@item.UserId" class="text-white btn btn-success"><i class="fas fa-plus"></i> Rol Ata</a></td>
             </tr>
         }
 

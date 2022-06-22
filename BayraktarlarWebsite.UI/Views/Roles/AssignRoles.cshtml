@@ -1,0 +1,42 @@
+﻿@model UserWithRolesViewModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="UserWithRoles" asp-controller="Roles">Kullanıcı Rolleri</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Rol Ata</li>
+    </ol>
+</nav>
+
+
+<div class="form-group shadow w-75 p-4 mx-auto">
+    <p><h4 class="text-center"><strong>@Model.Username</strong> adlı kullanıcının rollerini görüntülemektesiniz</h4></p>
+    <form method="post" asp-controller="Roles" asp-action="AssignRoles">
+        <input type="hidden" asp-for="Username" />
+        <input type="hidden" asp-for="UserId" />
+        @*Rolleri dön kaç tane rol varsa o kadar dön*@
+        @for (int i = 0; i < @Model.Roles.Count ; i++)
+        {
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+
+                    <div class="input-group-text">
+                        <input type="hidden" asp-for="@Model.Roles[i].RoleName">
+                        <input type="checkbox" asp-for="@Model.Roles[i].IsChecked">
+                        <label class="form-check-label ml-1"><strong>@Model.Roles[i].RoleName</strong></label>
+                    </div>
+                </div>
+
+
+            </div>
+        }
+        <a asp-action="UserWithRoles" class="btn btn-warning text-white"><i class="fas fa-undo"></i> Geri Dön</a>
+
+        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Rolleri Kaydet</button>
+    </form>
+</div>
+

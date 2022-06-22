@@ -104,9 +104,68 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult AssignRoles()
+        public async Task<IActionResult> AssignRoles(int userId)
         {
-            return View();
+            //Kullanıcı
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            //Tüm roller
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            var model = new UserWithRolesViewModel
+            {
+                UserId = userId,
+                Username = user.UserName,
+                Roles = new List<RoleViewModel> { }
+            };
+
+            foreach (var role in roles)
+            {
+                var list = new RoleViewModel
+                {
+                    RoleId = role.Id,
+                    RoleName = role.Name,
+                    IsChecked = await _userManager.IsInRoleAsync(user,role.Name)
+                };
+                model.Roles.Add(list);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRoles(UserWithRolesViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //modelden gelen kullanıcıyı bul
+                var user = await _userManager.FindByNameAsync(model.Username);
+
+                //modelden seçilen rolleri dön
+                foreach (var roles in model.Roles)
+                {
+                    //admin
+                    //eğer kullanıcıda admin ekli ise
+                    if (roles.IsChecked)
+                    {
+                        await _userManager.AddToRoleAsync(user,roles.RoleName);
+                    }
+                    else
+                    {
+                        await _userManager.RemoveFromRoleAsync(user,roles.RoleName);
+                    }
+                    
+                }
+
+                _toastNotification.AddSuccessToastMessage("Kullanıcı yetkilendirme başarılı",new ToastrOptions
+                {
+                    Title="İşlem Başarılı"
+                });
+                return RedirectToAction("UserWithRoles");
+            }
+            _toastNotification.AddErrorToastMessage("Kullanıcı yetkilendirme başarılısız", new ToastrOptions
+            {
+                Title = "İşlem Başarısız"
+            });
+            return View(model);
         }
 
     }
