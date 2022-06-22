@@ -15,6 +15,8 @@ namespace BayraktarlarWebsite.BLL.Interfaces
         Task UpdateAsync(TabelaUpdateDto tabelaUpdateDto);
         Task<TabelaDto> GetTabelaByTabelaIdAsync(int tabelaId);
         Task<TabelaListDto> GetAllAsync(int userId);
+        Task<TabelaListDto> GetAllAsync();
+
         Task AddAsync(TabelaAddDto tabelaAddDto);
         Task HardDeleteAsync(int tabelaId);
         Task UndoDeleteAsync(int tabelaId);

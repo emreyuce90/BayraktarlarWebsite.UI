@@ -10,6 +10,8 @@ namespace BayraktarlarWebsite.BLL.Interfaces
     public interface ICustomerService
     {
         Task<int> CountAsync(int statusId,int userId);
+        Task<int> CountAsync(int statusId);
+
         Task<CustomerListDto> GetAllAsync();
     }
 }

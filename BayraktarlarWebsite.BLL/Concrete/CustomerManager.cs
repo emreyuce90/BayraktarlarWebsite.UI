@@ -27,6 +27,12 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         }
 
+        public async Task<int> CountAsync(int statusId)
+        {
+            //sana gelen status id ye ait kayıtları say
+            return await _unitOfWork.Tabelas.CountAsync(t => t.StatusId == statusId);
+        }
+
         public async Task<CustomerListDto> GetAllAsync()
         {
             //db den gelen müşteriler

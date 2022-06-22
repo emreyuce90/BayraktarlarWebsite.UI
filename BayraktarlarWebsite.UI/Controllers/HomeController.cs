@@ -24,15 +24,34 @@ namespace BayraktarlarWebsite.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
+            //giriş yapan kullanıcı
             var authenticatedUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            var model = new HomePageViewModel
+            //eğer giriş yapan kullanıcı admin ise userid parametresini null geç
+            var isAdmin=await _userManager.IsInRoleAsync(authenticatedUser,"Admin");
+            if (isAdmin)
             {
-                OnaydaBekleyenler = await _customerService.CountAsync(1,authenticatedUser.Id),
-                Onaylananlar= await _customerService.CountAsync(2,authenticatedUser.Id),
-                ReddedilenTabelalar = await _customerService.CountAsync(6, authenticatedUser.Id),
-                UygulananTabelalar = await _customerService.CountAsync(5, authenticatedUser.Id)
-            };
-            return View(model);
+                var model = new HomePageViewModel
+                {
+                    OnaydaBekleyenler = await _customerService.CountAsync(1),
+                    Onaylananlar = await _customerService.CountAsync(2),
+                    ReddedilenTabelalar = await _customerService.CountAsync(6),
+                    UygulananTabelalar = await _customerService.CountAsync(5)
+                };
+                return View(model);
+            }
+            else
+            {
+                var model = new HomePageViewModel
+                {
+                    OnaydaBekleyenler = await _customerService.CountAsync(1, authenticatedUser.Id),
+                    Onaylananlar = await _customerService.CountAsync(2, authenticatedUser.Id),
+                    ReddedilenTabelalar = await _customerService.CountAsync(6, authenticatedUser.Id),
+                    UygulananTabelalar = await _customerService.CountAsync(5, authenticatedUser.Id)
+                };
+                return View(model);
+            }
+            
+            
         }
     }
 }

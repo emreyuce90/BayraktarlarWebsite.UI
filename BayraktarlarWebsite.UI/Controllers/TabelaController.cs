@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 namespace BayraktarlarWebsite.UI.Controllers
 {
-    
+    [Authorize]
     public class TabelaController : Controller
     {
         private readonly UserManager<User> _userManager;

@@ -58,6 +58,11 @@ namespace BayraktarlarWebsite.BLL.Concrete
             };
         }
 
+        public Task<TabelaListDto> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<bool> GetStatusCodeGivenTabelaAsync(int tabelaId)
         {
             var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.Id == tabelaId);

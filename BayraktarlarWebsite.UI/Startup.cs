@@ -41,8 +41,8 @@ namespace BayraktarlarWebsite.UI
             services.ConfigureApplicationCookie(opt =>
             {
                 opt.AccessDeniedPath = new PathString("/Users/AccessDenied");
-                opt.LoginPath = new PathString("/Users/Login");
-                opt.LogoutPath = new PathString("/Users/Logout");
+                opt.LoginPath = new PathString("/Auth/Login");
+                opt.LogoutPath = new PathString("/Auth/Logout");
                 opt.Cookie = new CookieBuilder
                 {
                     HttpOnly = true,

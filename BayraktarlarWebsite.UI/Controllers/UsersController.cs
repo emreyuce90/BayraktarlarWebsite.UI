@@ -1,13 +1,15 @@
-﻿using BayraktarlarWebsite.Entities.Entities;
+﻿using BayraktarlarWebsite.Entities.Dtos;
+using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
 {
-    
+
     public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -36,62 +38,49 @@ namespace BayraktarlarWebsite.UI.Controllers
                     UserName = model.Code,
                     Profile = model.Picture
                 };
-                var identityResult = await _userManager.CreateAsync(user,model.Password.ToString());
+                var identityResult = await _userManager.CreateAsync(user, model.Password.ToString());
                 if (identityResult.Succeeded)
                 {
-                    ViewBag.Message = "Kullanıcı Ekleme İşlemi Başarılı";
-                    return RedirectToAction("Success");
+                    var roleResult = await _userManager.AddToRoleAsync(user, "User");
+                    if (roleResult.Succeeded)
+                    {
+                        ViewBag.Message = "Kullanıcı Ekleme İşlemi Başarılı";
+                        return RedirectToAction("Login", "Auth");
+                    }
+                    foreach (var item in roleResult.Errors)
+                    {
+                        ModelState.AddModelError("", item.Description);
+                    }
+                    return View(model);
                 }
                 else
                 {
                     foreach (var item in identityResult.Errors)
                     {
-                        ModelState.AddModelError("",item.Description);
+                        ModelState.AddModelError("", item.Description);
                         return View(model);
                     }
-                   
-                }
-          
-            }
-       
-           
-                return View(model);
-            
-        }
-        
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View(new UserLoginViewModel());
-        }
-        
-        [HttpPost]
-        public async Task<IActionResult> Login(UserLoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(model.Code);
-                if(user != null)
-                {
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
 
                 }
-                ModelState.AddModelError("", "Kullanıcı adı veya şifreniz yanlıştır");
 
             }
+
+
             return View(model);
+
         }
+
+
 
         [HttpGet]
-        public async Task<IActionResult> Signout()
+        public async Task<IActionResult> Index()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Login");
+            //tüm kullanıcılar
+            var userList = await _userManager.Users.ToListAsync();
+            return View(new UserListDto
+            {
+                Users = userList
+            });
         }
-
     }
 }
