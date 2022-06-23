@@ -23,7 +23,9 @@
             <th>Malzeme Cinsi</th>
             <th>Durumu</th>
             <th>Tarihi</th>
+            <th>Silen kullanıcı</th>
             <th>Notlar</th>
+            
             <th>İşlemler</th>
         </tr>
     </thead>
@@ -46,12 +48,22 @@
                 <td>@t.MaterialName</td>
                 <td>@t.StatusName</td>
                 <td>@t.CreatedDate.ToShortDateString()</td>
+                <td class="text-center">@t.Username</td>
                 <td><button id="readNote" data-tabelaId="@t.Id" class="btn btn-success"><i class="fa fa-book" aria-hidden="true"></i> Oku</button></td>
+                
                 <td>
-
-                    <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
+                    @if (@ViewBag.IsAdmin)
+                    {
+                         <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
                     <a data-tabelaId="@t.Id" id="btnUndo" class="btn btn-warning text-white"><i class="fas fa-undo"></i></a>
                     <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
+                    }
+                    else
+                    {
+                         <a data-tabelaId="@t.Id" id="btnUndo" class="btn btn-warning text-white"><i class="fas fa-undo"></i></a>
+                    <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
+                    }
+                   
                 </td>
             </tr>
         }

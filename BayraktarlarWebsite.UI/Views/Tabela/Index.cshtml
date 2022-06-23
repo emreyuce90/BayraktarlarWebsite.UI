@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Tabelalar";
     Layout = "_AdminLayout";
+
 }
 
 <nav aria-label="breadcrumb">
@@ -36,56 +37,84 @@
                     @{
                         if (t.Thumbnail != null)
                         {
-                                <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
+                            <a href="~/img/tabelaImages/@t.Thumbnail"><img style="width:140px;height:100px;" class="img img-responsive " src="~/img/tabelaImages/@t.Thumbnail" /></a>
                         }
                     }
 
 
                 </td>
-                
-                    @{
-                        if(t.CustomerName.Length <= 25)
-                        {
-                              <td>@t.CustomerName</td>
-                        }else
-                        {
-                                <td>@t.CustomerName.Substring(0,25)</td>
-                        }
+
+                @{
+                    if (t.CustomerName.Length <= 25)
+                    {
+                        <td>@t.CustomerName</td>
                     }
-               
+                    else
+                    {
+                        <td>@t.CustomerName.Substring(0,25)</td>
+                    }
+                }
+
                 <td>@t.BrandName</td>
                 <td>@t.MaterialName</td>
                 <td>
-                    @if (t.StatusName.ToString() == "Uygulandı")
-                    {
-                       <span class="text-success"><i class="fa fa-check" aria-hidden="true"></i> @t.StatusName</span>
-                    }
-                    else if(t.StatusName.ToString() == "Reddedildi")
+                    @if (ViewBag.IsAdmin)
                     {
 
-                        <span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>@t.StatusName</span>
-                       
-                        
-                    }else{
-                          <span class="text-info">@t.StatusName</span>
-                        <a id="btnChange" data-tabelaId="@t.Id" class="btn btn-info btn-sm text-white"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                    }
 
+                        @if (t.StatusName.ToString() == "Uygulandı")
+                        {
+                            <span class="text-success"><i class="fa fa-check" aria-hidden="true"></i> @t.StatusName</span>
+                        }
+                        else if (t.StatusName.ToString() == "Reddedildi")
+                        {
+
+                            <span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>@t.StatusName</span>
+
+
+                        }
+                        else
+                        {
+                            <span class="text-info">@t.StatusName</span>
+                            <a id="btnChange" data-tabelaId="@t.Id" class="btn btn-info btn-sm text-white"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                        }
+                    }
+                    else
+                    {
+                         @if (t.StatusName.ToString() == "Uygulandı")
+                        {
+                            <span class="text-success"><i class="fa fa-check" aria-hidden="true"></i> @t.StatusName</span>
+                        }
+                        else if (t.StatusName.ToString() == "Reddedildi")
+                        {
+
+                            <span class="text-danger"><i class="fa fa-times" aria-hidden="true"></i>@t.StatusName</span>
+
+
+                        }
+                        else
+                        {
+                            <span class="text-info">@t.StatusName</span>
+                          
+                        }
+                    }
                 </td>
                 <td>@t.CreatedDate.ToShortDateString()</td>
                 <td>@t.Username</td>
                 <td><button id="readNote" data-tabelaId="@t.Id" class="btn btn-success"><i class="fa fa-book" aria-hidden="true"></i> Oku</button></td>
                 <td>
                     @{
-                        if(t.StatusName == "Uygulandı")
+                        if (t.StatusName == "Uygulandı")
                         {
-                            
-                        }else{
 
-                             <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
+                        }
+                        else
+                        {
+
+                            <a class="btn btn-warning text-white" asp-action="Update" asp-route-tabelaId="@t.Id"><i class="fas fa-edit"></i></a>
                         }
                     }
-                   
+
 
                     <a data-id="@t.Id" id="btnDelete" class="btn btn-danger text-white"><i class="fas fa-trash"></i></a>
                     <a asp-action="TabelaDetail" asp-route-tabelaId="@t.Id" class="btn text-white btn-info"><i class="fas fa-info"></i></a>
@@ -417,7 +446,7 @@
                     success: function(d) {
                         placeHolderDiv.html(d);
                         placeHolderDiv.find('.modal').modal('show');
-                        
+
                     },
                 });
             });

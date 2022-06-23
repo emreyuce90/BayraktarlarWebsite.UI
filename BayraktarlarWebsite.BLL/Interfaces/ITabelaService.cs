@@ -12,6 +12,8 @@ namespace BayraktarlarWebsite.BLL.Interfaces
         Task SoftDeleteAsync(int tabelaId);
         Task<bool> GetStatusCodeGivenTabelaAsync(int tabelaId);
         Task<TabelaListDto> DeletedTabelasAsync(int userId);
+        Task<TabelaListDto> DeletedTabelasAsync();
+
         Task UpdateAsync(TabelaUpdateDto tabelaUpdateDto);
         Task<TabelaDto> GetTabelaByTabelaIdAsync(int tabelaId);
         Task<TabelaListDto> GetAllAsync(int userId);

@@ -139,8 +139,21 @@ namespace BayraktarlarWebsite.UI.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            bool isAdmin =await _userManager.IsInRoleAsync(user, "Admin");
+            
+            TabelaListDto tabelalar;
+            if (isAdmin)
+            {
+               tabelalar = await _tabelaService.GetAllAsync();
+                ViewBag.IsAdmin = true;
+            }
+            else
+            {
+               tabelalar = await _tabelaService.GetAllAsync(user.Id);
+                ViewBag.IsAdmin = false;
+            }
             //db deki tabelalar
-            var tabelalar = await _tabelaService.GetAllAsync(user.Id);
+           
             //vm
             List<TabelaViewModel> model = new List<TabelaViewModel>();
 
@@ -328,8 +341,19 @@ namespace BayraktarlarWebsite.UI.Controllers
         public async Task<IActionResult> DeletedTabelas()
         {
             var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            //tabelaListDto
-            var tabelalar = await _tabelaService.DeletedTabelasAsync(user.Id);
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            TabelaListDto tabelalar;
+            if (isAdmin)
+            {
+                tabelalar = await _tabelaService.DeletedTabelasAsync();
+                ViewBag.IsAdmin = true;
+            }
+            else
+            {
+                tabelalar = await _tabelaService.DeletedTabelasAsync(user.Id);
+                ViewBag.IsAdmin = false;
+            }
+            
             var model = new List<TabelaViewModel>();
             foreach (var tbl in tabelalar.Tabela)
             {
