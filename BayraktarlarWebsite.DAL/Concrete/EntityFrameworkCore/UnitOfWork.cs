@@ -18,6 +18,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         private readonly EfTabelaImagesRepository _tabelaImagesRepository;
         private readonly EfCustomerRepository _customerRepository;
         private readonly EfBrandRepository _brandRepository;
+        private readonly EfLetRepository _efLetRepository;
         public UnitOfWork(DatabaseConnection context)
         {
             _context = context;
@@ -33,6 +34,8 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         public IMaterialRepository Materials => _efMaterialRepository ?? new EfMaterialRepository(_context);
 
         public IStatusRepository Status => _efStatusRepository ?? new EfStatusRepository(_context);
+
+        public ILetRepository Lets => _efLetRepository ?? new EfLetRepository(_context);
 
         public async ValueTask DisposeAsync()
         {

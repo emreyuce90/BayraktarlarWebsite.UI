@@ -12,6 +12,7 @@ namespace BayraktarlarWebsite.DAL.Context
 {
     public class DatabaseConnection:IdentityDbContext<User,Role,int>
     {
+        public DbSet<Let> Lets { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Material> Materials { get; set; }

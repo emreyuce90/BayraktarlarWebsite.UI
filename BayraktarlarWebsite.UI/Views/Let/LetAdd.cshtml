@@ -1,0 +1,43 @@
+﻿@model LetAddDto
+@{
+    ViewBag.Title = "İzin Al";
+    Layout = "_AdminLayout";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">İzin Al</a></li>
+    </ol>
+</nav>
+
+<div asp-validation-summary="All" class="text-danger">
+</div>
+
+<form method="post" class="shadow p-3" asp-controller="Let" asp-action="LetAdd">
+    <div id="baslik" class=" text-center mt-4">
+        <h1 class="lead display-5">İzin Dilekçesi Oluşturma Formu </h1>
+    </div>
+    <div class="form-group">
+        <label>İzin Başlangıç Tarihi :</label>
+        <input asp-for="StartDate" class="form-control" />
+        <span class="text-danger" asp-validation-for="StartDate"></span>
+    </div>
+    <div class="form-group">
+        <label>İzin Bitiş Tarihi :</label>
+        <input asp-for="EndDate" class="form-control" />
+        <span class="text-danger" asp-validation-for="EndDate"></span>
+    </div>
+        <div class="form-group">
+        <label>Kaç Gün? :</label>
+        <input asp-for="DayCount" class="form-control" />
+        <span class="text-danger" asp-validation-for="DayCount"></span>
+    </div>
+    <div class="form-group">
+        <label>Notlar :</label>
+        <textarea asp-for="Note" class="form-control" rows="5" cols="4"></textarea>
+        <span class="text-danger" asp-validation-for="Note"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3"> İmzala</button>
+</form>
