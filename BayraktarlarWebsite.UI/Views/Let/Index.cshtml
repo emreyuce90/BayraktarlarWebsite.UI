@@ -11,6 +11,72 @@
     </ol>
 </nav>
 
+@{
+    if (@ViewBag.IsAdmin == true)
+    {
+
+    }
+    else
+    {
+        <div class="row mt-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body text-center">ÇALIŞMA YILIM</div>
+                    <h1 class="text-center"></h1>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body text-center">BU YIL İZİN HAKKIM</div>
+                    <h1 class="text-center">1</h1>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body text-center">GEÇEN YIL İZİN HAKKIM</div>
+                    <h1 class="text-center">2</h1>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body text-center">BU YIL KULLANDIĞIM İZİNLER</div>
+                    <h1 class="text-center">1</h1>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body text-center">GEÇEN YIL KULLANDIĞIM İZİNLER</div>
+                    <h1 class="text-center">10</h1>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body text-center">BU YIL İZİN HAKKIM</div>
+                    <h1 class="text-center">2</h1>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body text-center">ÖNCEKİ KALAN İZİN HAKKIM</div>
+                    <h1 class="text-center">10</h1>
+                    <p></p>
+                </div>
+            </div>
+
+        </div>
+    }
+}
+
+
+
+
 <table class="table-hover table-striped" id="letList" width="100%">
     <thead>
         <tr>
@@ -20,18 +86,42 @@
             <th>Kaç Gün</th>
             <th>Onay</th>
             <th>Not</th>
+            <th>İşlemler</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var t in Model.Lets)
         {
             <tr>
-                <td>@t.UserId</td>
+                <td>@t.User.Code</td>
                 <td>@t.StartDate.ToShortDateString()</td>
                 <td>@t.EndDate.ToShortDateString()</td>
                 <td>@t.DayCount</td>
-                <td>@(t.IsApproved == false ? "Onaylanmadı" :"Onaylandı")</td>
+                <td>
+                    @{
+                        if (t.IsApproved == false)
+                        {
+                            <div class="text-danger"><i class="fa fa-ban" aria-hidden="true"></i> Onaylanmadı</div>
+                        }
+                        else
+                        {
+                            <div class="text-success"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Onaylandı</div>
+                        }
+                    }
+                </td>
+
                 <td>@t.Note</td>
+                @{
+                    if(ViewBag.IsAdmin == true)
+                    {
+                                        <td><a class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+
             </tr>
         }
     </tbody>

@@ -23,6 +23,7 @@ namespace BayraktarlarWebsite.Entities.Entities
         [Required]
         public int UserId { get; set; }
         //İzin onaylandı mı?
+        public User User { get; set; }
         public bool IsApproved { get; set; } = false;
         //İznin onaylandığı tarih
         [Required]

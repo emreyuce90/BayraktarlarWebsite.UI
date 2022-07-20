@@ -30,10 +30,19 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<LetListDto> GetAllAsync()
         {
-            var list = await _unitOfWork.Lets.GetAllAsync();
+            var list = await _unitOfWork.Lets.GetAllAsync(null,l=>l.User);
             return new LetListDto
             {
                 Lets = list
+            };
+        }
+
+        public async Task<LetListDto> GetAllByUserIdAsync(int userId)
+        {
+            var lets= await _unitOfWork.Lets.GetAllAsync(l => l.UserId == userId);
+            return new LetListDto
+            {
+                Lets = lets
             };
         }
     }
