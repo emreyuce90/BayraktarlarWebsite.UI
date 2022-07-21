@@ -14,6 +14,9 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore.Repositories
     {
         public EfLetRepository(DbContext context) : base(context)
         {
+
         }
+
+
     }
 }

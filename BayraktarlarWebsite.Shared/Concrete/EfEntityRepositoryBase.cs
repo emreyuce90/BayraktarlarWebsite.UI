@@ -105,6 +105,18 @@ namespace BayraktarlarWebsite.Shared.Concrete
             return await query.ToListAsync();
         }
 
+        public async Task<int> SummAsync(Expression<Func<Tentity, bool>> predicate = null,Expression < Func<Tentity, decimal> > selector = null)
+        {
+            //Where sorgusu
+            IQueryable<Tentity> queryable = _context.Set<Tentity>();
+            if (predicate != null)
+            {
+                queryable = queryable.Where(predicate);
+            }
+            //
+            return (int)await queryable.SumAsync(selector);            
+        }
+
         public async Task UpdateAsync(Tentity t)
         {
             await Task.Run(() => { _context.Set<Tentity>().Update(t); });

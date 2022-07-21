@@ -31,16 +31,19 @@ namespace BayraktarlarWebsite.UI.Controllers
             if (IsAdmin)
             {
                 ViewBag.IsAdmin = true;
-                return View(await _letService.GetAllAsync());
+                var lets = await _letService.GetAllAsync();
+                return View(new EmployeeLetDetails
+                {
+                    Lets = lets
+                });
             }
             else
             {
                 ViewBag.IsAdmin = false;
-
                 var vm = new EmployeeLetDetails();
                 //Çalışma senesi
                 vm.WorkYear = DateTime.Now.Year - loggedInUser.EntryDate.Year;
-                //Hakettiği izinler
+                //Bu yıl hakettiği izinler
                 if (DateTime.Now.Year - loggedInUser.EntryDate.Year > 1 || DateTime.Now.Year - loggedInUser.EntryDate.Year <= 5)
                 {
                     vm.ThisYearLetRight = 14;
@@ -78,9 +81,17 @@ namespace BayraktarlarWebsite.UI.Controllers
                     vm.LastYearLetRight = 0;
                 }
 
-               //Geçen yıl kullanılan izinler
+                //Geçen yıl kullanılan izinler
+                vm.LastYearLetUsed = await _letService.UsedLetsAsync((DateTime.Now.Year -1),loggedInUser.Id);
+                //Bu yıl kullanılan izinler
+                vm.ThisYearLetUsed = await _letService.UsedLetsAsync((DateTime.Now.Year), loggedInUser.Id);
+                //Kalan İzin Hakkı
+                vm.Balance = (vm.LastYearLetRight - vm.LastYearLetUsed) + (vm.ThisYearLetRight - vm.ThisYearLetUsed);
+                var lets = await _letService.GetAllByUserIdAsync(loggedInUser.Id);
+                vm.Lets = lets;
+                return View(vm);
             };
-            return View(await _letService.GetAllByUserIdAsync(loggedInUser.Id));
+            
         }
 
         [HttpGet]

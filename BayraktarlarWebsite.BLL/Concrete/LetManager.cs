@@ -30,7 +30,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<LetListDto> GetAllAsync()
         {
-            var list = await _unitOfWork.Lets.GetAllAsync(null,l=>l.User);
+            var list = await _unitOfWork.Lets.GetAllAsync(null, l => l.User);
             return new LetListDto
             {
                 Lets = list
@@ -39,11 +39,17 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<LetListDto> GetAllByUserIdAsync(int userId)
         {
-            var lets= await _unitOfWork.Lets.GetAllAsync(l => l.UserId == userId);
+            var lets = await _unitOfWork.Lets.GetAllAsync(l => l.UserId == userId);
             return new LetListDto
             {
                 Lets = lets
             };
+        }
+
+        public async Task<int> UsedLetsAsync(int year, int userId)
+        {
+           return await _unitOfWork.Lets.SummAsync(l=>l.EndDate.Year == year && l.UserId == userId && l.IsApproved == true,l=>l.DayCount);
+            
         }
     }
 }

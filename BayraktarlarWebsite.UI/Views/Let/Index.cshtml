@@ -1,4 +1,4 @@
-﻿@model LetListDto
+﻿@model EmployeeLetDetails
 @{
     ViewBag.Title = "İzinler";
     Layout = "_AdminLayout";
@@ -22,53 +22,48 @@
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-primary text-white mb-4">
                     <div class="card-body text-center">ÇALIŞMA YILIM</div>
-                    <h1 class="text-center"></h1>
+                    <h1 class="text-center">@Model.WorkYear</h1>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body text-center">TOPLAM KALAN İZNİM</div>
+                    <h1 class="text-center">@Model.Balance</h1>
                     <p></p>
                 </div>
             </div>
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-warning text-white mb-4">
                     <div class="card-body text-center">BU YIL İZİN HAKKIM</div>
-                    <h1 class="text-center">1</h1>
+                    <h1 class="text-center">@Model.ThisYearLetRight</h1>
+                    <p></p>
+                </div>
+            </div>
+             <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body text-center">BU YIL KULLANDIĞIM İZİNLER</div>
+                    <h1 class="text-center">@Model.ThisYearLetUsed</h1>
                     <p></p>
                 </div>
             </div>
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-success text-white mb-4">
                     <div class="card-body text-center">GEÇEN YIL İZİN HAKKIM</div>
-                    <h1 class="text-center">2</h1>
+                    <h1 class="text-center">@Model.LastYearLetRight</h1>
                     <p></p>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-danger text-white mb-4">
-                    <div class="card-body text-center">BU YIL KULLANDIĞIM İZİNLER</div>
-                    <h1 class="text-center">1</h1>
-                    <p></p>
-                </div>
-            </div>
+           
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-primary text-white mb-4">
                     <div class="card-body text-center">GEÇEN YIL KULLANDIĞIM İZİNLER</div>
-                    <h1 class="text-center">10</h1>
+                    <h1 class="text-center">@Model.LastYearLetUsed</h1>
                     <p></p>
                 </div>
             </div>
+            
 
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-success text-white mb-4">
-                    <div class="card-body text-center">BU YIL İZİN HAKKIM</div>
-                    <h1 class="text-center">2</h1>
-                    <p></p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-danger text-white mb-4">
-                    <div class="card-body text-center">ÖNCEKİ KALAN İZİN HAKKIM</div>
-                    <h1 class="text-center">10</h1>
-                    <p></p>
-                </div>
-            </div>
 
         </div>
     }
@@ -90,7 +85,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var t in Model.Lets)
+        @foreach (var t in Model.Lets.Lets)
         {
             <tr>
                 <td>@t.User.Code</td>
@@ -112,13 +107,13 @@
 
                 <td>@t.Note</td>
                 @{
-                    if(ViewBag.IsAdmin == true)
+                    if (ViewBag.IsAdmin == true)
                     {
-                                        <td><a class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
+                        <td><a class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
                     }
                     else
                     {
-                        
+
                     }
                 }
 

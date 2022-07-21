@@ -26,5 +26,8 @@ namespace BayraktarlarWebsite.Shared.Interface
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
         Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);
+        //Where şartı //Sum şartı
+        Task<int> SummAsync(Expression<Func<T, bool>> predicate = null, Expression<Func<T, decimal>> selector=null);
+
     }
 }

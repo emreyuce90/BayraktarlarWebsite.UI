@@ -12,5 +12,6 @@ namespace BayraktarlarWebsite.BLL.Interfaces
         Task<LetListDto> GetAllByUserIdAsync(int userId);
         Task<LetListDto> GetAllAsync();
         Task AddLetAsync(LetAddDto letAddDto);
+        Task<int> UsedLetsAsync(int year,int userId);
     }
 }

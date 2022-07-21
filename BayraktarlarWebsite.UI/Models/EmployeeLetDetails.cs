@@ -1,7 +1,10 @@
-﻿namespace BayraktarlarWebsite.UI.Models
+﻿using BayraktarlarWebsite.Entities.Dtos;
+
+namespace BayraktarlarWebsite.UI.Models
 {
     public class EmployeeLetDetails
     {
+        public LetListDto Lets { get; set; }
         //Çalışma yılı
         public int WorkYear { get; set; }
         //Bu yıl izin hakkı
