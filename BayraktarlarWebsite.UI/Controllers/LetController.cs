@@ -63,11 +63,11 @@ namespace BayraktarlarWebsite.UI.Controllers
                 }
 
                 //geçen yıl izin hakkı
-                if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 1 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 5)
+                if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 1 && (DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year <= 5)
                 {
                     vm.LastYearLetRight = 14;
                 }
-                else if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 5 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 15)
+                else if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 5 && (DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year <= 15)
                 {
                     vm.LastYearLetRight = 20;
                 }
@@ -107,6 +107,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             {
                 var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 letAddDto.UserId = loggedInUser.Id;
+                letAddDto.CreatedDate = DateTime.Now;
                 await _letService.AddLetAsync(letAddDto);
                 _toastNotification.AddSuccessToastMessage("İzin talebi oluşturma işlemi başarılı", new ToastrOptions
                 {

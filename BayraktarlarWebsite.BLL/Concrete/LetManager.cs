@@ -36,6 +36,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
             if(let != null)
             {
                 let.IsApproved = true;
+                let.ApprovedDate = DateTime.Now;
                 await _unitOfWork.Lets.UpdateAsync(let);
                 await _unitOfWork.SaveAsync();
             }
