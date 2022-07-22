@@ -10,10 +10,10 @@ namespace BayraktarlarWebsite.Entities.Dtos
     public class LetAddDto
     {
         [Required]
-        public DateTime StartDate { get; set; } = DateTime.Now;
+        public DateTime StartDate { get; set; }
         //Bitiş Tarihi
         [Required]
-        public DateTime EndDate { get; set; } = DateTime.Now.AddDays(2);
+        public DateTime EndDate { get; set; }
         //Not
         public string Note { get; set; }
         //Kim kullanacak ?

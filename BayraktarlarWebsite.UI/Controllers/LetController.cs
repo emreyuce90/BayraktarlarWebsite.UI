@@ -96,6 +96,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             if (letId != 0)
             {
                 await _letService.ApproveLetAsync(letId);
+                return NoContent();
             }
 
             return NotFound();

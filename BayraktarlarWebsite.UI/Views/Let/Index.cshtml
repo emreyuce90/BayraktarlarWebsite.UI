@@ -19,54 +19,54 @@
     }
     else
     {
-        <div class="row mt-4">
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-primary text-white mb-4">
-                    <div class="card-body text-center">ÇALIŞMA YILIM</div>
-                    <h1 class="text-center">@Model.WorkYear</h1>
-                    <p></p>
+    <div class="row mt-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-primary text-white mb-4">
+                        <div class="card-body text-center">ÇALIŞMA YILIM</div>
+                        <h1 class="text-center">@Model.WorkYear</h1>
+                        <p></p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-warning text-white mb-4">
-                    <div class="card-body text-center">TOPLAM KALAN İZNİM</div>
-                    <h1 class="text-center">@Model.Balance</h1>
-                    <p></p>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-warning text-white mb-4">
+                        <div class="card-body text-center">TOPLAM KALAN İZNİM</div>
+                        <h1 class="text-center">@Model.Balance</h1>
+                        <p></p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-warning text-white mb-4">
-                    <div class="card-body text-center">BU YIL İZİN HAKKIM</div>
-                    <h1 class="text-center">@Model.ThisYearLetRight</h1>
-                    <p></p>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-warning text-white mb-4">
+                        <div class="card-body text-center">BU YIL İZİN HAKKIM</div>
+                        <h1 class="text-center">@Model.ThisYearLetRight</h1>
+                        <p></p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-danger text-white mb-4">
-                    <div class="card-body text-center">BU YIL KULLANDIĞIM İZİNLER</div>
-                    <h1 class="text-center">@Model.ThisYearLetUsed</h1>
-                    <p></p>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger text-white mb-4">
+                        <div class="card-body text-center">BU YIL KULLANDIĞIM İZİNLER</div>
+                        <h1 class="text-center">@Model.ThisYearLetUsed</h1>
+                        <p></p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-success text-white mb-4">
-                    <div class="card-body text-center">GEÇEN YIL İZİN HAKKIM</div>
-                    <h1 class="text-center">@Model.LastYearLetRight</h1>
-                    <p></p>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-success text-white mb-4">
+                        <div class="card-body text-center">GEÇEN YIL İZİN HAKKIM</div>
+                        <h1 class="text-center">@Model.LastYearLetRight</h1>
+                        <p></p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-primary text-white mb-4">
-                    <div class="card-body text-center">GEÇEN YIL KULLANDIĞIM İZİNLER</div>
-                    <h1 class="text-center">@Model.LastYearLetUsed</h1>
-                    <p></p>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-primary text-white mb-4">
+                        <div class="card-body text-center">GEÇEN YIL KULLANDIĞIM İZİNLER</div>
+                        <h1 class="text-center">@Model.LastYearLetUsed</h1>
+                        <p></p>
+                    </div>
                 </div>
-            </div>
 
 
 
-        </div>
+    </div>
     }
 }
 
@@ -97,11 +97,11 @@
                     @{
                         if (t.IsApproved == false)
                         {
-                            <div class="text-danger"><i class="fa fa-ban" aria-hidden="true"></i> Onaylanmadı</div>
+                                <div class="text-danger"><i class="fa fa-ban" aria-hidden="true"></i> Onaylanmadı</div>
                         }
                         else
                         {
-                            <div class="text-success"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Onaylandı</div>
+                                <div class="text-success"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Onaylandı</div>
                         }
                     }
                 </td>
@@ -112,18 +112,18 @@
                     {
                         if (@t.IsApproved == false)
                         {
-                            <td><a data-letId="@t.Id" id="approveLet" class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
+                                <td><a data-letId="@t.Id" id="approveLet" class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
                         }
                         else
                         {
 
-                            <td></td>
+                                <td></td>
                         }
 
                     }
                     else
                     {
-                        <td><a class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> Dilekçeyi Görüntüle</a></td>
+                            <td><a class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> Dilekçeyi Görüntüle</a></td>
                     }
                 }
 
@@ -373,18 +373,17 @@
                     if (result.isConfirmed) {
                         //Sil butonuna tıklandı
                         $.ajax({
-
                             url: '/Let/ApproveLet/',
                             method: 'post',
                             data: { letId: id },
                             success: function(message) {
                                 //sayfayı yenile
-                                window.location.reload()
+                                document.location.reload();
                                 //alert ver
-
                             }
                         });
                         swalWithBootstrapButtons.fire(
+                            
                             'İzin Onaylandı!',
                             'Başarılı',
                             'success'
