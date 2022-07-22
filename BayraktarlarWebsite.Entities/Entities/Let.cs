@@ -30,6 +30,7 @@ namespace BayraktarlarWebsite.Entities.Entities
         public DateTime CreatedDate { get; set; }
 
         public int DayCount { get; set; }
+        public DateTime ApprovedDate { get; set; }
 
     }
 }

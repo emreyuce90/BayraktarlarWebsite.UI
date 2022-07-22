@@ -44,15 +44,15 @@ namespace BayraktarlarWebsite.UI.Controllers
                 //Çalışma senesi
                 vm.WorkYear = DateTime.Now.Year - loggedInUser.EntryDate.Year;
                 //Bu yıl hakettiği izinler
-                if (DateTime.Now.Year - loggedInUser.EntryDate.Year > 1 || DateTime.Now.Year - loggedInUser.EntryDate.Year <= 5)
+                if (DateTime.Now.Year - loggedInUser.EntryDate.Year >= 1 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 5)
                 {
                     vm.ThisYearLetRight = 14;
                 }
-                else if(DateTime.Now.Year - loggedInUser.EntryDate.Year > 5 || DateTime.Now.Year - loggedInUser.EntryDate.Year <= 15)
+                else if (DateTime.Now.Year - loggedInUser.EntryDate.Year > 5 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 15)
                 {
                     vm.ThisYearLetRight = 20;
                 }
-                else if(DateTime.Now.Year - loggedInUser.EntryDate.Year >15)
+                else if (DateTime.Now.Year - loggedInUser.EntryDate.Year > 15)
                 {
                     vm.ThisYearLetRight = 26;
 
@@ -63,11 +63,11 @@ namespace BayraktarlarWebsite.UI.Controllers
                 }
 
                 //geçen yıl izin hakkı
-                if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 1 || DateTime.Now.Year - loggedInUser.EntryDate.Year <= 5)
+                if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 1 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 5)
                 {
                     vm.LastYearLetRight = 14;
                 }
-                else if ((DateTime.Now.Year-1) - loggedInUser.EntryDate.Year > 5 || DateTime.Now.Year - loggedInUser.EntryDate.Year <= 15)
+                else if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 5 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 15)
                 {
                     vm.LastYearLetRight = 20;
                 }
@@ -82,7 +82,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 }
 
                 //Geçen yıl kullanılan izinler
-                vm.LastYearLetUsed = await _letService.UsedLetsAsync((DateTime.Now.Year -1),loggedInUser.Id);
+                vm.LastYearLetUsed = await _letService.UsedLetsAsync((DateTime.Now.Year - 1), loggedInUser.Id);
                 //Bu yıl kullanılan izinler
                 vm.ThisYearLetUsed = await _letService.UsedLetsAsync((DateTime.Now.Year), loggedInUser.Id);
                 //Kalan İzin Hakkı
@@ -91,7 +91,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 vm.Lets = lets;
                 return View(vm);
             };
-            
+
         }
 
         [HttpGet]
@@ -115,6 +115,18 @@ namespace BayraktarlarWebsite.UI.Controllers
                 return RedirectToAction("Index");
             }
             return View(letAddDto);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveLet(int letId)
+        {
+            if (letId != 0)
+            {
+                await _letService.ApproveLetAsync(letId);
+            }
+
+            return NotFound();
         }
     }
 }

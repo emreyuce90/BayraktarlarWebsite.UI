@@ -9,6 +9,7 @@ namespace BayraktarlarWebsite.BLL.Interfaces
 {
     public interface ILetService
     {
+        Task ApproveLetAsync(int letId);
         Task<LetListDto> GetAllByUserIdAsync(int userId);
         Task<LetListDto> GetAllAsync();
         Task AddLetAsync(LetAddDto letAddDto);

@@ -3,6 +3,7 @@
     ViewBag.Title = "İzinler";
     Layout = "_AdminLayout";
 }
+<div id="modal-area"></div>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mt-4">
@@ -40,7 +41,7 @@
                     <p></p>
                 </div>
             </div>
-             <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6">
                 <div class="card bg-danger text-white mb-4">
                     <div class="card-body text-center">BU YIL KULLANDIĞIM İZİNLER</div>
                     <h1 class="text-center">@Model.ThisYearLetUsed</h1>
@@ -54,7 +55,7 @@
                     <p></p>
                 </div>
             </div>
-           
+
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-primary text-white mb-4">
                     <div class="card-body text-center">GEÇEN YIL KULLANDIĞIM İZİNLER</div>
@@ -62,7 +63,7 @@
                     <p></p>
                 </div>
             </div>
-            
+
 
 
         </div>
@@ -109,11 +110,20 @@
                 @{
                     if (ViewBag.IsAdmin == true)
                     {
-                        <td><a class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
+                        if (@t.IsApproved == false)
+                        {
+                            <td><a data-letId="@t.Id" id="approveLet" class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
+                        }
+                        else
+                        {
+
+                            <td></td>
+                        }
+
                     }
                     else
                     {
-
+                        <td><a class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> Dilekçeyi Görüntüle</a></td>
                     }
                 }
 
@@ -339,7 +349,62 @@
                     }
                 }
             });
+
+            $(document).on('click', '#approveLet', function(e) {
+                e.preventDefault();
+                const id = $(this).attr("data-letId");
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'İzni onaylamak istediğinizden emin misiniz ?',
+                    text: "Onaylıyor musunuz ?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Onayla',
+                    cancelButtonText: 'Reddet',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //Sil butonuna tıklandı
+                        $.ajax({
+
+                            url: '/Let/ApproveLet/',
+                            method: 'post',
+                            data: { letId: id },
+                            success: function(message) {
+                                //sayfayı yenile
+                                window.location.reload()
+                                //alert ver
+
+                            }
+                        });
+                        swalWithBootstrapButtons.fire(
+                            'İzin Onaylandı!',
+                            'Başarılı',
+                            'success'
+                        )
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'İptal Edildi',
+                            'İzin onaylama işlemi iptal edildi',
+                            'error'
+                        )
+                    }
+                })
+
+            });
+
         });
+
     </script>
 
 }

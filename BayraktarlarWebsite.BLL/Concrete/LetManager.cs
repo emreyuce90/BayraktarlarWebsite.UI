@@ -28,6 +28,20 @@ namespace BayraktarlarWebsite.BLL.Concrete
             await _unitOfWork.SaveAsync();
         }
 
+        public async Task ApproveLetAsync(int letId)
+        {
+            //Finding let from letId
+            var let = await _unitOfWork.Lets.GetAsync(l => l.Id == letId);
+            //if let is not null
+            if(let != null)
+            {
+                let.IsApproved = true;
+                await _unitOfWork.Lets.UpdateAsync(let);
+                await _unitOfWork.SaveAsync();
+            }
+
+        }
+
         public async Task<LetListDto> GetAllAsync()
         {
             var list = await _unitOfWork.Lets.GetAllAsync(null, l => l.User);
