@@ -2,6 +2,7 @@
 using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
+using BayraktarlarWebsite.UI.Helpers.Abstract;
 using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +14,16 @@ namespace BayraktarlarWebsite.UI.Controllers
 {
     public class LetController : Controller
     {
+        private readonly ILetTimeCalculator _calculate;
         private readonly UserManager<User> _userManager;
         private readonly ILetService _letService;
         private readonly IToastNotification _toastNotification;
-        public LetController(ILetService letService, IToastNotification toastNotification, UserManager<User> userManager)
+        public LetController(ILetService letService, IToastNotification toastNotification, UserManager<User> userManager, ILetTimeCalculator calculate)
         {
             _letService = letService;
             _toastNotification = toastNotification;
             _userManager = userManager;
+            _calculate = calculate;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -44,42 +47,10 @@ namespace BayraktarlarWebsite.UI.Controllers
                 //Çalışma senesi
                 vm.WorkYear = DateTime.Now.Year - loggedInUser.EntryDate.Year;
                 //Bu yıl hakettiği izinler
-                if (DateTime.Now.Year - loggedInUser.EntryDate.Year >= 1 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 5)
-                {
-                    vm.ThisYearLetRight = 14;
-                }
-                else if (DateTime.Now.Year - loggedInUser.EntryDate.Year > 5 && DateTime.Now.Year - loggedInUser.EntryDate.Year <= 15)
-                {
-                    vm.ThisYearLetRight = 20;
-                }
-                else if (DateTime.Now.Year - loggedInUser.EntryDate.Year > 15)
-                {
-                    vm.ThisYearLetRight = 26;
-
-                }
-                else
-                {
-                    vm.ThisYearLetRight = 0;
-                }
+                vm.ThisYearLetRight=_calculate.CalculateLet(DateTime.Now.Year - loggedInUser.EntryDate.Year);
 
                 //geçen yıl izin hakkı
-                if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 1 && (DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year <= 5)
-                {
-                    vm.LastYearLetRight = 14;
-                }
-                else if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 5 && (DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year <= 15)
-                {
-                    vm.LastYearLetRight = 20;
-                }
-                else if ((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year > 15)
-                {
-                    vm.LastYearLetRight = 26;
-
-                }
-                else
-                {
-                    vm.LastYearLetRight = 0;
-                }
+                vm.LastYearLetRight = _calculate.CalculateLet((DateTime.Now.Year-1) - loggedInUser.EntryDate.Year);
 
                 //Geçen yıl kullanılan izinler
                 vm.LastYearLetUsed = await _letService.UsedLetsAsync((DateTime.Now.Year - 1), loggedInUser.Id);
