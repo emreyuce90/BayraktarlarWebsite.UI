@@ -8,15 +8,15 @@ namespace BayraktarlarWebsite.UI.Helpers.Concrete
       
         public int CalculateLet(int year)
         {
-            if (DateTime.Now.Year - year >= 1 && DateTime.Now.Year - year <= 5)
+            if (year >= 1 &&  year <= 5)
             {
                 return 14;
             }
-            else if (DateTime.Now.Year - year > 5 && DateTime.Now.Year - year <= 15)
+            else if (year > 5 && year <= 15)
             {
                return 20;
             }
-            else if (DateTime.Now.Year - year > 15)
+            else if (year > 15)
             {
                 return 26;
             }

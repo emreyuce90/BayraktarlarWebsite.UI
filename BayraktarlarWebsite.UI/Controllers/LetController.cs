@@ -47,10 +47,10 @@ namespace BayraktarlarWebsite.UI.Controllers
                 //Çalışma senesi
                 vm.WorkYear = DateTime.Now.Year - loggedInUser.EntryDate.Year;
                 //Bu yıl hakettiği izinler
-                vm.ThisYearLetRight=_calculate.CalculateLet(DateTime.Now.Year - loggedInUser.EntryDate.Year);
+                vm.ThisYearLetRight = _calculate.CalculateLet(DateTime.Now.Year - loggedInUser.EntryDate.Year);
 
                 //geçen yıl izin hakkı
-                vm.LastYearLetRight = _calculate.CalculateLet((DateTime.Now.Year-1) - loggedInUser.EntryDate.Year);
+                vm.LastYearLetRight = _calculate.CalculateLet((DateTime.Now.Year - 1) - loggedInUser.EntryDate.Year);
 
                 //Geçen yıl kullanılan izinler
                 vm.LastYearLetUsed = await _letService.UsedLetsAsync((DateTime.Now.Year - 1), loggedInUser.Id);
@@ -79,12 +79,30 @@ namespace BayraktarlarWebsite.UI.Controllers
                 var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 letAddDto.UserId = loggedInUser.Id;
                 letAddDto.CreatedDate = DateTime.Now;
-                await _letService.AddLetAsync(letAddDto);
-                _toastNotification.AddSuccessToastMessage("İzin talebi oluşturma işlemi başarılı", new ToastrOptions
+                //Eğer izin hakkı >= Talep edilenden
+                //Bu yıl izin hakkı //Geçen yıl izin hakkı
+
+                int remainingLets = await _letService.RemainingLetAsync(loggedInUser.Id);
+                if (remainingLets >= letAddDto.DayCount)
                 {
-                    Title = "İşlem Başarılı"
-                });
-                return RedirectToAction("Index");
+
+
+                    await _letService.AddLetAsync(letAddDto);
+                    _toastNotification.AddSuccessToastMessage("İzin talebi oluşturma işlemi başarılı", new ToastrOptions
+                    {
+                        Title = "İşlem Başarılı"
+                    });
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", $"Kullanabileceğiniz izin sayısı en fazla {remainingLets} olabilir. Kullanmak istediğiniz izin sayısı hakkettiğinizden fazla");
+                    _toastNotification.AddErrorToastMessage("İzin talebi oluşturma işlemi başarısız", new ToastrOptions
+                    {
+                        Title = "İşlem Başarısız"
+                    });
+                    return View(letAddDto);
+                }
             }
             return View(letAddDto);
         }
