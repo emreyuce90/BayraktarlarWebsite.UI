@@ -25,8 +25,9 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Read(int notificationId)
         {
-            if(notificationId == 0)
+            if(notificationId != 0)
             {
+               await _notificationService.ReadAsync(notificationId);
                 return NoContent();
             }
             else

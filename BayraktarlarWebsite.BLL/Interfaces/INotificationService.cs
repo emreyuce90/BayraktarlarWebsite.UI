@@ -9,6 +9,7 @@ namespace BayraktarlarWebsite.BLL.Interfaces
 {
     public interface INotificationService
     {
+        Task ReadAsync(int notificationId);
         Task<int> UnreadNotificationsAsync(int userId);
         Task AddNotificationAsync(NotificationAddDto notificationAddDto);
         Task<NotificationListDto> GetAllAsync(int userId);

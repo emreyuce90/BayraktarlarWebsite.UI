@@ -41,6 +41,14 @@ namespace BayraktarlarWebsite.BLL.Concrete
             
         }
 
+        public async Task ReadAsync(int notificationId)
+        {
+            var notification = await _unitOfWork.Notifications.GetAsync(n=>n.Id == notificationId);
+            notification.IsRead = true;
+            await _unitOfWork.Notifications.UpdateAsync(notification);
+            await _unitOfWork.SaveAsync();
+        }
+
         public async Task<int> UnreadNotificationsAsync(int userId)
         {
            int result =await _unitOfWork.Notifications.CountAsync(n =>n.IsRead == false && n.UserId == userId);

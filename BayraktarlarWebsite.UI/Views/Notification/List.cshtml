@@ -1,20 +1,43 @@
 ﻿@model NotificationListDto
 @{
+    ViewBag.Title = "Bildirimler";
     Layout = "_AdminLayout";
 }
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a>Bildirimlerim</a></li>
+    </ol>
 
 <div class="mt-2">
     @foreach (var n in Model.Notifications)
     {
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-            <strong>@n.Name</strong>
-            <p>@n.Description</p>
-            <button id="readNotification" data-notificationId="@n.Id" class="btn btn-success">
-                <i class="fa fa-eye" aria-hidden="true"></i> Oku
-            </button>
-        </div>
+        if (n.IsRead == false)
+        {
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <strong>@n.Name</strong>
+                <p>@n.Description</p>
+                <button id="readNotification" data-notificationId="@n.Id" class="btn btn-success">
+                    <i class="fa fa-eye" aria-hidden="true"></i> Oku
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-default alert-dismissible fade show" role="alert">
+                <strong>@n.Name</strong>
+                <p>@n.Description</p>
+                <button class="btn btn-success">
+                    <i class="fa fa-book" aria-hidden="true"></i> Okundu
+                </button>
+            </div>
+        }
+
+
     }
 </div>
+
+
 @section scripts{
     <script>
         $(document).ready(function() {
@@ -22,10 +45,14 @@
                 e.preventDefault();
                 const id = $(this).attr('data-notificationId');
                 $.ajax({
-                    url:"/Notification/Read/",
-                    data: {}
+                    url: "/Notification/Read/",
+                    method: 'post',
+                    data: { notificationId: id },
+                    success: function() {
+                        document.location.reload();
+                    }
                 });
             });
         });
     </script>
-}
+    }

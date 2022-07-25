@@ -100,8 +100,16 @@ namespace BayraktarlarWebsite.UI.Controllers
                         Name="İzin talebiniz oluşturuldu",
                         Description =$"{DateTime.Now.ToShortDateString()} tarihli izin talebiniz kaydedilmiştir.",
                         UserId= loggedInUser.Id
+                        
+                    };
+                    var notification2 = new NotificationAddDto
+                    {
+                        Name = "İzin talebi oluşturuldu",
+                        Description = $"{loggedInUser.UserName} adlı kullanıcı {letAddDto.DayCount} günlük izin talebinde bulundu.",
+                        UserId = 3
                     };
                     await _notificationService.AddNotificationAsync(notification);
+                    await _notificationService.AddNotificationAsync(notification2);
                     return RedirectToAction("Index");
                 }
                 else
@@ -131,7 +139,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 var notification = new NotificationAddDto
                 {
                     Name = "İzin talebiniz onaylandı",
-                    Description = $"{let.Let.StartDate} ile {let.Let.EndDate} tarihleri arasında {let.Let.DayCount} günlük izniniz {let.Let.ApprovedDate.ToShortDateString()} tarhinde {loggedInUser.UserName} kullanıcısı tarafından onaylanmıştır",
+                    Description = $"{let.Let.StartDate.ToShortDateString()} ile {let.Let.EndDate.ToShortDateString()} tarihleri arasında {let.Let.DayCount} günlük izniniz {let.Let.ApprovedDate.ToShortDateString()} tarhinde {loggedInUser.UserName} kullanıcısı tarafından onaylanmıştır",
                     UserId = let.Let.UserId
                 };
                 await _notificationService.AddNotificationAsync(notification);
