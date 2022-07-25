@@ -49,9 +49,10 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task<LetListDto> GetAllAsync()
         {
             var list = await _unitOfWork.Lets.GetAllAsync(null, l => l.User);
+            var sortedList = list.OrderByDescending(l => l.CreatedDate).ToList();
             return new LetListDto
             {
-                Lets = list
+                Lets = sortedList
             };
         }
 
