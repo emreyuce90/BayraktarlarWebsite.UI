@@ -14,6 +14,6 @@ namespace BayraktarlarWebsite.Entities.Entities
         public string Description { get; set; }
         public int UserId { get; set; }
         public bool IsRead { get; set; }
-
+        public DateTime CreatedDate { get; set; }
     }
 }

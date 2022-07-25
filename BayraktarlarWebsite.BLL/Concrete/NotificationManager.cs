@@ -34,9 +34,10 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task<NotificationListDto> GetAllAsync(int userId)
         {
             var notifications = await _unitOfWork.Notifications.GetAllAsync(n=>n.UserId == userId);
+            var sortedList =notifications.OrderBy(n => n.IsRead).ThenByDescending(n=>n.CreatedDate).ToList();
             return new NotificationListDto
             {
-                Notifications = notifications
+                Notifications = sortedList
             };
             
         }
