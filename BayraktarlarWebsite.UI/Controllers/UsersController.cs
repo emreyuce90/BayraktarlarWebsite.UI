@@ -39,7 +39,8 @@ namespace BayraktarlarWebsite.UI.Controllers
                     Mobile = model.Mobile,
                     PhoneNumber = model.Mobile,
                     UserName = model.Code,
-                    Profile = model.Picture
+                    Profile = model.Picture,
+                    EntryDate = model.EntryDate
                 };
                 var identityResult = await _userManager.CreateAsync(user, model.Password.ToString());
                 if (identityResult.Succeeded)

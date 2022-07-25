@@ -19,6 +19,7 @@ namespace BayraktarlarWebsite.DAL.Context
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Tabela> Tabelas { get; set; }
         public DbSet<TabelaImages> TabelaImages { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public DatabaseConnection(DbContextOptions<DatabaseConnection> options):base(options)
         {

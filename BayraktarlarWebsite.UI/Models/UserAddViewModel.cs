@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,6 +31,7 @@ namespace BayraktarlarWebsite.UI.Models
         [DataType(DataType.PhoneNumber)]
         [DisplayName("Cep Telefonu :")]
         public string Mobile { get; set; }
+        public DateTime EntryDate { get; set; }
         //Profil Resmi Alanı
         [DisplayName("Fotoğraf :")]
         public string Picture { get; set; }

@@ -11,6 +11,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private readonly EfNotificationRepository _notificationRepository;
         private readonly EfStatusRepository _efStatusRepository;
         private readonly EfMaterialRepository _efMaterialRepository;
         private readonly DatabaseConnection _context;
@@ -36,6 +37,8 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         public IStatusRepository Status => _efStatusRepository ?? new EfStatusRepository(_context);
 
         public ILetRepository Lets => _efLetRepository ?? new EfLetRepository(_context);
+
+        public INotificationRepository Notifications => _notificationRepository ?? new EfNotificationRepository(_context);
 
         public async ValueTask DisposeAsync()
         {

@@ -14,16 +14,18 @@ namespace BayraktarlarWebsite.UI.Controllers
 {
     public class LetController : Controller
     {
+        private readonly INotificationService _notificationService;
         private readonly ILetTimeCalculator _calculate;
         private readonly UserManager<User> _userManager;
         private readonly ILetService _letService;
         private readonly IToastNotification _toastNotification;
-        public LetController(ILetService letService, IToastNotification toastNotification, UserManager<User> userManager, ILetTimeCalculator calculate)
+        public LetController(ILetService letService, IToastNotification toastNotification, UserManager<User> userManager, ILetTimeCalculator calculate, INotificationService notificationService)
         {
             _letService = letService;
             _toastNotification = toastNotification;
             _userManager = userManager;
             _calculate = calculate;
+            _notificationService = notificationService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -92,6 +94,14 @@ namespace BayraktarlarWebsite.UI.Controllers
                     {
                         Title = "İşlem Başarılı"
                     });
+                    //Bildirim
+                    var notification = new NotificationAddDto
+                    {
+                        Name="İzin talebiniz oluşturuldu",
+                        Description =$"{DateTime.Now.ToShortDateString()} tarihli izin talebiniz kaydedilmiştir.",
+                        UserId= loggedInUser.Id
+                    };
+                    await _notificationService.AddNotificationAsync(notification);
                     return RedirectToAction("Index");
                 }
                 else
@@ -113,7 +123,18 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             if (letId != 0)
             {
+                var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                //Getting let
+                var let =await _letService.GetAsync(letId);
                 await _letService.ApproveLetAsync(letId);
+                //Bildirim
+                var notification = new NotificationAddDto
+                {
+                    Name = "İzin talebiniz onaylandı",
+                    Description = $"{let.Let.StartDate} ile {let.Let.EndDate} tarihleri arasında {let.Let.DayCount} günlük izniniz {let.Let.ApprovedDate.ToShortDateString()} tarhinde {loggedInUser.UserName} kullanıcısı tarafından onaylanmıştır",
+                    UserId = let.Let.UserId
+                };
+                await _notificationService.AddNotificationAsync(notification);
                 return NoContent();
             }
 

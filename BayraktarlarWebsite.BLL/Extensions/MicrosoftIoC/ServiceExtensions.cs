@@ -43,6 +43,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddScoped<IBrandService, BrandManager>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILetService, LetManager>();
+            services.AddScoped<INotificationService, NotificationManager>();
             return services;
         }
     }

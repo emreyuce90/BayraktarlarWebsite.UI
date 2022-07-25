@@ -64,6 +64,15 @@ namespace BayraktarlarWebsite.BLL.Concrete
             };
         }
 
+        public async Task<LetDto> GetAsync(int letId)
+        {
+            var let = await _unitOfWork.Lets.GetAsync(l=>l.Id == letId);
+            return new LetDto
+            {
+                Let = let
+            };
+        }
+
         public async Task<int> RemainingLetAsync(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());

@@ -82,6 +82,7 @@
             <th>Kaç Gün</th>
             <th>Onay</th>
             <th>Not</th>
+           
             <th>İşlemler</th>
         </tr>
     </thead>
@@ -107,12 +108,14 @@
                 </td>
 
                 <td>@t.Note</td>
+                
                 @{
                     if (ViewBag.IsAdmin == true)
                     {
                         if (@t.IsApproved == false)
                         {
                                 <td><a data-letId="@t.Id" id="approveLet" class="btn btn-success text-white"><i class="fa fa-check" aria-hidden="true"></i> İzni Onayla</a></td>
+
                         }
                         else
                         {

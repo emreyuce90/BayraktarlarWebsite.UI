@@ -18,5 +18,7 @@ namespace BayraktarlarWebsite.UI.Models
         public int ThisYearLetUsed { get; set; }
         //Geçen yıl izin hakkı
         public int LastYearLetUsed { get; set; }
+
+        
     }
 }
