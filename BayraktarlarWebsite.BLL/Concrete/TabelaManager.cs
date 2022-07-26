@@ -76,6 +76,12 @@ namespace BayraktarlarWebsite.BLL.Concrete
             };
         }
 
+        public async Task<int> GetByUserByTabelaId(int tabelaId)
+        {
+            var tabela =await _unitOfWork.Tabelas.GetAsync(t => t.Id == tabelaId);
+            return tabela.UserId;
+        }
+
         public async Task<bool> GetStatusCodeGivenTabelaAsync(int tabelaId)
         {
             var tabela = await _unitOfWork.Tabelas.GetAsync(t => t.Id == tabelaId);

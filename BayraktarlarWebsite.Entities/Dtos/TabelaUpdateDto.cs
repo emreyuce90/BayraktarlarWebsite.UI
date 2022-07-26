@@ -21,6 +21,7 @@ namespace BayraktarlarWebsite.Entities.Dtos
         //Tabelanın görseli
         public string Notes { get; set; }
 
+       
         public List<TabelaImages> Images { get; set; }
         public List<IFormFile> AddedPictures { get; set; }
 

@@ -15,12 +15,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+
 namespace BayraktarlarWebsite.UI.Controllers
 {
     [Authorize]
     public class TabelaController : Controller
     {
+        private readonly INotificationService _notificationService;
         private readonly UserManager<User> _userManager;
         private readonly IStatusService _statusService;
         private readonly ITabelaImagesService _tabelaImagesService;
@@ -31,7 +32,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly IImageHelper _imageHelper;
         private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
-        public TabelaController(UserManager<User> userManager,IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper, ITabelaImagesService tabelaImagesService, IStatusService statusService)
+        public TabelaController(UserManager<User> userManager, IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper, ITabelaImagesService tabelaImagesService, IStatusService statusService, INotificationService notificationService)
         {
 
             _toastNotification = toastNotification;
@@ -44,6 +45,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             _tabelaImagesService = tabelaImagesService;
             _statusService = statusService;
             _userManager = userManager;
+            _notificationService = notificationService;
         }
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -102,10 +104,28 @@ namespace BayraktarlarWebsite.UI.Controllers
                         table.Images.Add(new TabelaImages { PictureUrl = fileName });
                     }
                     //fotoğraflar bittiğinde tabela nesnesini db ye ekle
-                    await _tabelaService.AddAsync(table);
 
                 }
-
+                await _tabelaService.AddAsync(table);
+                //Hem admini hem de user ı bilgilendir
+                var notification = new NotificationAddDto
+                {
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                    Name = $"Tabela talebiniz oluşturuldu {DateTime.Now.ToShortDateString()}",
+                    Description = "Tabela talebiniz yöneticiye bildirilmiştir,en kısa zamanda dönüş yapılacaktır",
+                    UserId = user.Id
+                };
+                await _notificationService.AddNotificationAsync(notification);
+                var notification2 = new NotificationAddDto
+                {
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                    Name = $"{user.UserName} adlı kullanıcı {DateTime.Now.ToShortDateString()} tarihinde bir tabela talebinde bulundu",
+                    Description = "Tabela talebini bir an önce onayla!",
+                    UserId = 03
+                };
+                await _notificationService.AddNotificationAsync(notification2);
                 _toastNotification.AddSuccessToastMessage("Tabela ekleme işlemi başarılı");
                 return RedirectToAction("Index");
             }
@@ -139,21 +159,21 @@ namespace BayraktarlarWebsite.UI.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            bool isAdmin =await _userManager.IsInRoleAsync(user, "Admin");
-            
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
             TabelaListDto tabelalar;
             if (isAdmin)
             {
-               tabelalar = await _tabelaService.GetAllAsync();
+                tabelalar = await _tabelaService.GetAllAsync();
                 ViewBag.IsAdmin = true;
             }
             else
             {
-               tabelalar = await _tabelaService.GetAllAsync(user.Id);
+                tabelalar = await _tabelaService.GetAllAsync(user.Id);
                 ViewBag.IsAdmin = false;
             }
             //db deki tabelalar
-           
+
             //vm
             List<TabelaViewModel> model = new List<TabelaViewModel>();
 
@@ -237,7 +257,6 @@ namespace BayraktarlarWebsite.UI.Controllers
                     model.Images = tablImages;
 
                 }
-                await _tabelaService.UpdateAsync(model);
 
                 _toastNotification.AddSuccessToastMessage("Tabela güncelleme işlemi başarılı", new ToastrOptions
                 {
@@ -273,6 +292,25 @@ namespace BayraktarlarWebsite.UI.Controllers
             if (tabelaId != 0)
             {
                 await _tabelaService.SoftDeleteAsync(tabelaId);
+                //tabelaId den tabelayı bul
+                var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(tabelaId);
+                tabela.Tabela.StatusId = 6;
+                var status = new ChangeStatusDto
+                {
+                    StatusId = 6,
+                    TabelaId= tabela.Tabela.Id
+                };
+                await _tabelaService.ChangeStatusAsync(status);
+                //kullanıcıya bildirim yap
+                var notification = new NotificationAddDto
+                {
+                    CreatedDate = DateTime.Now,
+                    Description = $"{tabela.Tabela.Customer.Name} isimli carinize ait {tabela.Tabela.Brand.Name} markalandırmalı tabela talebiniz silindi",
+                    Name = "Tabela talebiniz silinmiştir",
+                    UserId = await _tabelaService.GetByUserByTabelaId(tabelaId)
+
+                };
+                await _notificationService.AddNotificationAsync(notification);
                 _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
                 {
                     Title = "İşlem Başarılı"
@@ -353,7 +391,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 tabelalar = await _tabelaService.DeletedTabelasAsync(user.Id);
                 ViewBag.IsAdmin = false;
             }
-            
+
             var model = new List<TabelaViewModel>();
             foreach (var tbl in tabelalar.Tabela)
             {
@@ -405,6 +443,19 @@ namespace BayraktarlarWebsite.UI.Controllers
             if (ModelState.IsValid)
             {
                 await _tabelaService.ChangeStatusAsync(model);
+                var tabela = await _tabelaService.GetTabelaByTabelaIdAsync(model.TabelaId);
+                //Bildirim yap
+                var notification = new NotificationAddDto
+                {
+                    CreatedDate = DateTime.Now,
+                    Description = $"Tabelanızın durumu {tabela.Tabela.Status.Name} olarak değiştirilmiştir",
+                    IsRead = false,
+                    Name = "Tabelanızın statüsü yönetici tarafından değiştirilmiştir",
+                    //Bu bildirim tabela kime aitse o kullanıcıya yapılacaktır
+                    UserId = await _tabelaService.GetByUserByTabelaId(model.TabelaId)
+
+                };
+                await _notificationService.AddNotificationAsync(notification);
                 _toastNotification.AddSuccessToastMessage("Durum güncelleme başarılı", new ToastrOptions
                 {
                     Title = "İşlem Başarılı"

@@ -9,6 +9,7 @@ namespace BayraktarlarWebsite.BLL.Interfaces
 {
     public interface ITabelaService
     {
+        Task<int> GetByUserByTabelaId(int tabelaId);
         Task SoftDeleteAsync(int tabelaId);
         Task<bool> GetStatusCodeGivenTabelaAsync(int tabelaId);
         Task<TabelaListDto> DeletedTabelasAsync(int userId);
@@ -23,5 +24,6 @@ namespace BayraktarlarWebsite.BLL.Interfaces
         Task HardDeleteAsync(int tabelaId);
         Task UndoDeleteAsync(int tabelaId);
         Task ChangeStatusAsync(ChangeStatusDto model);
+        
     }
 }
