@@ -44,6 +44,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILetService, LetManager>();
             services.AddScoped<INotificationService, NotificationManager>();
+            services.AddScoped<ITicketService, TicketManager>();
             return services;
         }
     }

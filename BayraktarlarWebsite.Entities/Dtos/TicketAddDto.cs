@@ -1,4 +1,4 @@
-﻿using BayraktarlarWebsite.Shared.Interface;
+﻿using BayraktarlarWebsite.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BayraktarlarWebsite.Entities.Entities
+namespace BayraktarlarWebsite.Entities.Dtos
 {
-    public class Ticket:IEntity
+    public class TicketAddDto
     {
-        public int Id { get; set; }
+        
         //Konu
-        [Required(ErrorMessage ="Lütfen bir konu belirtiniz")]
+        [Required(ErrorMessage = "Lütfen bir konu belirtiniz")]
         [DisplayName("Konu")]
         public string Subject { get; set; }
         [Required(ErrorMessage = "Lütfen  ait açıklamasını yazınız")]
