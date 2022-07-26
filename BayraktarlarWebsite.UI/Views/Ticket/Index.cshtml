@@ -1,0 +1,47 @@
+﻿@model TicketListDto
+@{
+    Layout = "AdminLayout";
+    ViewBag.Title = "Görevlerim";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Görevlerim</a></li>
+    </ol>
+</nav>
+
+@if (Model.Tickets.Count > 0)
+{
+    <div class="mt-2">
+        @foreach (var t in Model.Tickets)
+        {
+            <div class="card">
+                <div class="card-header">
+                    Ticket ID #@t.Id
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@t.Subject</h5>
+                    <p class="card-text">@t.Detail</p>
+                    <a href="#" class="btn btn-primary">Görevi Tamamla</a>
+                </div>
+            </div>
+        }
+
+    </div>
+}
+else
+{
+    <div class="mt-2">
+        @foreach (var t in Model.Tickets)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Harika!</strong> Tüm görevleriniz tamamlandı!
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+    </div>
+}

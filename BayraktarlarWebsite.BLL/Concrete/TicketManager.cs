@@ -25,9 +25,13 @@ namespace BayraktarlarWebsite.BLL.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<TicketListDto> GetAllAsync()
+        public async Task<TicketListDto> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.IsClosed == false);
+            return new TicketListDto
+            {
+                Tickets = tickets
+            };
         }
 
         public Task<TicketListDto> GetAllAsync(int userId)
