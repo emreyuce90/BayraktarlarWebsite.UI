@@ -6,6 +6,7 @@
 }
 
 <div class="row mt-4">
+
     <div class="col-xl-3 col-md-6">
         <div class="card bg-primary text-white mb-4">
             <div class="card-body text-center">Uygulanan Tabelalarım</div>
@@ -34,5 +35,65 @@
             <p></p>
         </div>
     </div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body text-center">Çalışma Yılım</div>
+            <h1 class="text-center">@Model.WorkingYear</h1>
+            <p></p>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body text-center">Kalan İznim</div>
+            <h1 class="text-center">@Model.RemainingLets</h1>
+            <p></p>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body text-center">Bu Yıl Kullandığım</div>
+            <h1 class="text-center">@Model.UsedThisYear</h1>
+            <p></p>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-danger text-white mb-4">
+            <div class="card-body text-center">Geçen Yıl Kullandığım</div>
+            <h1 class="text-center">@Model.UsedLastYear</h1>
+            <p></p>
+        </div>
+    </div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body text-center">Tamamlanmamış Görevlerim</div>
+            <h1 class="text-center">@Model.Todo</h1>
+            <p></p>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body text-center">Planlanmış Görevlerim</div>
+            <h1 class="text-center">@Model.Planned</h1>
+            <p></p>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body text-center">Tamamlanmış Görevlerim</div>
+            <h1 class="text-center">@Model.Done</h1>
+            <p></p>
+        </div>
+    </div>
+    
 
 </div>

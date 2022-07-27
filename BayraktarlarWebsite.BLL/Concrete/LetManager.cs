@@ -129,8 +129,15 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<int> UsedLetsAsync(int year, int userId)
         {
+            
             return await _unitOfWork.Lets.SummAsync(l => l.EndDate.Year == year && l.UserId == userId && l.IsApproved == true, l => l.DayCount);
 
+        }
+
+        public async Task<int> WorkingYearAsync(int userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            return DateTime.Now.Year - user.EntryDate.Year;
         }
     }
 }

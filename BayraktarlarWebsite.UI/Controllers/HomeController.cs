@@ -5,6 +5,7 @@ using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,13 +14,15 @@ namespace BayraktarlarWebsite.UI.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private readonly ILetService _letService;
         private readonly UserManager<User> _userManager;
         private readonly ICustomerService _customerService;
 
-        public HomeController(ICustomerService customerService, UserManager<User> userManager)
+        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService)
         {
             _customerService = customerService;
             _userManager = userManager;
+            _letService = letService;
         }
 
         public async Task<IActionResult> Index()
@@ -35,18 +38,24 @@ namespace BayraktarlarWebsite.UI.Controllers
                     OnaydaBekleyenler = await _customerService.CountAsync(1),
                     Onaylananlar = await _customerService.CountAsync(2),
                     ReddedilenTabelalar = await _customerService.CountAsync(6),
-                    UygulananTabelalar = await _customerService.CountAsync(5)
+                    UygulananTabelalar = await _customerService.CountAsync(5),
+                    
                 };
                 return View(model);
             }
             else
             {
+                
                 var model = new HomePageViewModel
                 {
                     OnaydaBekleyenler = await _customerService.CountAsync(1, authenticatedUser.Id),
                     Onaylananlar = await _customerService.CountAsync(2, authenticatedUser.Id),
                     ReddedilenTabelalar = await _customerService.CountAsync(6, authenticatedUser.Id),
-                    UygulananTabelalar = await _customerService.CountAsync(5, authenticatedUser.Id)
+                    UygulananTabelalar = await _customerService.CountAsync(5, authenticatedUser.Id),
+                    WorkingYear = await _letService.WorkingYearAsync(authenticatedUser.Id),
+                    RemainingLets = await _letService.RemainingLetAsync(authenticatedUser.Id),
+                    UsedLastYear = await _letService.UsedLetsAsync((DateTime.Now.Year-1),authenticatedUser.Id),
+                    UsedThisYear= await _letService.UsedLetsAsync(DateTime.Now.Year,authenticatedUser.Id)
                 };
                 return View(model);
             }

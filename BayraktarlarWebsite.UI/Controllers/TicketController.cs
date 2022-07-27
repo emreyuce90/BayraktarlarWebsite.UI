@@ -19,7 +19,8 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(await _ticketService.GetAllAsync());
+            var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            return View(await _ticketService.GetAllAsync(loggedInUser.Id));
         }
     }
 }

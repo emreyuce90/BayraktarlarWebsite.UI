@@ -1,6 +1,6 @@
 ﻿@model TicketListDto
 @{
-    Layout = "AdminLayout";
+    Layout = "_AdminLayout";
     ViewBag.Title = "Görevlerim";
 }
 
@@ -11,7 +11,7 @@
     </ol>
 </nav>
 
-@if (Model.Tickets.Count > 0)
+@if(Model.Tickets.Count > 0)
 {
     <div class="mt-2">
         @foreach (var t in Model.Tickets)
@@ -33,15 +33,14 @@
 else
 {
     <div class="mt-2">
-        @foreach (var t in Model.Tickets)
-        {
+   
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Harika!</strong> Tüm görevleriniz tamamlandı!
+                <strong>Harika!</strong> Tamamlanmamış göreviniz yok tüm görevleriniz tamamlandı!
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-        }
+        
 
     </div>
 }

@@ -34,9 +34,13 @@ namespace BayraktarlarWebsite.BLL.Concrete
             };
         }
 
-        public Task<TicketListDto> GetAllAsync(int userId)
+        public async Task<TicketListDto> GetAllAsync(int userId)
         {
-            throw new NotImplementedException();
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.UserId ==userId && t.IsClosed == false);
+            return new TicketListDto
+            {
+                Tickets = tickets
+            };
         }
     }
 }
