@@ -11,19 +11,41 @@
     </ol>
 </nav>
 
-@if(Model.Tickets.Count > 0)
+@if (Model.Tickets.Count > 0)
 {
     <div class="mt-2">
         @foreach (var t in Model.Tickets)
         {
-            <div class="card">
-                <div class="card-header">
-                    Ticket ID #@t.Id
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">@t.Subject</h5>
-                    <p class="card-text">@t.Detail</p>
-                    <a href="#" class="btn btn-primary">Görevi Tamamla</a>
+            <div class="mt-2">
+                <div class="card">
+                    <div class="card-header">
+                        Ticket ID #@t.Id
+
+                        <span style="float:right">@t.CreatedDate</span>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                        @{
+                            if (t.Urgency.Id == 1)
+                            {
+                                <span class="badge badge-info mb-1"><i class="fa fa-flag" aria-hidden="true"></i> @t.Urgency.UrgencyName</span>
+                            }
+                            else if (t.UrgencyId == 2)
+                            {
+                                <span class="badge badge-warning mb-1 text-white"><i class="fa fa-flag" aria-hidden="true"></i> @t.Urgency.UrgencyName</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger mb-1"><i class="fa fa-flag" aria-hidden="true"></i> @t.Urgency.UrgencyName</span>
+                            }
+                        }
+                        <span style="float:right"><a asp-action="Edit" asp-controller="Ticket" class="btn btn-link">Düzenle <i class="fa fa-edit" aria-hidden="true"></i></a> </span>
+                        <h5 class="card-title">@t.Subject</h5>
+                    
+                    </div>
+                        <p class="card-text">@t.Detail</p>
+                        <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i> Görevi Tamamla</a>
+                    </div>
                 </div>
             </div>
         }
@@ -33,14 +55,14 @@
 else
 {
     <div class="mt-2">
-   
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Harika!</strong> Tamamlanmamış göreviniz yok tüm görevleriniz tamamlandı!
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Harika!</strong> Tamamlanmamış göreviniz yok tüm görevleriniz tamamlandı!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
 
     </div>
 }

@@ -35,5 +35,7 @@ namespace BayraktarlarWebsite.Entities.Entities
         public int UserId { get; set; }
         public User User { get; set; }
 
+        public DateTime RemainderDate { get; set; }
+
     }
 }

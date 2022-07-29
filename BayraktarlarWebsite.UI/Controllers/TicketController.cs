@@ -4,6 +4,7 @@ using BayraktarlarWebsite.Entities.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
@@ -34,6 +35,20 @@ namespace BayraktarlarWebsite.UI.Controllers
             var aciliyetler = await _urgencyService.GetAllAsync();
             ViewBag.Select = new SelectList(aciliyetler.Urgencies,"Id","UrgencyName");
             return View(new TicketAddDto());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTicket(TicketAddDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                model.CreatedDate = DateTime.Now;
+                model.UserId = loggedInUser.Id;
+                await _ticketService.AddTicketAsync(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
     }
 }

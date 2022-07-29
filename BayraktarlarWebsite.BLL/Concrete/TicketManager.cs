@@ -2,6 +2,7 @@
 using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Dtos;
+using BayraktarlarWebsite.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +21,15 @@ namespace BayraktarlarWebsite.BLL.Concrete
             _unitOfWork = unitOfWork;
         }
 
-        public Task AddTicketAsync(TicketAddDto ticketAddDto)
+        public async Task AddTicketAsync(TicketAddDto ticketAddDto)
         {
-            throw new NotImplementedException();
+            await _unitOfWork.Tickets.AddAsync(_mapper.Map<Ticket>(ticketAddDto));
+            await _unitOfWork.SaveAsync();
         }
-
+        
         public async Task<TicketListDto> GetAllAsync()
         {
-            var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.IsClosed == false);
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t => t.IsClosed == false,t=>t.Urgency);
             return new TicketListDto
             {
                 Tickets = tickets
@@ -36,7 +38,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<TicketListDto> GetAllAsync(int userId)
         {
-            var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.UserId ==userId && t.IsClosed == false);
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.UserId ==userId && t.IsClosed == false,t=>t.Urgency);
             return new TicketListDto
             {
                 Tickets = tickets
