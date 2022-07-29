@@ -1,13 +1,13 @@
 ﻿@model TicketListDto
 @{
     Layout = "_AdminLayout";
-    ViewBag.Title = "Görevlerim";
+    ViewBag.Title = "Zamanlanmış Görevlerim";
 }
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mt-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
-        <li class="breadcrumb-item"><a asp-action="Index">Görevlerim</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Zamanlanmış Görevlerim</a></li>
     </ol>
 </nav>
 
@@ -46,7 +46,6 @@
 
                                 </div>
                                 <p class="card-text">@t.Detail</p>
-
                                 <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i> Görevi Tamamla</a>
                             </div>
                             @{
@@ -62,20 +61,20 @@
 
                                 }
                             }
-
                         </div>
                     </div>
                 </div>
             }
         </div>
     </div>
+
 }
 else
 {
     <div class="mt-2">
 
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Harika!</strong> Tamamlanmamış göreviniz yok tüm görevleriniz tamamlandı!
+            <strong>Harika!</strong> Zamanlanmış göreviniz yok
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>

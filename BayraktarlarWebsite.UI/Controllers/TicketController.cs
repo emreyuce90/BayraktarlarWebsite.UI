@@ -29,12 +29,26 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Remainder()
+        {
+            var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            return View(await _ticketService.GetAllFutureAsync(loggedInUser.Id));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ClosedTickets()
+        {
+            var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            return View(await _ticketService.ClosedTicketsAsync(loggedInUser.Id));
+        }
+
+        [HttpGet]
         public async Task<IActionResult> AddTicket()
         {
             //Aciliyet tablosunu çek
             var aciliyetler = await _urgencyService.GetAllAsync();
             ViewBag.Select = new SelectList(aciliyetler.Urgencies,"Id","UrgencyName");
-            return View(new TicketAddDto());
+            return View(new TicketAddDto() { RemainderDate=Convert.ToDateTime(DateTime.Now.ToString("f"))});
         }
 
         [HttpPost]

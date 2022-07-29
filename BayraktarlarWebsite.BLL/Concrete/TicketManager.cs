@@ -26,10 +26,39 @@ namespace BayraktarlarWebsite.BLL.Concrete
             await _unitOfWork.Tickets.AddAsync(_mapper.Map<Ticket>(ticketAddDto));
             await _unitOfWork.SaveAsync();
         }
-        
+
+
+
+        public async Task<TicketListDto> ClosedTicketsAsync(int userId)
+        {
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t => t.IsClosed == true && t.UserId == userId, t => t.Urgency);
+            return new TicketListDto
+            {
+                Tickets = tickets
+            };
+        }
+
+        public async Task<int> CountClosedTicketsAsync(int userId)
+        {
+            //Hatırlatıcıdaki görevleri sayar
+            return await _unitOfWork.Tickets.CountAsync(t => t.IsClosed == true && t.UserId == userId);
+        }
+
+        public async Task<int> CountNotClosedTicketsAsync(int userId)
+        {
+            //Hatırlatıcıdaki görevleri sayar
+            return await _unitOfWork.Tickets.CountAsync(t => t.IsClosed == false && t.UserId == userId && t.RemainderDate.Date <= DateTime.Now.Date);
+        }
+
+        public async Task<int> CountRemainderTicketsAsync(int userId)
+        {
+            //Hatırlatıcıdaki görevleri sayar
+            return await _unitOfWork.Tickets.CountAsync(t => t.IsClosed == false && t.UserId == userId && t.RemainderDate.Date > DateTime.Now.Date);
+        }
+
         public async Task<TicketListDto> GetAllAsync()
         {
-            var tickets = await _unitOfWork.Tickets.GetAllAsync(t => t.IsClosed == false,t=>t.Urgency);
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t => t.IsClosed == false, t => t.Urgency);
             return new TicketListDto
             {
                 Tickets = tickets
@@ -38,11 +67,24 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<TicketListDto> GetAllAsync(int userId)
         {
-            var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.UserId ==userId && t.IsClosed == false,t=>t.Urgency);
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t => t.UserId == userId && t.IsClosed == false && t.RemainderDate.Date <= DateTime.Now.Date, t => t.Urgency);
+
             return new TicketListDto
             {
                 Tickets = tickets
             };
         }
+
+        public async Task<TicketListDto> GetAllFutureAsync(int userId)
+        {
+            var tickets = await _unitOfWork.Tickets.GetAllAsync(t => t.UserId == userId && t.IsClosed == false && t.RemainderDate.Date > DateTime.Now.Date, t => t.Urgency);
+
+            return new TicketListDto
+            {
+                Tickets = tickets
+            };
+        }
+
+
     }
 }
