@@ -64,5 +64,20 @@ namespace BayraktarlarWebsite.UI.Controllers
             }
             return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveTicket(int ticketId)
+        {
+            if(ticketId != 0)
+            {
+                await _ticketService.ApproveAsync(ticketId);
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
+        }
     }
 }

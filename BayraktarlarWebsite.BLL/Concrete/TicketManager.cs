@@ -27,7 +27,18 @@ namespace BayraktarlarWebsite.BLL.Concrete
             await _unitOfWork.SaveAsync();
         }
 
+        public async Task ApproveAsync(int ticketId)
+        {
+            //retrieving data from db
+            var toBeApprovedTicket = await _unitOfWork.Tickets.GetAsync(t=>t.Id == ticketId);
+            if(toBeApprovedTicket != null)
+            {
+                toBeApprovedTicket.IsClosed = true;
+                await _unitOfWork.Tickets.UpdateAsync(toBeApprovedTicket);
+                await _unitOfWork.SaveAsync();
+            }
 
+        }
 
         public async Task<TicketListDto> ClosedTicketsAsync(int userId)
         {

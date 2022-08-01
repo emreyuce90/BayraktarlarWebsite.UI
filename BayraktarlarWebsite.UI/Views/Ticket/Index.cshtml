@@ -47,7 +47,7 @@
                                 </div>
                                 <p class="card-text">@t.Detail</p>
 
-                                <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i> Görevi Tamamla</a>
+                                <a id="closeTicket" data-ticketId="@t.Id" class="btn btn-secondary btn-block btn-sm text-white"><i class="fa fa-check" aria-hidden="true"></i> Görevi Tamamla</a>
                             </div>
                             @{
                                 @*Hatırlatma tarihi bugünün tarihinden büyük ise*@
@@ -83,4 +83,31 @@ else
 
 
     </div>
+}
+
+@section scripts{
+
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '#closeTicket', function(e) {
+                e.preventDefault();
+                const url = '/Ticket/ApproveTicket/';
+                const id = $(this).attr('data-ticketId');
+                let approve = confirm('Bu görevi onaylamak istediğinizden emin misiniz?');
+                if (approve) {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: { ticketId: id },
+                        success: function() {
+                            window.location.reload();
+                        }
+                    });
+                }
+
+            });
+        });
+
+    </script>
+
 }
