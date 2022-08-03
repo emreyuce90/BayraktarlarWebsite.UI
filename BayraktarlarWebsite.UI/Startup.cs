@@ -32,7 +32,7 @@ namespace BayraktarlarWebsite.UI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDependencies(_configuration.GetConnectionString("db1"));
+            services.AddDependencies(_configuration.GetConnectionString("db2"));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<ILetTimeCalculator, LetTimeCalculator>();

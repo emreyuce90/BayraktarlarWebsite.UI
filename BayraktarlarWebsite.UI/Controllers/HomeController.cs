@@ -26,7 +26,10 @@ namespace BayraktarlarWebsite.UI.Controllers
             _letService = letService;
             _ticketService = ticketService;
         }
-
+        public IActionResult Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> Dashboard()
         {
             //giriş yapan kullanıcı
