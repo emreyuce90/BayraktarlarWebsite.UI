@@ -27,7 +27,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             _ticketService = ticketService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Dashboard()
         {
             //giriş yapan kullanıcı
             var authenticatedUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
