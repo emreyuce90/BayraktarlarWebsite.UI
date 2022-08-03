@@ -30,8 +30,8 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task ApproveAsync(int ticketId)
         {
             //retrieving data from db
-            var toBeApprovedTicket = await _unitOfWork.Tickets.GetAsync(t=>t.Id == ticketId);
-            if(toBeApprovedTicket != null)
+            var toBeApprovedTicket = await _unitOfWork.Tickets.GetAsync(t => t.Id == ticketId);
+            if (toBeApprovedTicket != null)
             {
                 toBeApprovedTicket.IsClosed = true;
                 await _unitOfWork.Tickets.UpdateAsync(toBeApprovedTicket);
@@ -96,6 +96,21 @@ namespace BayraktarlarWebsite.BLL.Concrete
             };
         }
 
+        public async Task<TicketUpdateDto> GetAsync(int ticketId)
+        {
+            var ticket = await _unitOfWork.Tickets.GetAsync(t => t.Id == ticketId);
+            return _mapper.Map<TicketUpdateDto>(ticket);
+        }
 
+        public async Task UpdateTicketAsync(TicketUpdateDto ticketUpdateDto)
+        {
+            var oldData = await _unitOfWork.Tickets.GetAsync(t => t.Id == ticketUpdateDto.Id);
+            oldData.Subject = ticketUpdateDto.Subject;
+            oldData.Detail = ticketUpdateDto.Detail;
+            oldData.RemainderDate = ticketUpdateDto.RemainderDate;
+            oldData.UrgencyId = ticketUpdateDto.UrgencyId;
+            await _unitOfWork.Tickets.UpdateAsync(oldData);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

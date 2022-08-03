@@ -36,7 +36,7 @@ namespace BayraktarlarWebsite.UI
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<ILetTimeCalculator, LetTimeCalculator>();
-            services.AddAutoMapper(typeof(BrandMap),typeof(CustomerMap),typeof(TabelaImagesMap),typeof(TabelaViewModelMap),typeof(MaterialMap),typeof(TabelaMap),typeof(RolesMapping));
+            services.AddAutoMapper(typeof(BrandMap),typeof(CustomerMap),typeof(TabelaImagesMap),typeof(TabelaViewModelMap),typeof(MaterialMap),typeof(TabelaMap),typeof(RolesMapping),typeof(TicketMap));
             services.AddSession();
             //cookie servisi
             services.ConfigureApplicationCookie(opt =>

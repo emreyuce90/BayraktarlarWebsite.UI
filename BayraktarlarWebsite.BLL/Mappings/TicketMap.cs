@@ -14,6 +14,7 @@ namespace BayraktarlarWebsite.BLL.Mappings
         public TicketMap()
         {
             CreateMap<TicketAddDto, Ticket>().ReverseMap();
+            CreateMap<TicketUpdateDto, Ticket>().ReverseMap();
         }
     }
 }

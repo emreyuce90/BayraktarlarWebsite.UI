@@ -41,7 +41,7 @@
                                             <span class="badge badge-danger mb-1"><i class="fa fa-flag" aria-hidden="true"></i> @t.Urgency.UrgencyName</span>
                                         }
                                     }
-                                    <span style="float:right"><a asp-action="Edit" asp-controller="Ticket" class="btn btn-link">Düzenle <i class="fa fa-edit" aria-hidden="true"></i></a> </span>
+                                    <span style="float:right"><a asp-action="UpdateTicket" asp-controller="Ticket" asp-route-ticketId="@t.Id" class="btn btn-link">Düzenle <i class="fa fa-edit" aria-hidden="true"></i></a> </span>
                                     <h5 class="card-title">@t.Subject</h5>
 
                                 </div>

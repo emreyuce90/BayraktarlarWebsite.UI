@@ -79,5 +79,30 @@ namespace BayraktarlarWebsite.UI.Controllers
             }
             
         }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateTicket(int ticketId)
+        {
+            var urgencies = await _urgencyService.GetAllAsync();
+            var selectList = new SelectList(urgencies.Urgencies,"Id","UrgencyName");
+            ViewBag.Select = selectList;
+            var updatedTicket =await _ticketService.GetAsync(ticketId);
+            return View(updatedTicket);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateTicket(TicketUpdateDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                model.UserId = loggedInUser.Id;
+                await _ticketService.UpdateTicketAsync(model);
+                return RedirectToAction("Index");
+            }
+            var urgencies = await _urgencyService.GetAllAsync();
+            var selectList = new SelectList(urgencies.Urgencies, "Id", "UrgencyName");
+            ViewBag.Select = selectList;
+            return View(model);
+        }
     }
 }
