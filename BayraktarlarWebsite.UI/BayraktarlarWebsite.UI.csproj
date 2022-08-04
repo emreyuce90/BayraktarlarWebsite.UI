@@ -53,6 +53,22 @@
 
   <ItemGroup>
     <None Include="wwwroot\adminLayout\js\scripts.js" />
+    <None Include="wwwroot\website\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\website\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\website\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\website\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\website\css\bootstrap.css.map" />
+    <None Include="wwwroot\website\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\website\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\website\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\website\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\website\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\website\js\bootstrap.js" />
+    <None Include="wwwroot\website\js\bootstrap.js.map" />
+    <None Include="wwwroot\website\js\bootstrap.min.js" />
+    <None Include="wwwroot\website\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\website\js\main.js" />
+    <None Include="wwwroot\website\js\wow.js" />
   </ItemGroup>
 
   <ItemGroup>

@@ -26,6 +26,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             _letService = letService;
             _ticketService = ticketService;
         }
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
