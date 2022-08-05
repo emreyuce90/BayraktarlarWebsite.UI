@@ -33,7 +33,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Dashboard", "Home");
                     }
 
                 }

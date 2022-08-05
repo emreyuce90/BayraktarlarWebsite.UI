@@ -39,8 +39,27 @@
 </div>
 
 <div class="row mt-4">
-
+    @{
+        if (ViewBag.IsAdmin)
+        {
+            <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body text-center">İzin Talebinde Bulunanlar</div>
+            <h1 class="text-center">@Model.TotalNotApprovedLet</h1>
+            <p></p>
+        </div>
+    </div>
     <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body text-center">İzni Onaylananlar</div>
+            <h1 class="text-center">@Model.TotalApprovedLet</h1>
+            <p></p>
+        </div>
+    </div>
+        }
+        else
+        {
+                <div class="col-xl-3 col-md-6">
         <div class="card bg-primary text-white mb-4">
             <div class="card-body text-center">Çalışma Yılım</div>
             <h1 class="text-center">@Model.WorkingYear</h1>
@@ -68,6 +87,9 @@
             <p></p>
         </div>
     </div>
+
+        }
+    }
 
 </div>
 

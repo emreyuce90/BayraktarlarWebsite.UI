@@ -8,167 +8,170 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @await Html.PartialAsync("_WebsiteCssPartialView")
-    @await Html.PartialAsync("_WebsiteJsPartialView")
+
     @RenderSection("css",false)
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top text-dark " id="mainNav">
 
-    <div class="container-fluid">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <a class="navbar-brand" href="index.html">
-                <img src="~/website/img/logobu.png" width="200" height="40" alt="">
-            </a>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#page-top"><i class="fas fa-home"></i> Ana Sayfa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#about"><i class="fas fa-info"></i> Hakkımızda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#products">
-                        <i class="fas fa-store"></i>
-                        Ürünlerimiz
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#services">
-                        <i class="fas fa-oil-can"></i> Hangi
-                        Yağ
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link js-scroll-trigger" asp-action="Learn">
-                        <i class="fas fa-wrench"></i> Ustasından
-                        Öğren
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="https://b2b.bayraktarlartrakya.com/slogin.aspx">
-                        <i class="fas fa-shopping-basket"></i> Satış Portalı
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#contact">
-                        <i class="fas fa-id-card"></i>
-                        İletişim
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" asp-action="Kvkk">KVKK</a>
-                </li>
+        <div class="container-fluid">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <a class="navbar-brand" href="index.html">
+                    <img src="~/website/img/logobu.png" width="200" height="40" alt="">
+                </a>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#page-top"><i class="fas fa-home"></i> Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#about"><i class="fas fa-info"></i> Hakkımızda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#products">
+                            <i class="fas fa-store"></i>
+                            Ürünlerimiz
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#services">
+                            <i class="fas fa-oil-can"></i> Hangi
+                            Yağ
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link js-scroll-trigger" asp-action="Learn">
+                            <i class="fas fa-wrench"></i> Ustasından
+                            Öğren
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="https://b2b.bayraktarlartrakya.com/slogin.aspx">
+                            <i class="fas fa-shopping-basket"></i> Satış Portalı
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#contact">
+                            <i class="fas fa-id-card"></i>
+                            İletişim
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" asp-action="Kvkk"><i class="fa fa-book" aria-hidden="true"></i> KVKK</a>
+                    </li>
+                                        <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger"asp-controller="Auth" asp-action="Login"><i class="fa fa-book" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i>  Kullanıcı Girişi</a>
+                    </li>
 
 
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
     @RenderBody()
     <section id="contact bg">
-    <div style="margin-top: 5rem;">
-        <footer class="bg text-white mt-4 text-center">
-            <div class="row ">
+        <div style="margin-top: 5rem;">
+            <footer class="bg text-white mt-4 text-center">
+                <div class="row ">
 
-                <div class="col-md-6 " style="margin-top: 4rem; ">
-                    <div style="margin-bottom: 2rem;">
-                        <h3>İletişim Bilgilerimiz</h3>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h4>Merkez</h4>
-                                <ul>
-                                    <li>Dere Mahalle Lüleburgaz Caddesi</li>
-                                    <li>No:43 Pınarhisar/Kırklareli</li>
-                                    <li><i class="fas fa-phone-alt mr-2"></i>0288 615 11 87</li>
-                                    <li><i class="fas fa-fax mr-2"></i>0288 615 36 43(pbx)</li>
-                                    <li>
-                                        <i class="fas fa-envelope-open-text mr-2"></i>info@bayraktarlartrakya.com
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <h4>Şube</h4>
-                                <ul>
-                                    <li>Yıldırım Beyazıt Mahallesi </li>
-                                    <li>Barbaros Cad. No:63/B Çerkezköy/TEKİRDAĞ</li>
-                                    <li><i class="fas fa-phone-alt mr-2"></i>0282 726 87 53</li>
-                                    <li><i class="fas fa-fax mr-2"></i>0282 726 10 71(pbx)</li>
+                    <div class="col-md-6 " style="margin-top: 4rem; ">
+                        <div style="margin-bottom: 2rem;">
+                            <h3>İletişim Bilgilerimiz</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Merkez</h4>
+                                    <ul>
+                                        <li>Dere Mahalle Lüleburgaz Caddesi</li>
+                                        <li>No:43 Pınarhisar/Kırklareli</li>
+                                        <li><i class="fas fa-phone-alt mr-2"></i>0288 615 11 87</li>
+                                        <li><i class="fas fa-fax mr-2"></i>0288 615 36 43(pbx)</li>
+                                        <li>
+                                            <i class="fas fa-envelope-open-text mr-2"></i>info@bayraktarlartrakya.com
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Şube</h4>
+                                    <ul>
+                                        <li>Yıldırım Beyazıt Mahallesi </li>
+                                        <li>Barbaros Cad. No:63/B Çerkezköy/TEKİRDAĞ</li>
+                                        <li><i class="fas fa-phone-alt mr-2"></i>0282 726 87 53</li>
+                                        <li><i class="fas fa-fax mr-2"></i>0282 726 10 71(pbx)</li>
 
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
+
                         </div>
 
+
+                    </div>
+                    <div class="col-md-2 " style="margin-top: 4rem;">
+                        <h3>Sosyal Medyada Biz</h3>
+
+                        <a href="https://www.facebook.com/bayraktarlartrakya/?ref=bookmarks">
+                            <i class="fab fa-facebook fa-2x"></i>
+                        </a>
+                        <a href="https://www.instagram.com/bayraktarlar_trakya/" style="color:purple">
+                            <i class="fab fa-instagram fa-2x ml-3"></i>
+                        </a>
+                        <a style="color:#0077B5;"
+                           href="https://www.linkedin.com/company/bayraktarlartrakya/about/?viewAsMember=true">
+                            <i class="fab fa-linkedin fa-2x ml-3"></i>
+                        </a>
                     </div>
 
+                    <div class="col-md-4" style="margin-top: 4rem;">
 
+                        <h3>Yararlı Linkler</h3>
+                        <ul>
+                            <li class="mb-2">
+                                <a href="https://www.msds.exxonmobil.com/psims/psims.aspx?language=TU&brand=XOM&lstext=T%C3%BCrk%C3%A7e&languageselectedvalue=17"
+                                   class="btn btn-success btn-sm">Ürün Güvenlik Bilgi Formları</a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="https://www.exxonmobil.com/pds?language=tr" class="btn btn-primary btn-sm">
+                                    Ürün
+                                    Bülteni Kütüphanesi
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="https://www.exxonmobil.com/pds?language=tr" class="btn btn-warning btn-sm">
+                                    Mobil 1 Center Bulucu
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="http://www.clubmobil1.com/#/login" class="btn btn-secondary btn-sm">
+                                    Ustalar
+                                    Kulübü
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-md-2 " style="margin-top: 4rem;">
-                    <h3>Sosyal Medyada Biz</h3>
+            </footer>
+        </div>
+    </section>
 
-                    <a href="https://www.facebook.com/bayraktarlartrakya/?ref=bookmarks">
-                        <i class="fab fa-facebook fa-2x"></i>
-                    </a>
-                    <a href="https://www.instagram.com/bayraktarlar_trakya/" style="color:purple">
-                        <i class="fab fa-instagram fa-2x ml-3"></i>
-                    </a>
-                    <a style="color:#0077B5;"
-                       href="https://www.linkedin.com/company/bayraktarlartrakya/about/?viewAsMember=true">
-                        <i class="fab fa-linkedin fa-2x ml-3"></i>
-                    </a>
-                </div>
-
-                <div class="col-md-4" style="margin-top: 4rem;">
-
-                    <h3>Yararlı Linkler</h3>
-                    <ul>
-                        <li class="mb-2">
-                            <a href="https://www.msds.exxonmobil.com/psims/psims.aspx?language=TU&brand=XOM&lstext=T%C3%BCrk%C3%A7e&languageselectedvalue=17"
-                               class="btn btn-success btn-sm">Ürün Güvenlik Bilgi Formları</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="https://www.exxonmobil.com/pds?language=tr" class="btn btn-primary btn-sm">
-                                Ürün
-                                Bülteni Kütüphanesi
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="https://www.exxonmobil.com/pds?language=tr" class="btn btn-warning btn-sm">
-                                Mobil 1 Center Bulucu
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="http://www.clubmobil1.com/#/login" class="btn btn-secondary btn-sm">
-                                Ustalar
-                                Kulübü
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="row bg ">
+        <div class="col-md-6">
+            <div class="map-responsive mt-1 ">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2982.286889662207!2d27.492665114805632!3d41.62792988901263!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40a0a1499b6d69e5%3A0x9128682bfa096385!2sBayraktarlar%20Mobil%20Madeni%20Ya%C4%9Flar!5e0!3m2!1str!2str!4v1568982979271!5m2!1str!2str"
+                        width="1300" height="400" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
             </div>
-        </footer>
-    </div>
-</section>
-
-<div class="row bg ">
-    <div class="col-md-6">
-        <div class="map-responsive mt-1 ">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2982.286889662207!2d27.492665114805632!3d41.62792988901263!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40a0a1499b6d69e5%3A0x9128682bfa096385!2sBayraktarlar%20Mobil%20Madeni%20Ya%C4%9Flar!5e0!3m2!1str!2str!4v1568982979271!5m2!1str!2str"
-                    width="1300" height="400" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+        </div>
+        <div class="col-md-6">
+            <div class="map-responsive mt-1 ">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.9485418820927!2d27.984905315193995!3d41.2882243792734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14b5263b1eb3f755%3A0x4b82037fdf44acc4!2sBayraktarlar%20Mobil%20End%C3%BCstriyel%20Ya%C4%9Flar!5e0!3m2!1str!2str!4v1569248644576!5m2!1str!2str"
+                        width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+            </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="map-responsive mt-1 ">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.9485418820927!2d27.984905315193995!3d41.2882243792734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14b5263b1eb3f755%3A0x4b82037fdf44acc4!2sBayraktarlar%20Mobil%20End%C3%BCstriyel%20Ya%C4%9Flar!5e0!3m2!1str!2str!4v1569248644576!5m2!1str!2str"
-                    width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
-        </div>
-    </div>
-</div>
-    
+    @await Html.PartialAsync("_WebsiteJsPartialView")
     @RenderSection("scripts",false)
 
 </body>

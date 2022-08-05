@@ -46,6 +46,18 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         }
 
+        public async Task<int> CountApprovedAsync()
+        {
+            int letCount =await _unitOfWork.Lets.CountAsync(l=>l.IsApproved == true && l.ApprovedDate.Year == DateTime.Now.Year);
+            return letCount;
+        }
+
+        public async Task<int> CountTotalWaitAsync()
+        {
+            int letCount = await _unitOfWork.Lets.CountAsync(l=>l.IsApproved == false && l.ApprovedDate.Year == DateTime.Now.Year);
+            return letCount;
+        }
+
         public async Task<LetListDto> GetAllAsync()
         {
             var list = await _unitOfWork.Lets.GetAllAsync(null, l => l.User);

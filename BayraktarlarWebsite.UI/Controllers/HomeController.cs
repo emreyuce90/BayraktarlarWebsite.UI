@@ -39,19 +39,25 @@ namespace BayraktarlarWebsite.UI.Controllers
             var isAdmin=await _userManager.IsInRoleAsync(authenticatedUser,"Admin");
             if (isAdmin)
             {
+                ViewBag.IsAdmin = true;
                 var model = new HomePageViewModel
                 {
                     OnaydaBekleyenler = await _customerService.CountAsync(1),
                     Onaylananlar = await _customerService.CountAsync(2),
                     ReddedilenTabelalar = await _customerService.CountAsync(6),
                     UygulananTabelalar = await _customerService.CountAsync(5),
-                    
+                    Done = await _ticketService.CountClosedTicketsAsync(authenticatedUser.Id),
+                    Todo = await _ticketService.CountNotClosedTicketsAsync(authenticatedUser.Id),
+                    Planned = await _ticketService.CountRemainderTicketsAsync(authenticatedUser.Id),
+                    TotalApprovedLet = await _letService.CountApprovedAsync(),
+                    TotalNotApprovedLet = await _letService.CountTotalWaitAsync()
+
                 };
                 return View(model);
             }
             else
             {
-                
+                ViewBag.IsAdmin = false;
                 var model = new HomePageViewModel
                 {
                     OnaydaBekleyenler = await _customerService.CountAsync(1, authenticatedUser.Id),

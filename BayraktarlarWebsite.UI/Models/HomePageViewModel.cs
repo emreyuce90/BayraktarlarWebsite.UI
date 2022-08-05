@@ -13,6 +13,8 @@
         public int Todo { get; set; }
         public int Planned { get; set; }
         public int Done { get; set; }
+        public int TotalApprovedLet { get; set; }
+        public int TotalNotApprovedLet { get; set; }
 
     }
 }
