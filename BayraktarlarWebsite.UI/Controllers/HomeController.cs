@@ -77,5 +77,18 @@ namespace BayraktarlarWebsite.UI.Controllers
             
             
         }
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Learn()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Kvkk()
+        {
+            return View();
+        }
     }
 }
