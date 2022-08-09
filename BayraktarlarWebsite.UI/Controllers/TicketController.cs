@@ -115,6 +115,23 @@ namespace BayraktarlarWebsite.UI.Controllers
                 var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 model.UserId = loggedInUser.Id;
                 await _ticketService.UpdateTicketAsync(model);
+                if (model.RemainderDate > DateTime.Now)
+                {
+                    var notification = new NotificationAddDto
+                    {
+                        CreatedDate = DateTime.Now,
+                        RememberDate = model.RemainderDate,
+                        Description = $"{model.Subject} konulu görevinizi unutmayınız",
+                        IsRead = false,
+                        Name = $"Hatırlatıcı!",
+                        UserId = loggedInUser.Id
+                    };
+                    await _notificationService.AddNotificationAsync(notification);
+                }
+                else
+                {
+
+                }
                 return RedirectToAction("Index");
             }
             var urgencies = await _urgencyService.GetAllAsync();
