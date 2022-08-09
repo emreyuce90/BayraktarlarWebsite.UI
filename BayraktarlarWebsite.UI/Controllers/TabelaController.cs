@@ -114,7 +114,8 @@ namespace BayraktarlarWebsite.UI.Controllers
                     IsRead = false,
                     Name = $"Tabela talebiniz oluşturuldu {DateTime.Now.ToShortDateString()}",
                     Description = "Tabela talebiniz yöneticiye bildirilmiştir,en kısa zamanda dönüş yapılacaktır",
-                    UserId = user.Id
+                    UserId = user.Id,
+                    RememberDate = DateTime.Now
                 };
                 await _notificationService.AddNotificationAsync(notification);
                 var notification2 = new NotificationAddDto
@@ -123,7 +124,8 @@ namespace BayraktarlarWebsite.UI.Controllers
                     IsRead = false,
                     Name = $"{user.UserName} adlı kullanıcı {DateTime.Now.ToShortDateString()} tarihinde bir tabela talebinde bulundu",
                     Description = "Tabela talebini bir an önce onayla!",
-                    UserId = 03
+                    UserId = 03,
+                   RememberDate = DateTime.Now
                 };
                 await _notificationService.AddNotificationAsync(notification2);
                 _toastNotification.AddSuccessToastMessage("Tabela ekleme işlemi başarılı");
@@ -307,8 +309,10 @@ namespace BayraktarlarWebsite.UI.Controllers
                     CreatedDate = DateTime.Now,
                     Description = $"{tabela.Tabela.Customer.Name} isimli carinize ait {tabela.Tabela.Brand.Name} markalandırmalı tabela talebiniz silindi",
                     Name = "Tabela talebiniz silinmiştir",
-                    UserId = await _tabelaService.GetByUserByTabelaId(tabelaId)
-
+                    UserId = await _tabelaService.GetByUserByTabelaId(tabelaId),
+                    IsRead =false,
+                    RememberDate = DateTime.Now
+                    
                 };
                 await _notificationService.AddNotificationAsync(notification);
                 _toastNotification.AddSuccessToastMessage("Tabela silme işlemi başarılı", new ToastrOptions
@@ -319,7 +323,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             }
             _toastNotification.AddErrorToastMessage("Tabela silme işlemi başarısız", new ToastrOptions
             {
-                Title = "İşlem Başarızı"
+                Title = "İşlem Başarısız"
             });
             return NotFound();
         }
@@ -452,7 +456,8 @@ namespace BayraktarlarWebsite.UI.Controllers
                     IsRead = false,
                     Name = "Tabelanızın statüsü yönetici tarafından değiştirilmiştir",
                     //Bu bildirim tabela kime aitse o kullanıcıya yapılacaktır
-                    UserId = await _tabelaService.GetByUserByTabelaId(model.TabelaId)
+                    UserId = await _tabelaService.GetByUserByTabelaId(model.TabelaId),
+                    RememberDate =DateTime.Now
 
                 };
                 await _notificationService.AddNotificationAsync(notification);

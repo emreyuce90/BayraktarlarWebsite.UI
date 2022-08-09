@@ -33,7 +33,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<NotificationListDto> GetAllAsync(int userId)
         {
-            var notifications = await _unitOfWork.Notifications.GetAllAsync(n=>n.UserId == userId);
+            var notifications = await _unitOfWork.Notifications.GetAllAsync(n => n.UserId == userId && DateTime.Now>= n.RememberDate);
             var sortedList =notifications.OrderBy(n => n.IsRead).ThenByDescending(n=>n.CreatedDate).ToList();
             return new NotificationListDto
             {
@@ -52,7 +52,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<int> UnreadNotificationsAsync(int userId)
         {
-           int result =await _unitOfWork.Notifications.CountAsync(n =>n.IsRead == false && n.UserId == userId);
+           int result =await _unitOfWork.Notifications.CountAsync(n =>n.IsRead == false && n.UserId == userId && DateTime.Now>=n.RememberDate);
             return result;
         }
     }

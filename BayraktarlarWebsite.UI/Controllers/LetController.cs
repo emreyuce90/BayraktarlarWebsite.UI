@@ -100,15 +100,18 @@ namespace BayraktarlarWebsite.UI.Controllers
                         Name="İzin talebiniz oluşturuldu",
                         Description =$"{letAddDto.StartDate.ToShortDateString()} - {letAddDto.EndDate.ToShortDateString()} tarihleri arası {letAddDto.DayCount} günlük izin talebiniz kaydedilmiştir.",
                         UserId= loggedInUser.Id,
-                        CreatedDate = DateTime.Now
-                        
+                        CreatedDate = DateTime.Now,
+                        IsRead = false,
+                        RememberDate=DateTime.Now                        
                     };
                     var notification2 = new NotificationAddDto
                     {
                         Name = "İzin talebi oluşturuldu",
                         Description = $"{loggedInUser.UserName} adlı kullanıcı {letAddDto.DayCount} günlük izin talebinde bulundu.",
                         UserId = 3,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = DateTime.Now,
+                        IsRead =false,
+                        RememberDate = DateTime.Now
                     };
                     await _notificationService.AddNotificationAsync(notification);
                     await _notificationService.AddNotificationAsync(notification2);
@@ -143,7 +146,8 @@ namespace BayraktarlarWebsite.UI.Controllers
                     Name = "İzin talebiniz onaylandı",
                     Description = $"{let.Let.StartDate.ToShortDateString()} ile {let.Let.EndDate.ToShortDateString()} tarihleri arasında {let.Let.DayCount} günlük izniniz {let.Let.ApprovedDate.ToShortDateString()} tarhinde {loggedInUser.UserName} kullanıcısı tarafından onaylanmıştır",
                     UserId = let.Let.UserId,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    RememberDate = DateTime.Now
                 };
                 await _notificationService.AddNotificationAsync(notification);
                 return NoContent();

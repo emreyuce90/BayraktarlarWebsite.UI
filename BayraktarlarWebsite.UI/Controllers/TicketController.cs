@@ -14,12 +14,13 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly IUrgencyService _urgencyService;
         private readonly UserManager<User> _userManager;
         private readonly ITicketService _ticketService;
-
-        public TicketController(ITicketService ticketService, UserManager<User> userManager, IUrgencyService urgencyService)
+        private readonly INotificationService _notificationService;
+        public TicketController(ITicketService ticketService, UserManager<User> userManager, IUrgencyService urgencyService, INotificationService notificationService)
         {
             _ticketService = ticketService;
             _userManager = userManager;
             _urgencyService = urgencyService;
+            _notificationService = notificationService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -60,6 +61,23 @@ namespace BayraktarlarWebsite.UI.Controllers
                 model.CreatedDate = DateTime.Now;
                 model.UserId = loggedInUser.Id;
                 await _ticketService.AddTicketAsync(model);
+                if (model.RemainderDate > DateTime.Now)
+                {
+                    var notification = new NotificationAddDto
+                    {
+                        CreatedDate = DateTime.Now,
+                        RememberDate = model.RemainderDate,
+                        Description = $"{model.Subject} konulu görevinizi unutmayınız",
+                        IsRead = false,
+                        Name = $"Hatırlatıcı!",
+                        UserId = loggedInUser.Id
+                    };
+                    await _notificationService.AddNotificationAsync(notification);
+                }
+                else
+                {
+                   
+                }
                 return RedirectToAction("Index");
             }
             return View(model);
