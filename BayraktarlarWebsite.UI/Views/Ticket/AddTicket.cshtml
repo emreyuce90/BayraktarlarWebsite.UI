@@ -36,12 +36,25 @@
 
     </div>
 
+    @if (@ViewBag.IsAdmin == true)
+    {
+        <div class="form-group">
+            <label>Atama Yapılacak Kullanıcı :</label>
+            <select class="form-control" asp-for="UserId" asp-items="@(ViewBag.Users)">
+            </select>
+        </div>
+    }
+
+
+
+
+
     <div class="form-group">
         <label>Hatırlatma Zamanı :</label>
-        <input asp-for="RemainderDate" class="form-control"/>
-        <span class="text-danger" asp-validation-for="RemainderDate" ></span>
+        <input asp-for="RemainderDate" class="form-control" />
+        <span class="text-danger" asp-validation-for="RemainderDate"></span>
     </div>
-        
+
     <button type="submit" class="btn btn-success mt-3"><i class="fa fa-clock" aria-hidden="true"></i> Hatırlatıcı Ekle </button>
 </form>
 

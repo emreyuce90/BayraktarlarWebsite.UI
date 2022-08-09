@@ -4,6 +4,7 @@ using BayraktarlarWebsite.Entities.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -46,10 +47,25 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> AddTicket()
         {
+            var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             //Aciliyet tablosunu çek
             var aciliyetler = await _urgencyService.GetAllAsync();
-            ViewBag.Select = new SelectList(aciliyetler.Urgencies,"Id","UrgencyName");
-            return View(new TicketAddDto() { RemainderDate=Convert.ToDateTime(DateTime.Now.ToString("f"))});
+            ViewBag.Select = new SelectList(aciliyetler.Urgencies, "Id", "UrgencyName");
+            //Oturum açan kullanıcı admin mi?
+            bool isAdmin = await _userManager.IsInRoleAsync(loggedInUser, "Admin");
+            if (isAdmin)
+            {
+                ViewBag.IsAdmin = true;
+                //Tüm kullanıcıları çek
+                var allUsers = await _userManager.Users.ToListAsync();
+                var selectList = new SelectList(allUsers, "Id", "UserName");
+                ViewBag.Users = selectList;
+            }
+            else
+            {
+                ViewBag.IsAdmin = false;
+            }
+            return View(new TicketAddDto() { RemainderDate = Convert.ToDateTime(DateTime.Now.ToString("f")) });
         }
 
         [HttpPost]
@@ -59,9 +75,13 @@ namespace BayraktarlarWebsite.UI.Controllers
             {
                 var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 model.CreatedDate = DateTime.Now;
-                model.UserId = loggedInUser.Id;
+                bool isAdmin = await _userManager.IsInRoleAsync(loggedInUser, "Admin");
+                if (isAdmin != true)
+                {
+                    model.UserId = loggedInUser.Id;
+                }
                 await _ticketService.AddTicketAsync(model);
-                if (model.RemainderDate > DateTime.Now)
+                if (model.RemainderDate > DateTime.Now && isAdmin == false)
                 {
                     var notification = new NotificationAddDto
                     {
@@ -73,11 +93,20 @@ namespace BayraktarlarWebsite.UI.Controllers
                         UserId = loggedInUser.Id
                     };
                     await _notificationService.AddNotificationAsync(notification);
-                }
-                else
+                }else if (model.RemainderDate > DateTime.Now || isAdmin == true)
                 {
-                   
+                    var notification = new NotificationAddDto
+                    {
+                        CreatedDate = DateTime.Now,
+                        RememberDate = model.RemainderDate,
+                        Description = $"{model.Subject} konulu görevinizi yapmayı unutmayınız",
+                        IsRead = false,
+                        Name = $"Admin size bir görev atadı!",
+                        UserId = model.UserId
+                    };
+                    await _notificationService.AddNotificationAsync(notification);
                 }
+                
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -86,7 +115,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> ApproveTicket(int ticketId)
         {
-            if(ticketId != 0)
+            if (ticketId != 0)
             {
                 await _ticketService.ApproveAsync(ticketId);
                 return NoContent();
@@ -95,16 +124,16 @@ namespace BayraktarlarWebsite.UI.Controllers
             {
                 return NotFound();
             }
-            
+
         }
 
         [HttpGet]
         public async Task<IActionResult> UpdateTicket(int ticketId)
         {
             var urgencies = await _urgencyService.GetAllAsync();
-            var selectList = new SelectList(urgencies.Urgencies,"Id","UrgencyName");
+            var selectList = new SelectList(urgencies.Urgencies, "Id", "UrgencyName");
             ViewBag.Select = selectList;
-            var updatedTicket =await _ticketService.GetAsync(ticketId);
+            var updatedTicket = await _ticketService.GetAsync(ticketId);
             return View(updatedTicket);
         }
         [HttpPost]
