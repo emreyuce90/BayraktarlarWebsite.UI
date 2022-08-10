@@ -123,7 +123,19 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             if (ticketId != 0)
             {
+                var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 await _ticketService.ApproveAsync(ticketId);
+                //Bilgilendirme yap
+                var notification = new NotificationAddDto
+                {
+                    CreatedDate = DateTime.Now,
+                    IsRead = false,
+                    Description = $"{loggedInUser.UserName} adlı kullanıcı atadığınız görevi tamamladı",
+                    RememberDate=DateTime.Now,
+                    Name=$"Atadığınız görevi tamamlandı",
+                    UserId=1
+                };
+                await _notificationService.AddNotificationAsync(notification);
                 return NoContent();
             }
             else
