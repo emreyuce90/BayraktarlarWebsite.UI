@@ -50,6 +50,17 @@
                 <div class="collapse" id="collapseLayoutsa" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a asp-controller="Ticket" asp-action="AddTicket" class="nav-link"><i class="fa fa-plus mr-2" aria-hidden="true"></i>  Hatırlatıcı Ekle</a>
+                                                @{
+                            if (Model.IsAdmin)
+                            {
+                                  <a asp-controller="Ticket" asp-action="Assignment" class="nav-link"><i class="fa fa-user-plus mr-2" aria-hidden="true"></i>  Atadığım Görevler <span class="badge badge-success">@Model.Unclosed</span></a>
+                            }
+                            else
+                            {
+                                
+                            }
+                        }
+                      
                         <a asp-controller="Ticket" asp-action="Index" class="nav-link"><i class="fa fa-times-circle mr-2" aria-hidden="true"></i>  Tamamlanmamış Görevlerim<span class="badge badge-success">@Model.Unclosed</span></a>
                         <a asp-controller="Ticket" asp-action="Remainder" class="nav-link"> <i class="fa fa-calendar mr-2" aria-hidden="true"></i> Zamanlanmış Görevlerim<span class="badge badge-warning">@Model.Remainder</span></a>
                         <a asp-controller="Ticket" asp-action="ClosedTickets" class="nav-link"><i class="fa fa-check-square mr-2" aria-hidden="true"></i>Tamamlanmış Görevlerim<span class="badge badge-info">@Model.Closed</span></a>

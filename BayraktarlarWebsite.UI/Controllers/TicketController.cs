@@ -76,7 +76,13 @@ namespace BayraktarlarWebsite.UI.Controllers
                 var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 model.CreatedDate = DateTime.Now;
                 bool isAdmin = await _userManager.IsInRoleAsync(loggedInUser, "Admin");
-                if (isAdmin != true)
+                if (isAdmin)
+                {
+                   
+                    model.IsAssigned = true;
+
+                }
+                else
                 {
                     model.UserId = loggedInUser.Id;
                 }
@@ -166,6 +172,13 @@ namespace BayraktarlarWebsite.UI.Controllers
             var urgencies = await _urgencyService.GetAllAsync();
             var selectList = new SelectList(urgencies.Urgencies, "Id", "UrgencyName");
             ViewBag.Select = selectList;
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Assignment()
+        {
+            var model =await _ticketService.AssignedTicketsAsync();
             return View(model);
         }
     }

@@ -40,6 +40,15 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         }
 
+        public async Task<TicketListDto> AssignedTicketsAsync()
+        {
+           var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.IsAssigned == true,t=>t.User,t=>t.Urgency);
+            return new TicketListDto
+            {
+                Tickets = tickets
+            };
+        }
+
         public async Task<TicketListDto> ClosedTicketsAsync(int userId)
         {
             var tickets = await _unitOfWork.Tickets.GetAllAsync(t => t.IsClosed == true && t.UserId == userId, t => t.Urgency);

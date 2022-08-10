@@ -37,5 +37,7 @@ namespace BayraktarlarWebsite.Entities.Entities
 
         public DateTime RemainderDate { get; set; }
 
+        public bool IsAssigned { get; set; }
+
     }
 }
