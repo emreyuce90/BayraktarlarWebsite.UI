@@ -29,7 +29,8 @@ namespace BayraktarlarWebsite.UI.ViewComponents
                 Username = loggedInUser.UserName,
                 Unclosed = await _ticketService.CountNotClosedTicketsAsync(loggedInUser.Id),
                 Closed = await _ticketService.CountClosedTicketsAsync(loggedInUser.Id),
-                Remainder = await _ticketService.CountRemainderTicketsAsync(loggedInUser.Id)
+                Remainder = await _ticketService.CountRemainderTicketsAsync(loggedInUser.Id),
+                CountAssigneds = await _ticketService.CountAssignedTicketsAsync()
             };
             if (loggedInUserRoles.Contains("Admin"))
             {

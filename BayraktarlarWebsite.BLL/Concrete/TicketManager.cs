@@ -43,6 +43,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task<TicketListDto> AssignedTicketsAsync()
         {
            var tickets = await _unitOfWork.Tickets.GetAllAsync(t=>t.IsAssigned == true,t=>t.User,t=>t.Urgency);
+            tickets.OrderByDescending(t => t.CreatedDate);
             return new TicketListDto
             {
                 Tickets = tickets
@@ -56,6 +57,12 @@ namespace BayraktarlarWebsite.BLL.Concrete
             {
                 Tickets = tickets
             };
+        }
+
+        public async Task<int> CountAssignedTicketsAsync()
+        {
+            var assignedTickets =await _unitOfWork.Tickets.CountAsync(t => t.IsAssigned == true);
+            return assignedTickets;
         }
 
         public async Task<int> CountClosedTicketsAsync(int userId)

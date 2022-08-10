@@ -9,6 +9,7 @@ namespace BayraktarlarWebsite.BLL.Interfaces
 {
     public interface ITicketService
     {
+        Task<int> CountAssignedTicketsAsync();
         Task<TicketListDto> AssignedTicketsAsync();
         Task AddTicketAsync(TicketAddDto ticketAddDto);
         Task<TicketUpdateDto> GetAsync(int ticketId);

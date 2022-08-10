@@ -53,7 +53,7 @@
                                                 @{
                             if (Model.IsAdmin)
                             {
-                                  <a asp-controller="Ticket" asp-action="Assignment" class="nav-link"><i class="fa fa-user-plus mr-2" aria-hidden="true"></i>  Atadığım Görevler <span class="badge badge-success">@Model.Unclosed</span></a>
+                                  <a asp-controller="Ticket" asp-action="Assignment" class="nav-link"><i class="fa fa-user-plus mr-2" aria-hidden="true"></i>  Atadığım Görevler <span class="badge badge-success">@Model.CountAssigneds</span></a>
                             }
                             else
                             {

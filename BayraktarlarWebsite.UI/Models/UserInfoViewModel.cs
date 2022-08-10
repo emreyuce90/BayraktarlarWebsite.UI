@@ -7,6 +7,7 @@
         public int Unclosed { get; set; }
         public int Closed { get; set; }
         public int Remainder { get; set; }
+        public int CountAssigneds { get; set; }
 
     }
 }
