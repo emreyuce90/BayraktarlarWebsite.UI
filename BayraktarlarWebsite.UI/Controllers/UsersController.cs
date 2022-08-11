@@ -99,12 +99,12 @@ namespace BayraktarlarWebsite.UI.Controllers
             if (ModelState.IsValid)
             {
                 //ilk olarak sana gelen eski şifreyi kontrol et bakalım eski şifre doğru mu?
-                var user =await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
                 bool isValid = await _userManager.CheckPasswordAsync(user, model.OldPassword);
                 //eğer kullanıcının girdiği şifre doğru ise
                 if (isValid)
                 {
-                   var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
                         //ilk olarak securitstampi değiştir
@@ -112,7 +112,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                         //Kullanıcının oturumunu kapat
                         await _signInManager.SignOutAsync();
                         //Kullanıcıya yeni şifreyle tekrar oturum açtır
-                        await _signInManager.PasswordSignInAsync(user,model.NewPassword, true, false);
+                        await _signInManager.PasswordSignInAsync(user, model.NewPassword, true, false);
                         _toastNotification.AddSuccessToastMessage("Şifre değiştirme işlemi başarılı", new ToastrOptions
                         {
                             Title = "İşlem başarılı"
@@ -138,6 +138,47 @@ namespace BayraktarlarWebsite.UI.Controllers
                 }
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View(new ForgotPasswordViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //kullanıcıyı vt dan bul
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                //eğer kullanıcı mevcut ise
+                if (user != null)
+                {
+                    //new token
+                    var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var passwordResetLink = Url.Action("ResetPassword", "Users", new {email=model.Email,token=resetToken});
+                    return View("ForgotPasswordConfirmation");
+                }
+                else
+                {
+                    return View("ForgotPasswordConfirmation");
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            return View();
         }
     }
 }

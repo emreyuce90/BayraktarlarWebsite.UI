@@ -30,7 +30,7 @@
                 @foreach (var t in Model.Tickets)
                 {
                     <tr>
-                        <td>@t.User.UserName</td>
+                        <td>@t.User.FirstName @t.User.LastName</td>
                         <td>@t.CreatedDate</td>
                         <td>@t.Subject</td>
                         <td>@t.Detail</td>

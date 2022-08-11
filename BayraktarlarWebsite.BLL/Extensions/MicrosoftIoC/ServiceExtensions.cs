@@ -4,6 +4,7 @@ using BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore;
 using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -34,7 +35,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
                 opt.Password.RequiredLength = 5;
             }
 
-           ).AddEntityFrameworkStores<DatabaseConnection>();
+           ).AddEntityFrameworkStores<DatabaseConnection>().AddDefaultTokenProviders();
             services.AddScoped<IStatusService, StatusManager>();
             services.AddScoped<IMaterialService, MaterialManager>();
             services.AddScoped<ITabelaService, TabelaManager>();
