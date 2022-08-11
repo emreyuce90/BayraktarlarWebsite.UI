@@ -37,5 +37,10 @@ namespace BayraktarlarWebsite.UI.Models
         public string Picture { get; set; }
         //Profil Resmi Taşıma
         public IFormFile Profile { get; set; }
+
+        [Required(ErrorMessage ="İsim alanı boş geçilemez")]
+        public string FirstName { get; set; }
+        [Required(ErrorMessage = "Soyisim alanı boş geçilemez")]
+        public string LastName { get; set; }
     }
 }
