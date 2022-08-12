@@ -1,6 +1,7 @@
 ﻿using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Models;
+using LinqKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -158,7 +159,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 {
                     //new token
                     var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var passwordResetLink = Url.Action("ResetPassword", "Users", new {email=model.Email,token=resetToken});
+                    var passwordResetLink = Url.Action("ResetPassword", "Users", new {email=model.Email,token=resetToken},Request.Scheme);
                     return View("ForgotPasswordConfirmation");
                 }
                 else
@@ -176,7 +177,52 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult ResetPassword()
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null)
+            {
+                ModelState.AddModelError("", "Invalid token or email");
+                
+            }
+            return View();
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //kullanıcıyı kontrol et
+                var user = await _userManager.FindByEmailAsync(model.EMail);
+                if(user != null)
+                {
+                    var result =await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ConfirmResetPassword");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("",error.Description);
+                        }
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("","Kullanıcı veya token hatası meydana geldi");
+                    return View(model);
+
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ConfirmResetPassword()
         {
             return View();
         }
