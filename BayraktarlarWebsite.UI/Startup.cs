@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace BayraktarlarWebsite.UI
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.Configure<SmtpSettings>(_configuration.GetSection("SmtpSettings"));
             services.AddDependencies(_configuration.GetConnectionString("db2"));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
             services.AddScoped<IImageHelper, ImageHelper>();

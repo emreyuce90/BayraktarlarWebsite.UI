@@ -12,16 +12,18 @@ namespace BayraktarlarWebsite.UI.Controllers
 {
     public class TicketController : Controller
     {
+        private readonly IMailService _mailService;
         private readonly IUrgencyService _urgencyService;
         private readonly UserManager<User> _userManager;
         private readonly ITicketService _ticketService;
         private readonly INotificationService _notificationService;
-        public TicketController(ITicketService ticketService, UserManager<User> userManager, IUrgencyService urgencyService, INotificationService notificationService)
+        public TicketController(ITicketService ticketService, UserManager<User> userManager, IUrgencyService urgencyService, INotificationService notificationService, IMailService mailService)
         {
             _ticketService = ticketService;
             _userManager = userManager;
             _urgencyService = urgencyService;
             _notificationService = notificationService;
+            _mailService = mailService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -78,9 +80,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 bool isAdmin = await _userManager.IsInRoleAsync(loggedInUser, "Admin");
                 if (isAdmin)
                 {
-                   
                     model.IsAssigned = true;
-
                 }
                 else
                 {
@@ -89,6 +89,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 await _ticketService.AddTicketAsync(model);
                 if (model.RemainderDate > DateTime.Now && isAdmin == false)
                 {
+                    //Hatırlatıcılı görev //Kullanıcı
                     var notification = new NotificationAddDto
                     {
                         CreatedDate = DateTime.Now,
@@ -99,7 +100,16 @@ namespace BayraktarlarWebsite.UI.Controllers
                         UserId = loggedInUser.Id
                     };
                     await _notificationService.AddNotificationAsync(notification);
-                }else if (model.RemainderDate > DateTime.Now || isAdmin == true)
+                    var email = new EmailSendDto
+                    {
+                        UserEmailAddress = loggedInUser.Email,
+                        Subject = "Hatırlatıcılı Görev Oluşturuldu",
+                        Description = $"Görev başlığınız:{model.Subject}/n Görev Detayınız: {model.Detail}/n Görev Oluşturma Tarihiniz: {model.CreatedDate}/n Görevi tamamlamanız gereken tarih: {model.RemainderDate}/n Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir/n Bayraktarlar Akaryakıt Petrol Ürünleri"
+                    };
+                    _mailService.SendMail(email);
+                }
+                //Hatırlatıcılı bildirim veya oluşturan kişi admin ise
+                else if (model.RemainderDate > DateTime.Now || isAdmin == true)
                 {
                     var notification = new NotificationAddDto
                     {
@@ -111,8 +121,15 @@ namespace BayraktarlarWebsite.UI.Controllers
                         UserId = model.UserId
                     };
                     await _notificationService.AddNotificationAsync(notification);
+                    var email = new EmailSendDto
+                    {
+                        UserEmailAddress = loggedInUser.Email,
+                        Subject = "Yöneticiniz size bir görev atadı!",
+                        Description = $"Görev başlığınız:{model.Subject}/n Görev Detayınız: {model.Detail}/n Görev Oluşturma Tarihiniz: {model.CreatedDate}/n Görevi tamamlamanız gereken tarih: {model.RemainderDate}/n Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir/n Bayraktarlar Akaryakıt Petrol Ürünleri"
+                    };
+                    _mailService.SendMail(email);
                 }
-                
+
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -131,11 +148,12 @@ namespace BayraktarlarWebsite.UI.Controllers
                     CreatedDate = DateTime.Now,
                     IsRead = false,
                     Description = $"{loggedInUser.UserName} adlı kullanıcı atadığınız görevi tamamladı",
-                    RememberDate=DateTime.Now,
-                    Name=$"Atadığınız görevi tamamlandı",
-                    UserId=1
+                    RememberDate = DateTime.Now,
+                    Name = $"Atadığınız görevi tamamlandı",
+                    UserId = 1
                 };
                 await _notificationService.AddNotificationAsync(notification);
+
                 return NoContent();
             }
             else
@@ -190,7 +208,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Assignment()
         {
-            var model =await _ticketService.AssignedTicketsAsync();
+            var model = await _ticketService.AssignedTicketsAsync();
             return View(model);
         }
     }
