@@ -121,11 +121,13 @@ namespace BayraktarlarWebsite.UI.Controllers
                         UserId = model.UserId
                     };
                     await _notificationService.AddNotificationAsync(notification);
+                    var assignedUser = await _userManager.FindByIdAsync(model.UserId.ToString());
                     var email = new EmailSendDto
                     {
-                        UserEmailAddress = loggedInUser.Email,
+                        
+                        UserEmailAddress = assignedUser.Email,
                         Subject = "Yöneticiniz size bir görev atadı!",
-                        Description = $"Görev başlığınız:{model.Subject}/n Görev Detayınız: {model.Detail}/n Görev Oluşturma Tarihiniz: {model.CreatedDate}/n Görevi tamamlamanız gereken tarih: {model.RemainderDate}/n Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir/n Bayraktarlar Akaryakıt Petrol Ürünleri"
+                        Description = $"Görev başlığınız:{model.Subject} Görev Detayınız: {model.Detail}/n Görev Oluşturma Tarihiniz: {model.CreatedDate} Görevi tamamlamanız gereken tarih: {model.RemainderDate} Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir/n Bayraktarlar Akaryakıt Petrol Ürünleri"
                     };
                     _mailService.SendMail(email);
                 }
@@ -153,7 +155,11 @@ namespace BayraktarlarWebsite.UI.Controllers
                     UserId = 1
                 };
                 await _notificationService.AddNotificationAsync(notification);
-
+                EmailSendDto email = new EmailSendDto
+                {
+                   
+                };
+                _mailService.SendMail(email);
                 return NoContent();
             }
             else
