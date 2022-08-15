@@ -1,11 +1,13 @@
 ﻿using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.Entities.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
 {
+    [Authorize]
     public class NotificationController : Controller
     {
         private readonly INotificationService _notificationService;

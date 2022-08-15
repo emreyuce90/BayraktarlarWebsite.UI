@@ -126,14 +126,14 @@ namespace BayraktarlarWebsite.UI.Controllers
                     IsRead = false,
                     Name = $"{user.UserName} adlı kullanıcı {DateTime.Now.ToShortDateString()} tarihinde bir tabela talebinde bulundu",
                     Description = "Tabela talebini bir an önce onayla!",
-                    UserId = 03,
+                    UserId = 1,
                    RememberDate = DateTime.Now
                 };
                 await _notificationService.AddNotificationAsync(notification2);
                 //Hem kullanıcıya hem de admine mail at
                 var adminToSend = new EmailSendDto
                 {
-                    Subject=$"{user.FirstName+" "+user.LastName}Kullanıcısı bir tabela talebinde bulundu!",
+                    Subject=$"{user.FirstName+" "+user.LastName} Kullanıcısı bir tabela talebinde bulundu!",
                     Description="En kısa zamanda siteye girip tabelayı onayla!",
                     UserEmailAddress="emreyuce@bayraktarlartrakya.com"
                 };
@@ -470,7 +470,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 var notification = new NotificationAddDto
                 {
                     CreatedDate = DateTime.Now,
-                    Description = $"Tabelanızın durumu {tabela.Tabela.Status.Name} olarak değiştirilmiştir",
+                    Description = $"Tabelanızın durumu {model.StatusName} olarak değiştirilmiştir",
                     IsRead = false,
                     Name = "Tabelanızın statüsü yönetici tarafından değiştirilmiştir",
                     //Bu bildirim tabela kime aitse o kullanıcıya yapılacaktır

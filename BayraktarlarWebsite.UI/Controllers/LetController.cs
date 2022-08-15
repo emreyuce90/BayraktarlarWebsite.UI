@@ -116,7 +116,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     {
                         Name = "İzin talebi oluşturuldu",
                         Description = $"{loggedInUser.UserName} adlı kullanıcı {letAddDto.DayCount} günlük izin talebinde bulundu.",
-                        UserId = 3,
+                        UserId = 1,
                         CreatedDate = DateTime.Now,
                         IsRead =false,
                         RememberDate = DateTime.Now

@@ -79,7 +79,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<LetDto> GetAsync(int letId)
         {
-            var let = await _unitOfWork.Lets.GetAsync(l=>l.Id == letId);
+            var let = await _unitOfWork.Lets.GetAsync(l=>l.Id == letId,l=>l.User);
             return new LetDto
             {
                 Let = let
