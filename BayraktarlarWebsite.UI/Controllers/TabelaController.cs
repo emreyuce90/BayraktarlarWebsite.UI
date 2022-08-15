@@ -248,9 +248,12 @@ namespace BayraktarlarWebsite.UI.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 //eğer yeni fotoğraflar seçildiyse
                 if (model.AddedPictures != null)
                 {
+                    //eski tabela
+                    var oldTabela = await _tabelaService.GetTabelaByTabelaIdAsync(model.Id);
                     //TabelaImages listesi oluştur
                     var tablImages = new List<TabelaImages> { };
                     string fileName;
@@ -272,10 +275,13 @@ namespace BayraktarlarWebsite.UI.Controllers
                         //upload edilen görsellerin hepsini Pictures nesnesine ekle
                         var tbl = new TabelaImages { PictureUrl = fileName };
                         tablImages.Add(tbl);
-
+                        
                     };
+                   
+                    //modelden gelen görselleri tablImages e ekle
                     model.Images = tablImages;
-
+                    model.Images.AddRange(oldTabela.Tabela.Images);
+                    await _tabelaService.UpdateAsync(model);
                 }
 
                 _toastNotification.AddSuccessToastMessage("Tabela güncelleme işlemi başarılı", new ToastrOptions
