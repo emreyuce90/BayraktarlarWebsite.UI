@@ -104,7 +104,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     {
                         UserEmailAddress = loggedInUser.Email,
                         Subject = "Hatırlatıcılı Görev Oluşturuldu",
-                        Description = $"Görev başlığınız:{model.Subject}/n Görev Detayınız: {model.Detail}/n Görev Oluşturma Tarihiniz: {model.CreatedDate}/n Görevi tamamlamanız gereken tarih: {model.RemainderDate}/n Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir/n Bayraktarlar Akaryakıt Petrol Ürünleri"
+                        Description = $"Görev başlığınız:{model.Subject}\n Görev Detayınız: {model.Detail}\n Görev Oluşturma Tarihiniz: {model.CreatedDate}\n Görevi tamamlamanız gereken tarih: {model.RemainderDate}\n Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir\n Bayraktarlar Akaryakıt Petrol Ürünleri"
                     };
                     _mailService.SendMail(email);
                 }
@@ -127,7 +127,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                         
                         UserEmailAddress = assignedUser.Email,
                         Subject = "Yöneticiniz size bir görev atadı!",
-                        Description = $"Görev başlığınız:{model.Subject} Görev Detayınız: {model.Detail}/n Görev Oluşturma Tarihiniz: {model.CreatedDate} Görevi tamamlamanız gereken tarih: {model.RemainderDate} Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir/n Bayraktarlar Akaryakıt Petrol Ürünleri"
+                        Description = $"Görev başlığınız:{model.Subject} Görev Detayınız: {model.Detail}\n Görev Oluşturma Tarihiniz: {model.CreatedDate}\n Görevi tamamlamanız gereken tarih: {model.RemainderDate}\n Not:Görev hatırlatıcınızı websitesi üzerinden bildirim olarak alabilirsiniz,görev hatırlatma tarihinde ayrıca email gönderilmeyecektir\n Bayraktarlar Akaryakıt Petrol Ürünleri"
                     };
                     _mailService.SendMail(email);
                 }
@@ -155,9 +155,12 @@ namespace BayraktarlarWebsite.UI.Controllers
                     UserId = 1
                 };
                 await _notificationService.AddNotificationAsync(notification);
+                var ticketDetails = await _ticketService.GetTicketByTicketId(ticketId);
                 EmailSendDto email = new EmailSendDto
                 {
-                   
+                   UserEmailAddress=loggedInUser.Email,
+                   Subject="Atamış olduğunuz görev tamamlandı",
+                   Description=$"{ticketDetails.Ticket.User.FirstName +" "+ticketDetails.Ticket.User.LastName} kullanıcısı atamış olduğunuz görevi tamamladı.\n Görev Adı: {ticketDetails.Ticket.Subject} \n Görev İçeriği: {ticketDetails.Ticket.Detail} \n Görev Oluşturma Tarihi :{ticketDetails.Ticket.CreatedDate}\n Görev Tamamlama Tarihi: {DateTime.Now}"
                 };
                 _mailService.SendMail(email);
                 return NoContent();

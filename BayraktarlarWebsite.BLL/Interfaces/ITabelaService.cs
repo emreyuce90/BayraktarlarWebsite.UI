@@ -9,6 +9,7 @@ namespace BayraktarlarWebsite.BLL.Interfaces
 {
     public interface ITabelaService
     {
+        Task<string> GetUserMailByTabelaIdAsync(int tabelaId);
         Task<int> GetByUserByTabelaId(int tabelaId);
         Task SoftDeleteAsync(int tabelaId);
         Task<bool> GetStatusCodeGivenTabelaAsync(int tabelaId);

@@ -14,18 +14,20 @@ namespace BayraktarlarWebsite.UI.Controllers
 {
     public class LetController : Controller
     {
+        private readonly IMailService _mailService;
         private readonly INotificationService _notificationService;
         private readonly ILetTimeCalculator _calculate;
         private readonly UserManager<User> _userManager;
         private readonly ILetService _letService;
         private readonly IToastNotification _toastNotification;
-        public LetController(ILetService letService, IToastNotification toastNotification, UserManager<User> userManager, ILetTimeCalculator calculate, INotificationService notificationService)
+        public LetController(ILetService letService, IToastNotification toastNotification, UserManager<User> userManager, ILetTimeCalculator calculate, INotificationService notificationService, IMailService mailService)
         {
             _letService = letService;
             _toastNotification = toastNotification;
             _userManager = userManager;
             _calculate = calculate;
             _notificationService = notificationService;
+            _mailService = mailService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -87,13 +89,19 @@ namespace BayraktarlarWebsite.UI.Controllers
                 int remainingLets = await _letService.RemainingLetAsync(loggedInUser.Id);
                 if (remainingLets >= letAddDto.DayCount)
                 {
-
-
                     await _letService.AddLetAsync(letAddDto);
                     _toastNotification.AddSuccessToastMessage("İzin talebi oluşturma işlemi başarılı", new ToastrOptions
                     {
                         Title = "İşlem Başarılı"
                     });
+                    //Mail gönderimi
+                    var emailToSend = new EmailSendDto
+                    {
+                        UserEmailAddress = loggedInUser.Email,
+                        Description =$"Sayın{loggedInUser.FirstName+" "+loggedInUser.LastName} izin isteme işleminiz başarıyla yöneticinize iletilmiştir,iznin onaylanması durumunda tarafınıza e-mail ve websitesi üzerinden bildirim yapılacaktır",
+                        Subject = "İzin isteme işlemi başarılı"
+                    };
+                    _mailService.SendMail(emailToSend);
                     //Bildirim
                     var notification = new NotificationAddDto
                     {
@@ -140,6 +148,14 @@ namespace BayraktarlarWebsite.UI.Controllers
                 //Getting let
                 var let =await _letService.GetAsync(letId);
                 await _letService.ApproveLetAsync(letId);
+                //Mail gönderme işlemi
+                var emailToSend = new EmailSendDto
+                {
+                    Description=$"Tebrikler,izniniz onaylandı\n.İzin başlangıç tarihiniz: {let.Let.StartDate} \n izin bitiş tarihiniz: {let.Let.EndDate}\n Gün: {let.Let.DayCount}",
+                    Subject="Tebrikler! İzniniz onaylandı",
+                    UserEmailAddress =let.Let.User.Email
+                };
+                _mailService.SendMail(emailToSend);
                 //Bildirim
                 var notification = new NotificationAddDto
                 {

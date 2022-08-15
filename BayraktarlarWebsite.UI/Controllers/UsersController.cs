@@ -1,4 +1,5 @@
-﻿using BayraktarlarWebsite.Entities.Dtos;
+﻿using BayraktarlarWebsite.BLL.Interfaces;
+using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Models;
 using LinqKit;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
+using System;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
@@ -14,14 +16,16 @@ namespace BayraktarlarWebsite.UI.Controllers
 
     public class UsersController : Controller
     {
+        private readonly IMailService _mailService;
         private readonly IToastNotification _toastNotification;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public UsersController(UserManager<User> userManager, SignInManager<User> signInManager, IToastNotification toastNotification)
+        public UsersController(UserManager<User> userManager, SignInManager<User> signInManager, IToastNotification toastNotification, IMailService mailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _toastNotification = toastNotification;
+            _mailService = mailService;
         }
         [HttpGet]
         public IActionResult Add()
@@ -89,7 +93,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ChangePassword()
+        public  IActionResult ChangePassword()
         {
             return View(new ChangePasswordViewModel());
         }
@@ -114,6 +118,14 @@ namespace BayraktarlarWebsite.UI.Controllers
                         await _signInManager.SignOutAsync();
                         //Kullanıcıya yeni şifreyle tekrar oturum açtır
                         await _signInManager.PasswordSignInAsync(user, model.NewPassword, true, false);
+                        //Şifre değiştirme işlemiyle ilgili kullanıcıyı mail ile bilgilendir
+                        var emailToSend = new EmailSendDto
+                        {
+                            Subject="Şifreniz değiştirildi",
+                            Description=$"{DateTime.Now} tarihinde şifreniz değiştirilmiştir.",
+                            UserEmailAddress =user.Email
+                        };
+                        _mailService.SendMail(emailToSend);
                         _toastNotification.AddSuccessToastMessage("Şifre değiştirme işlemi başarılı", new ToastrOptions
                         {
                             Title = "İşlem başarılı"
@@ -160,6 +172,14 @@ namespace BayraktarlarWebsite.UI.Controllers
                     //new token
                     var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                     var passwordResetLink = Url.Action("ResetPassword", "Users", new {email=model.Email,token=resetToken},Request.Scheme);
+                    //Şifre yenileme linkini mail olarak gönder
+                    var mailToSend = new EmailSendDto
+                    {
+                        Subject="Şifre sıfırlama talebiniz hk.",
+                        UserEmailAddress=user.Email,
+                        Description=$"Aşağıdaki linke tıklayarak şifrenizi sıfırlayabilirsiniz\n {passwordResetLink}"
+                    };
+                    _mailService.SendMail(mailToSend);
                     return View("ForgotPasswordConfirmation");
                 }
                 else

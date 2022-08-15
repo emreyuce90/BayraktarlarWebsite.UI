@@ -118,6 +118,15 @@ namespace BayraktarlarWebsite.BLL.Concrete
             return _mapper.Map<TicketUpdateDto>(ticket);
         }
 
+        public async Task<TicketDto> GetTicketByTicketId(int ticketId)
+        {
+           var ticketWuser = await _unitOfWork.Tickets.GetAsync(t => t.Id == ticketId,t=>t.User);
+            return new TicketDto
+            {
+                Ticket = ticketWuser
+            };
+        }
+
         public async Task UpdateTicketAsync(TicketUpdateDto ticketUpdateDto)
         {
             var oldData = await _unitOfWork.Tickets.GetAsync(t => t.Id == ticketUpdateDto.Id);

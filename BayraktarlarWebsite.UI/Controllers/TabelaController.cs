@@ -21,6 +21,7 @@ namespace BayraktarlarWebsite.UI.Controllers
     [Authorize]
     public class TabelaController : Controller
     {
+        private readonly IMailService _mailService;
         private readonly INotificationService _notificationService;
         private readonly UserManager<User> _userManager;
         private readonly IStatusService _statusService;
@@ -32,7 +33,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly IImageHelper _imageHelper;
         private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
-        public TabelaController(UserManager<User> userManager, IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper, ITabelaImagesService tabelaImagesService, IStatusService statusService, INotificationService notificationService)
+        public TabelaController(UserManager<User> userManager, IToastNotification toastNotification, IImageHelper imageHelper, ICustomerService customerService, IBrandService brandService, IMaterialService materialService, ITabelaService tabelaService, IMapper mapper, ITabelaImagesService tabelaImagesService, IStatusService statusService, INotificationService notificationService, IMailService mailService)
         {
 
             _toastNotification = toastNotification;
@@ -46,6 +47,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             _statusService = statusService;
             _userManager = userManager;
             _notificationService = notificationService;
+            _mailService = mailService;
         }
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -128,6 +130,22 @@ namespace BayraktarlarWebsite.UI.Controllers
                    RememberDate = DateTime.Now
                 };
                 await _notificationService.AddNotificationAsync(notification2);
+                //Hem kullanıcıya hem de admine mail at
+                var adminToSend = new EmailSendDto
+                {
+                    Subject=$"{user.FirstName+" "+user.LastName}Kullanıcısı bir tabela talebinde bulundu!",
+                    Description="En kısa zamanda siteye girip tabelayı onayla!",
+                    UserEmailAddress="emreyuce@bayraktarlartrakya.com"
+                };
+                _mailService.SendMail(adminToSend);
+                //Kullanıcıya email bilgilendirmesi yap
+                var userToSend = new EmailSendDto
+                {
+                    Subject = $"Tabela oluşturma işleminiz başarılı!",
+                    Description = "Tabela detaylarınız yöneticinize iletilmiştir.",
+                    UserEmailAddress = user.Email
+                };
+                _mailService.SendMail(userToSend);
                 _toastNotification.AddSuccessToastMessage("Tabela ekleme işlemi başarılı");
                 return RedirectToAction("Index");
             }
@@ -461,6 +479,14 @@ namespace BayraktarlarWebsite.UI.Controllers
 
                 };
                 await _notificationService.AddNotificationAsync(notification);
+                //Kullanıcıya mail bildirimi yap
+                var email = new EmailSendDto
+                {
+                    UserEmailAddress=await _tabelaService.GetUserMailByTabelaIdAsync(model.TabelaId),
+                    Subject=$"Tabela talebinizin durumu güncellenmiştir.",
+                    Description= "Tabela talebinizin durumu {model.StatusName} olarak güncellenmiştir."
+                };
+                _mailService.SendMail(email);
                 _toastNotification.AddSuccessToastMessage("Durum güncelleme başarılı", new ToastrOptions
                 {
                     Title = "İşlem Başarılı"

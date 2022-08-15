@@ -98,6 +98,13 @@ namespace BayraktarlarWebsite.BLL.Concrete
             return new TabelaDto { Tabela = tabela};
         }
 
+        public async Task<string> GetUserMailByTabelaIdAsync(int tabelaId)
+        {
+            //finding user by tabelaId
+           var user = await _unitOfWork.Tabelas.GetAsync(t=>t.Id == tabelaId,t=>t.User);
+            return user.User.Email;
+        }
+
         public async Task HardDeleteAsync(int tabelaId)
         {
             var id = await _unitOfWork.Tabelas.AnyAsync(t => t.Id == tabelaId);
