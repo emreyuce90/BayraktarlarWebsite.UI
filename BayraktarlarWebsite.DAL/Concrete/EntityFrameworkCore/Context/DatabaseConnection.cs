@@ -23,7 +23,12 @@ namespace BayraktarlarWebsite.DAL.Context
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Urgency> Urgencies { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
-
+        public DbSet<Ciro> Cirolar { get; set; }
+        public DbSet<Tahsilat> Tahsilatlar { get; set; }
+        public DbSet<Marka> Markalar { get; set; }
+        public DbSet<AltMarka> AltMarkalar { get; set; }
+        public DbSet<Hedef> Hedefler { get; set; }
+        public DbSet<Sellout> Satislar { get; set; }
         public DatabaseConnection(DbContextOptions<DatabaseConnection> options):base(options)
         {
 
