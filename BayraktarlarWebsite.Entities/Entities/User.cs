@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,14 @@ namespace BayraktarlarWebsite.Entities.Entities
 {
     public class User: IdentityUser<int>
     {
+        [Required(ErrorMessage ="İsim alanı boş geçilemez")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "Soyisim alanı boş geçilemez")]
+
         public string LastName { get; set; }
         public DateTime EntryDate { get; set; }
+        [Required(ErrorMessage = "Kod alanı boş geçilemez")]
+
         public string Code { get; set; }
         public string Mobile { get; set; }
         public string Profile { get; set; }

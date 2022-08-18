@@ -27,12 +27,12 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
                 opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 opt.User.RequireUniqueEmail = true;
                 //Password Settings
-                opt.Password.RequireUppercase = true;
-                opt.Password.RequireDigit = true;
-                opt.Password.RequireLowercase = true;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
                 opt.Password.RequiredUniqueChars = 1;
-                opt.Password.RequireNonAlphanumeric = true;
-                opt.Password.RequiredLength = 5;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredLength = 1;
             }
 
            ).AddEntityFrameworkStores<DatabaseConnection>().AddDefaultTokenProviders();
