@@ -23,6 +23,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         private readonly EfCustomerRepository _customerRepository;
         private readonly EfBrandRepository _brandRepository;
         private readonly EfLetRepository _efLetRepository;
+        private readonly EfCiroRepository _efCiroRepository;
         public UnitOfWork(DatabaseConnection context)
         {
             _context = context;
@@ -49,6 +50,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
 
         public IUrgencyRepository Urgencies => _urgencyRepository ?? new EfUrgencyRepository(_context);
 
+        public ICiroRepository Ciro => _efCiroRepository ?? new EfCiroRepository(_context);
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync();

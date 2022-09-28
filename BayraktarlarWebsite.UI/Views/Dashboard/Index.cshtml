@@ -1,0 +1,70 @@
+﻿@model CiroListDto
+@{
+    ViewBag.Title = "Durumum";
+    Layout = "_AdminLayout";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Dashboard" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Ciro & Tahsilatlarım</a></li>
+    </ol>
+</nav>
+
+
+<div class="jumbotron">
+    <h3 class="text-center display-5">Ciro & Tahsilat Durumu</h3>
+    <select class="form-select form-control" id="selectBox">
+        @*<option selected>Lütfen Yıl Seçiniz</option>*@
+        <option selected="@(ViewBag.SelectedValue==DateTime.Now.Year ? "selected":null)" value="@DateTime.Now.Year">@DateTime.Now.Year</option>
+        <option selected="@(ViewBag.SelectedValue==DateTime.Now.Year - 1 ? "selected":null)" value="@(DateTime.Now.Year - 1)">@(DateTime.Now.Year - 1)</option>
+        <option selected="@(ViewBag.SelectedValue==DateTime.Now.Year - 2 ? "selected":null)" value="@(DateTime.Now.Year - 2)">@(DateTime.Now.Year - 2)</option>
+        <option selected="@(ViewBag.SelectedValue==DateTime.Now.Year - 3 ? "selected":null)" value="@(DateTime.Now.Year - 3)">@(DateTime.Now.Year - 3)</option>
+        <option selected="@(ViewBag.SelectedValue==DateTime.Now.Year - 4 ? "selected":null)" value="@(DateTime.Now.Year - 4)">@(DateTime.Now.Year - 4)</option>
+    </select>
+</div>
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+
+            <th scope="col">Ay</th>
+            <th scope="col">Ay Adı</th>
+            <th scope="col">Yıl</th>
+            <th scope="col">Ciro</th>
+            <th scope="col">Tahsilat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model.CiroList)
+        {
+            <tr>
+                <td>@c.Date.Month</td>
+                <td> @c.Date.ToString("MMMM")</td>
+                <td> @c.Date.ToString("yyyy")</td>
+                <td>@c.Amount.ToString("c")</td>
+
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <td> </td>
+            <td> </td>
+            <td>Toplam Ciro: <strong>@Model.SumTotal.ToString("c")</strong></td>
+
+        </tr>
+
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            const selectedValue = $('#selectBox');
+            $('#selectBox').on('change', function () {
+                window.location =
+                    `/Dashboard/Index/?year=${selectedValue.val()}`;
+                    
+            });
+        });
+    </script>
+}

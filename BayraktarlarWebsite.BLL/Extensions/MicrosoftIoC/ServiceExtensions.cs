@@ -48,6 +48,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddScoped<ITicketService, TicketManager>();
             services.AddScoped<IUrgencyService, UrgencyManager>();
             services.AddSingleton<IMailService, MailManager>();
+            services.AddScoped<ICiroService, CiroManager>();
             return services;
         }
     }
