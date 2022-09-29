@@ -5,8 +5,11 @@ using BayraktarlarWebsite.UI.Models;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
@@ -23,20 +26,45 @@ namespace BayraktarlarWebsite.UI.Controllers
             _tahsilatService = tahsilatService;
         }
         [HttpGet]
-        public async Task<IActionResult> Index(int year=2022)
+        public async Task<IActionResult> Index(int? userId, int year = 2022)
         {
-            
+
             var loggedInUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            bool isAdmin = await _userManager.IsInRoleAsync(loggedInUser, "Admin");
+            if (isAdmin)
+            {
+                var allUsers = await _userManager.Users.Select(u => new UsernameAndIdVM
+                {
+                    Id = u.Id,
+                    Name = u.FirstName
+
+                }).ToListAsync();
+                
+                ViewBag.IsAdmin = true;
+                var alltahsilatList = await _tahsilatService.GetAllAsync(year);
+                var allciroList = await _ciroService.GetCiroListAsync(year);
+
+                CiroTahsilatVM m = new CiroTahsilatVM()
+                {
+                    Cirolar = allciroList,
+                    Tahsilatlar = alltahsilatList,
+                    SelectedYear = year,
+                    UserNameAndId = allUsers
+                };
+
+                return View(m);
+            }
+            ViewBag.IsAdmin = false;
             var tahsilatList = await _tahsilatService.GetAllAsyncByUserId(loggedInUser.Id, year);
             var ciroList = await _ciroService.GetCiroListAsync(loggedInUser.Id, year);
-            
+
             CiroTahsilatVM model = new CiroTahsilatVM()
             {
                 Cirolar = ciroList,
                 Tahsilatlar = tahsilatList,
                 SelectedYear = year
             };
-          
+
             return View(model);
         }
     }

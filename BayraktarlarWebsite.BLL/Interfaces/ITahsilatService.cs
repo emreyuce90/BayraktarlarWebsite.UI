@@ -11,5 +11,6 @@ namespace BayraktarlarWebsite.BLL.Interfaces
     public interface ITahsilatService
     {
         Task<TahsilatListDto> GetAllAsyncByUserId(int userId,int year);
+        Task<TahsilatListDto> GetAllAsync(int year);
     }
 }

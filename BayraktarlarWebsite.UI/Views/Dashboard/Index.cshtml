@@ -11,18 +11,45 @@
     </ol>
 </nav>
 
+@if (ViewBag.IsAdmin == true)
+{
+    <div class="jumbotron">
+        <h3 class="text-center display-5">Ciro & Tahsilat Durumu</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Yıl Seç:</strong></p>
+                <select class="form-select form-control" id="selectBox">
+                    <option selected="@(Model.SelectedYear ==DateTime.Now.Year ? "selected":null)" value="@DateTime.Now.Year">@DateTime.Now.Year</option>
+                    <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 1 ? "selected":null)" value="@(DateTime.Now.Year - 1)">@(DateTime.Now.Year - 1)</option>
+                    <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 2 ? "selected":null)" value="@(DateTime.Now.Year - 2)">@(DateTime.Now.Year - 2)</option>
+                    <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 3 ? "selected":null)" value="@(DateTime.Now.Year - 3)">@(DateTime.Now.Year - 3)</option>
+                    <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 4 ? "selected":null)" value="@(DateTime.Now.Year - 4)">@(DateTime.Now.Year - 4)</option>
+                </select>
+            </div>
 
-<div class="jumbotron">
-    <h3 class="text-center display-5">Ciro & Tahsilat Durumu</h3>
+            <div class="col-md-6">
+                <p><strong>Plasiyer Seç:</strong></p>
+                
+                <select class="form-control" asp-items="@(new SelectList(Model.UserNameAndId,"Id","Name"))"></select>
+                
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p><strong>Yıl Seç:</strong></p>
     <select class="form-select form-control" id="selectBox">
-        @*<option selected>Lütfen Yıl Seçiniz</option>*@
         <option selected="@(Model.SelectedYear ==DateTime.Now.Year ? "selected":null)" value="@DateTime.Now.Year">@DateTime.Now.Year</option>
         <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 1 ? "selected":null)" value="@(DateTime.Now.Year - 1)">@(DateTime.Now.Year - 1)</option>
         <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 2 ? "selected":null)" value="@(DateTime.Now.Year - 2)">@(DateTime.Now.Year - 2)</option>
         <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 3 ? "selected":null)" value="@(DateTime.Now.Year - 3)">@(DateTime.Now.Year - 3)</option>
         <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 4 ? "selected":null)" value="@(DateTime.Now.Year - 4)">@(DateTime.Now.Year - 4)</option>
     </select>
-</div>
+}
+
+
+
 <div class="row">
     <div class="col-md-6">
         <table class="table table-hover table-striped">
@@ -108,7 +135,7 @@
             $('#selectBox').on('change', function () {
                 window.location =
                     `/Dashboard/Index/?year=${selectedValue.val()}`;
-                    
+
             });
         });
     </script>

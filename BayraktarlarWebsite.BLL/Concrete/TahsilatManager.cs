@@ -20,6 +20,13 @@ namespace BayraktarlarWebsite.BLL.Concrete
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<TahsilatListDto> GetAllAsync(int year)
+        {
+            var totalList= await _unitOfWork.Tahsilatlar.GetAllAsync(t => t.Date.Year == year,t=>t.User);
+            var sumTotalList = await _unitOfWork.Tahsilatlar.SummAsync(t => t.Date.Year == year, t => (decimal)t.Amount);
+            return new TahsilatListDto { Tahsilats = totalList ,SumTotal=sumTotalList};
+        }
+
         public async Task<TahsilatListDto> GetAllAsyncByUserId(int userId, int year)
         {
            var list = await _unitOfWork.Tahsilatlar.GetAllAsync(t => t.UserId == userId && t.Date.Year == year);

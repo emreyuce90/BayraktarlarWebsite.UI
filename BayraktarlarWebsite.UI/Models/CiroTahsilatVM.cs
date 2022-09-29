@@ -1,6 +1,7 @@
 ﻿using BayraktarlarWebsite.Entities.Dtos;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace BayraktarlarWebsite.UI.Models
 {
@@ -9,6 +10,7 @@ namespace BayraktarlarWebsite.UI.Models
         public CiroListDto Cirolar { get; set; }
         public TahsilatListDto Tahsilatlar { get; set; }
         public int SelectedYear { get; set; }
+        public List<UsernameAndIdVM> UserNameAndId { get; set; }
 
     }
 }

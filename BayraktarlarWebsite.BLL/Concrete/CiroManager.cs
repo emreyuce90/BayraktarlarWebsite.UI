@@ -2,6 +2,7 @@
 using BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore;
 using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Dtos;
+using BayraktarlarWebsite.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,13 @@ namespace BayraktarlarWebsite.BLL.Concrete
             var list =await _unitOfWork.Ciro.GetAllAsync(c=>c.UserId == userId && c.Date.Year == year);
             var total = await _unitOfWork.Ciro.SummAsync(c => c.UserId == userId && c.Date.Year == year,x=> (decimal)x.Amount);
             return new CiroListDto { CiroList = list,SumTotal =total };
+        }
+
+        public async  Task<CiroListDto> GetCiroListAsync(int year)
+        {
+            var list = await _unitOfWork.Ciro.GetAllAsync(c=>c.Date.Year == year);
+            var total = await _unitOfWork.Ciro.SummAsync(c=>c.Date.Year == year, x => (decimal)x.Amount);
+            return new CiroListDto { CiroList = list, SumTotal = total };
         }
     }
 }

@@ -10,5 +10,6 @@ namespace BayraktarlarWebsite.BLL.Interfaces
     public interface ICiroService
     {
         Task<CiroListDto> GetCiroListAsync(int userId,int year);
+        Task<CiroListDto> GetCiroListAsync(int year);
     }
 }
