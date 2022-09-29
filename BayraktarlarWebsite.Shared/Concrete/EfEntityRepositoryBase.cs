@@ -58,7 +58,7 @@ namespace BayraktarlarWebsite.Shared.Concrete
             return await queryable.ToListAsync();
         }
 
-        public async Task<Tentity> GetAsync(Expression<Func<Tentity, bool>> predicate, params Expression<Func<Tentity, object>>[] includeProperties)
+        public async Task<Tentity> GetAsync(Expression < Func<Tentity, bool>> predicate=null, params Expression<Func<Tentity, object>>[] includeProperties)
         {
             IQueryable<Tentity> queryable = _context.Set<Tentity>();
             if (predicate != null)
@@ -72,7 +72,7 @@ namespace BayraktarlarWebsite.Shared.Concrete
                     queryable = queryable.Include(includeProperty);
                 }
             }
-
+          
             return await queryable.SingleOrDefaultAsync();
         }
 

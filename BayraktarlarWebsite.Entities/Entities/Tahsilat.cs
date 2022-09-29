@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BayraktarlarWebsite.Shared.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.Entities.Entities
 {
-    public class Tahsilat
+    public class Tahsilat:IEntity
     {
         
         public int Id { get; set; }

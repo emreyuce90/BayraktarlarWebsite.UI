@@ -1,6 +1,7 @@
 ﻿using BayraktarlarWebsite.BLL.Concrete;
 using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore;
+using BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore.Repositories;
 using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Entities;
@@ -49,6 +50,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddScoped<IUrgencyService, UrgencyManager>();
             services.AddSingleton<IMailService, MailManager>();
             services.AddScoped<ICiroService, CiroManager>();
+            services.AddScoped<ITahsilatService, TahsilatManager>();
             return services;
         }
     }

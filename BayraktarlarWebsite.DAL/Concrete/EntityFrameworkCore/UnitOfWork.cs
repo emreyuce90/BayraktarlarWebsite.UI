@@ -11,6 +11,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private readonly EfTahsilatRepository _tahsilatRepository;
         private readonly EfUrgencyRepository _urgencyRepository;
         private readonly EfAttachmentRepository _attachmentRepository;
         private readonly EfTicketRepositoryBase _ticketRepository;
@@ -51,6 +52,9 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         public IUrgencyRepository Urgencies => _urgencyRepository ?? new EfUrgencyRepository(_context);
 
         public ICiroRepository Ciro => _efCiroRepository ?? new EfCiroRepository(_context);
+
+        public ITahsilatRepository Tahsilatlar => _tahsilatRepository ?? new EfTahsilatRepository(_context);
+
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync();

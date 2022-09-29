@@ -10,7 +10,7 @@ namespace BayraktarlarWebsite.Shared.Interface
     public interface IEntityRepository<T> where T:class,IEntity,new()
     {
         //repository.GetAsync(I=>I.Name == "XXX",I=>I.Comment)
-        Task<T> GetAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate=null, params Expression<Func<T, object>>[] includeProperties);
         //repository.GetAllAsync();
         //repository.GetAllAsync(I=>I.CategoryName == C#,I=>I.Comments)
         Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties);
