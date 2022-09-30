@@ -1,5 +1,6 @@
 ﻿using BayraktarlarWebsite.BLL.Interfaces;
 using BayraktarlarWebsite.DAL.Interfaces;
+using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Models;
 
@@ -41,15 +42,28 @@ namespace BayraktarlarWebsite.UI.Controllers
                 }).ToListAsync();
                 
                 ViewBag.IsAdmin = true;
-                var alltahsilatList = await _tahsilatService.GetAllAsync(year);
-                var allciroList = await _ciroService.GetCiroListAsync(year);
+                TahsilatListDto alltahsilatList;
+                CiroListDto allciroList;
+
+                if (userId != null)
+                {
+                     alltahsilatList = await _tahsilatService.GetAllAsyncByUserId((int)userId, year);
+                     allciroList = await _ciroService.GetCiroListAsync((int)userId, year);
+                }
+                else
+                {
+                     alltahsilatList = await _tahsilatService.GetAllAsync(year);
+                     allciroList = await _ciroService.GetCiroListAsync(year);
+                }
+                
 
                 CiroTahsilatVM m = new CiroTahsilatVM()
                 {
                     Cirolar = allciroList,
                     Tahsilatlar = alltahsilatList,
                     SelectedYear = year,
-                    UserNameAndId = allUsers
+                    UserNameAndId = allUsers,
+                    SelectedUserId =userId
                 };
 
                 return View(m);

@@ -10,6 +10,7 @@ namespace BayraktarlarWebsite.UI.Models
         public CiroListDto Cirolar { get; set; }
         public TahsilatListDto Tahsilatlar { get; set; }
         public int SelectedYear { get; set; }
+        public int? SelectedUserId { get; set; }
         public List<UsernameAndIdVM> UserNameAndId { get; set; }
 
     }

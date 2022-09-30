@@ -28,10 +28,8 @@
             </div>
 
             <div class="col-md-6">
-                <p><strong>Plasiyer Seç:</strong></p>
-                
-                <select class="form-control" asp-items="@(new SelectList(Model.UserNameAndId,"Id","Name"))"></select>
-                
+                <p><strong>Plasiyer Seç:</strong></p>               
+                <select  id="salesman" class="form-control" asp-items="@(new SelectList(Model.UserNameAndId,"Id","Name"))"></select>
             </div>
         </div>
     </div>
@@ -132,11 +130,16 @@ else
     <script>
         $(document).ready(function () {
             const selectedValue = $('#selectBox');
+            const selectedSalesman =$('#salesman');
             $('#selectBox').on('change', function () {
                 window.location =
-                    `/Dashboard/Index/?year=${selectedValue.val()}`;
-
+                    `/Dashboard/Index/?year=${selectedValue.val()}&userId=${selectedSalesman.val()}`;
             });
+
+            $('#salesman').on('change',function(){
+                window.location =
+                    `/Dashboard/Index/?userId=${selectedSalesman.val()}&year=${selectedValue.val()}`;
+            })
         });
     </script>
 }
