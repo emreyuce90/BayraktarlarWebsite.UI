@@ -34,28 +34,31 @@ namespace BayraktarlarWebsite.UI.Controllers
             bool isAdmin = await _userManager.IsInRoleAsync(loggedInUser, "Admin");
             if (isAdmin)
             {
-                var allUsers = await _userManager.Users.Select(u => new UsernameAndIdVM
+                var allUsers = await _userManager.Users.Where(u => u.IsRepresentive == true).Select(u => new UsernameAndIdVM
                 {
                     Id = u.Id,
                     Name = u.FirstName
 
                 }).ToListAsync();
-                
+
                 ViewBag.IsAdmin = true;
                 TahsilatListDto alltahsilatList;
                 CiroListDto allciroList;
-
+                string selectedUser;
                 if (userId != null)
                 {
-                     alltahsilatList = await _tahsilatService.GetAllAsyncByUserId((int)userId, year);
-                     allciroList = await _ciroService.GetCiroListAsync((int)userId, year);
+                    alltahsilatList = await _tahsilatService.GetAllAsyncByUserId((int)userId, year);
+                    allciroList = await _ciroService.GetCiroListAsync((int)userId, year);
+                    var user = await _userManager.FindByIdAsync(userId.ToString());
+                    selectedUser = user.FirstName +" "+ user.LastName;
                 }
                 else
                 {
-                     alltahsilatList = await _tahsilatService.GetAllAsync(year);
-                     allciroList = await _ciroService.GetCiroListAsync(year);
+                    alltahsilatList = await _tahsilatService.GetAllAsync(year);
+                    allciroList = await _ciroService.GetCiroListAsync(year);
+                    selectedUser = "Hiç bir kullanıcı seçilmedi";
                 }
-                
+
 
                 CiroTahsilatVM m = new CiroTahsilatVM()
                 {
@@ -63,7 +66,8 @@ namespace BayraktarlarWebsite.UI.Controllers
                     Tahsilatlar = alltahsilatList,
                     SelectedYear = year,
                     UserNameAndId = allUsers,
-                    SelectedUserId =userId
+                    SelectedUserId = userId,
+                    SelectedUserName = selectedUser
                 };
 
                 return View(m);

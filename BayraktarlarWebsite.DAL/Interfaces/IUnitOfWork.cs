@@ -8,6 +8,7 @@ namespace BayraktarlarWebsite.DAL.Interfaces
 {
     public interface IUnitOfWork: IAsyncDisposable
     {
+        ISellRepository Sells { get; }
         ITahsilatRepository Tahsilatlar { get; }
         ICiroRepository Ciro { get; }
         IUrgencyRepository Urgencies { get; }

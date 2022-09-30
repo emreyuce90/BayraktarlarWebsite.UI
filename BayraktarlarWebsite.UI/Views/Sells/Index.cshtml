@@ -1,0 +1,124 @@
+﻿@model SellTargetVM
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Satışlarım & Hedeflerim";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Dashboard" asp-controller="Home"><i class="fa fa-home" aria-hidden="true"></i> Ana Sayfa</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Satışlarım & Hedeflerim</a></li>
+    </ol>
+</nav>
+
+<div class="jumbotron">
+    <h3 class="text-center display-5">Satış & Hedef Durumu</h3>
+    <div class="row">
+        @if (ViewBag.IsAdmin == true)
+        {
+
+            <div class="col-md-6">
+                <p><strong>Plasiyer Seç:</strong></p>
+                <select id="salesman" class="form-control" asp-items="@(new SelectList(Model.UserNameAndId,"Id","Name"))"></select>
+            </div>
+        }
+
+
+        <div class="col-md-6">
+            <p><strong>Yıl Seç:</strong></p>
+            <select class="form-select form-control" id="selectBox">
+                <option selected="@(Model.SelectedYear ==DateTime.Now.Year ? "selected":null)" value="@DateTime.Now.Year">@DateTime.Now.Year</option>
+                <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 1 ? "selected":null)" value="@(DateTime.Now.Year - 1)">@(DateTime.Now.Year - 1)</option>
+                <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 2 ? "selected":null)" value="@(DateTime.Now.Year - 2)">@(DateTime.Now.Year - 2)</option>
+                <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 3 ? "selected":null)" value="@(DateTime.Now.Year - 3)">@(DateTime.Now.Year - 3)</option>
+                <option selected="@(Model.SelectedYear ==DateTime.Now.Year - 4 ? "selected":null)" value="@(DateTime.Now.Year - 4)">@(DateTime.Now.Year - 4)</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <p><strong>Ay Seç:</strong></p>
+            <select class="form-select form-control" id="selectMonth">
+                <option value="1" selected="@(Model.SelectedMonth == 1 ? "selected":null)">OCAK</option>
+                <option value="2" selected="@(Model.SelectedMonth == 2 ? "selected":null)">ŞUBAT</option>
+                <option value="3" selected="@(Model.SelectedMonth == 3 ? "selected":null)">MART</option>
+                <option value="4" selected="@(Model.SelectedMonth == 4 ? "selected":null)">NİSAN</option>
+                <option value="5" selected="@(Model.SelectedMonth == 5 ? "selected":null)">MAYIS</option>
+                <option value="6" selected="@(Model.SelectedMonth == 6 ? "selected":null)">HAZİRAN</option>
+                <option value="7" selected="@(Model.SelectedMonth == 7 ? "selected":null)">TEMMUZ</option>
+                <option value="8" selected="@(Model.SelectedMonth == 8 ? "selected":null)">AĞUSTOS</option>
+                <option value="9" selected="@(Model.SelectedMonth == 9 ? "selected":null)">EYLÜL</option>
+                <option value="10" selected="@(Model.SelectedMonth == 10 ? "selected":null)">EKİM</option>
+                <option value="11" selected="@(Model.SelectedMonth == 11 ? "selected":null)">KASIM</option>
+                <option value="12" selected="@(Model.SelectedMonth == 12 ? "selected":null)">ARALIK</option>
+            </select>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+
+                    <th scope="col">Ay</th>
+                    <th scope="col">Ay Adı</th>
+                    <th scope="col">Yıl</th>
+                    <th scope="col">Plasiyer Adı</th>
+                    <th scope="col">Marka Adı</th>
+                    <th scope="col">Alt Marka Adı</th>
+                    <th scope="col">Ciro</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model.SellList.Sells)
+                {
+                    <tr>
+                        <td>@s.SellDate.Month</td>
+                        <td> @s.SellDate.ToString("MMMM")</td>
+                        <td> @s.SellDate.ToString("yyyy")</td>
+                        <td>@s.User.FirstName @s.User.LastName</td>
+                        <td>@s.AltMarka.Marka.Name</td>
+                        <td>@s.AltMarka.Name</td>
+                        <td>@s.Sell</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+
+
+
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            const selectedValue = $('#selectBox');
+            const selectedSalesman = $('#salesman');
+            const month = $('#selectMonth');
+
+            $('#selectBox').on('change', function () {
+                window.location =
+                    `/Sells/Index/?userId=${selectedSalesman.val()}&year=${selectedValue.val()}&month=${month.val()}`;
+            });
+
+            $('#salesman').on('change', function () {
+                window.location =
+                    `/Sells/Index/?userId=${selectedSalesman.val()}&year=${selectedValue.val()}&month=${month.val()}`;
+            });
+
+            $('#selectMonth').on('change', function () {
+                window.location =
+                    `/Sells/Index/?userId=${selectedSalesman.val()}&year=${selectedValue.val()}&month=${month.val()}`;
+            });
+
+
+        });
+    </script>
+    }

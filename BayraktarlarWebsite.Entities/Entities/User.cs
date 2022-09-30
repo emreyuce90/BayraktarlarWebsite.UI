@@ -18,6 +18,7 @@ namespace BayraktarlarWebsite.Entities.Entities
         public DateTime EntryDate { get; set; }
         [Required(ErrorMessage = "Kod alanı boş geçilemez")]
 
+        public bool IsRepresentive { get; set; }
         public string Code { get; set; }
         public string Mobile { get; set; }
         public string Profile { get; set; }

@@ -12,6 +12,8 @@ namespace BayraktarlarWebsite.UI.Models
         public int SelectedYear { get; set; }
         public int? SelectedUserId { get; set; }
         public List<UsernameAndIdVM> UserNameAndId { get; set; }
+        public string SelectedUserName{ get; set; }
+
 
     }
 }

@@ -28,8 +28,8 @@
             </div>
 
             <div class="col-md-6">
-                <p><strong>Plasiyer Seç:</strong></p>               
-                <select  id="salesman" class="form-control" asp-items="@(new SelectList(Model.UserNameAndId,"Id","Name"))"></select>
+                <p><strong>Plasiyer Seç: @Model.SelectedUserName</strong></p>
+                <select id="salesman" class="form-control" selected="@(Model.SelectedUserId == Model.SelectedUserId ? "selected":null)" asp-items="@(new SelectList(Model.UserNameAndId,"Id","Name"))"></select>
             </div>
         </div>
     </div>

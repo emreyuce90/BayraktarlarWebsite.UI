@@ -4,14 +4,16 @@ using BayraktarlarWebsite.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BayraktarlarWebsite.DAL.Migrations
 {
     [DbContext(typeof(DatabaseConnection))]
-    partial class DatabaseConnectionModelSnapshot : ModelSnapshot
+    [Migration("20220930132230_mig_22")]
+    partial class mig_22
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

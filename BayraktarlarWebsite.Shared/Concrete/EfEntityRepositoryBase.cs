@@ -55,6 +55,8 @@ namespace BayraktarlarWebsite.Shared.Concrete
                 }
             }
 
+    
+
             return await queryable.ToListAsync();
         }
 
@@ -72,6 +74,8 @@ namespace BayraktarlarWebsite.Shared.Concrete
                     queryable = queryable.Include(includeProperty);
                 }
             }
+
+            
           
             return await queryable.SingleOrDefaultAsync();
         }

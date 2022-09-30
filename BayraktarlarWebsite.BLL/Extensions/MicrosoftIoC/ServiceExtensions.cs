@@ -7,6 +7,7 @@ using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddSingleton<IMailService, MailManager>();
             services.AddScoped<ICiroService, CiroManager>();
             services.AddScoped<ITahsilatService, TahsilatManager>();
+            services.AddScoped<ISellService, SellManager>();
             return services;
         }
     }

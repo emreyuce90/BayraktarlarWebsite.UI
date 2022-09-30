@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BayraktarlarWebsite.Shared.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.Entities.Entities
 {
-    public class Sellout
+    public class Sellout:IEntity
     {
         //TOLGA VARTA VARTA 300
         //SERTAN MOBIL CVL PREMIUM 300 Temmuz 2022 

@@ -4,6 +4,7 @@ using BayraktarlarWebsite.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private readonly EfSellRepository _sellRepository;
         private readonly EfTahsilatRepository _tahsilatRepository;
         private readonly EfUrgencyRepository _urgencyRepository;
         private readonly EfAttachmentRepository _attachmentRepository;
@@ -54,6 +56,8 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         public ICiroRepository Ciro => _efCiroRepository ?? new EfCiroRepository(_context);
 
         public ITahsilatRepository Tahsilatlar => _tahsilatRepository ?? new EfTahsilatRepository(_context);
+
+        public ISellRepository Sells => _sellRepository ?? new EfSellRepository(_context);
 
         public async ValueTask DisposeAsync()
         {
