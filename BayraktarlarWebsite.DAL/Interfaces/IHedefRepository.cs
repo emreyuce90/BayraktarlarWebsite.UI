@@ -1,15 +1,15 @@
 ﻿using BayraktarlarWebsite.Entities.Entities;
+using BayraktarlarWebsite.Shared.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BayraktarlarWebsite.Entities.Dtos
+namespace BayraktarlarWebsite.DAL.Interfaces
 {
-    public class SellListDto
+    public interface IHedefRepository:IEntityRepository<Hedef>
     {
-        public IList<Sellout> Sells { get; set; }
-        public int Sumtotal { get; set; }
+
     }
 }

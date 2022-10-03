@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using BayraktarlarWebsite.Shared.Interface;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.Entities.Entities
 {
-    public class Hedef
+    public class Hedef:IEntity
     {
         public int Id { get; set; }
 

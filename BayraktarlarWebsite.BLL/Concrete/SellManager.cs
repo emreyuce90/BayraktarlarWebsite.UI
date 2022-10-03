@@ -21,7 +21,8 @@ namespace BayraktarlarWebsite.BLL.Concrete
         public async Task<SellListDto> GetAllByUserIdAsync(int userId, int year, int month)
         {
             var salesmanSales =await _unitOfWork.Sells.GetAllAsync(s => s.UserId == userId && s.SellDate.Year == year && s.SellDate.Month == month,s=>s.AltMarka,s=>s.User,s=>s.AltMarka.Marka);
-            return new SellListDto { Sells = salesmanSales };
+            var sumtotalSales = await _unitOfWork.Sells.SummAsync(s => s.UserId == userId && s.SellDate.Year == year && s.SellDate.Month == month,s=>s.Sell);
+            return new SellListDto { Sells = salesmanSales,Sumtotal = sumtotalSales };
         }
     }
 }

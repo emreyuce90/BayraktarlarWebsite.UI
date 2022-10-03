@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.Entities.Dtos
 {
-    public class SellListDto
+    public class HedefListDto
     {
-        public IList<Sellout> Sells { get; set; }
-        public int Sumtotal { get; set; }
+        public IList<Hedef> HedefList { get; set; }
+       
     }
 }

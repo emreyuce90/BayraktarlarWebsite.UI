@@ -67,7 +67,10 @@
                     <th scope="col">Plasiyer Adı</th>
                     <th scope="col">Marka Adı</th>
                     <th scope="col">Alt Marka Adı</th>
-                    <th scope="col">Ciro</th>
+                    <th scope="col">Tonaj(LT)</th>
+                    <th scope="col">Hedef Aylık</th>
+                    <th scope="col">Hedef Yıllık</th>
+
 
                 </tr>
             </thead>
@@ -85,10 +88,33 @@
 
                     </tr>
                 }
+                @foreach (var h in Model.HedefList.HedefList)
+                {
+                    <tr>
+                        <td>@h.TargetPerYear</td>
+                    </tr>
+                }
+                @foreach (var h in Model.HedefList.HedefList)
+                {
+                    <tr>
+                        <td>@h.TargetPerMonth</td>
+                    </tr>
+                }
+
+                <tr>
+                    <td></td>
+                    <td> </td>
+                    <td> </td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>Toplam:</strong></td>
+                    <td><strong>@Model.SumTotalSell.ToString()LT</strong></td>
+                </tr>
             </tbody>
         </table>
     </div>
     <div class="col-md-6"></div>
+
 </div>
 
 
