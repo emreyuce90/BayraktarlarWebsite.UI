@@ -20,7 +20,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ICustomerService _customerService;
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, ILogger<HomeController> logger,IOptions<SeoInfo> seoInfo)
+        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, ILogger<HomeController> logger,IOptionsSnapshot<SeoInfo> seoInfo)
         {
             _customerService = customerService;
             _userManager = userManager;
