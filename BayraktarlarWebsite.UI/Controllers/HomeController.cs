@@ -1,13 +1,12 @@
 ﻿using BayraktarlarWebsite.BLL.Interfaces;
-using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.UI.Controllers
@@ -15,18 +14,21 @@ namespace BayraktarlarWebsite.UI.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private readonly SeoInfo _seoInfo;
         private readonly ITicketService _ticketService;
         private readonly ILetService _letService;
         private readonly UserManager<User> _userManager;
         private readonly ICustomerService _customerService;
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, ILogger<HomeController> logger)
+        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, ILogger<HomeController> logger,IOptions<SeoInfo> seoInfo)
         {
             _customerService = customerService;
             _userManager = userManager;
             _letService = letService;
             _ticketService = ticketService;
             _logger = logger;
+            _seoInfo = seoInfo.Value;
+            
         }
         [AllowAnonymous]
         public IActionResult Index()
@@ -92,6 +94,13 @@ namespace BayraktarlarWebsite.UI.Controllers
         public IActionResult Kvkk()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult TestConfig()
+        {
+            return View(_seoInfo);
         }
     }
 }
