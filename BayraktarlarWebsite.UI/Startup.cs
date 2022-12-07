@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProgrammersBlog.Shared.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -35,6 +36,7 @@ namespace BayraktarlarWebsite.UI
         {
             services.Configure<SmtpSettings>(_configuration.GetSection("SmtpSettings"));
             services.Configure<SeoInfo>(_configuration.GetSection("SeoInfo"));
+            services.ConfigureWritable<SeoInfo>(_configuration.GetSection("SeoInfo"));
             services.AddDependencies(_configuration.GetConnectionString("db2"));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
             services.AddScoped<IImageHelper, ImageHelper>();

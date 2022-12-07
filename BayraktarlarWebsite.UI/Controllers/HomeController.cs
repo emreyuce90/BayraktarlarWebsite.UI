@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ProgrammersBlog.Shared.Utilities.Helpers.Abstract;
 using System;
 using System.Threading.Tasks;
 
@@ -14,13 +15,14 @@ namespace BayraktarlarWebsite.UI.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private readonly IWritableOptions<SeoInfo> _writableOptionsSeoInfo;
         private readonly SeoInfo _seoInfo;
         private readonly ITicketService _ticketService;
         private readonly ILetService _letService;
         private readonly UserManager<User> _userManager;
         private readonly ICustomerService _customerService;
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, ILogger<HomeController> logger,IOptionsSnapshot<SeoInfo> seoInfo)
+        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, ILogger<HomeController> logger, IOptionsSnapshot<SeoInfo> seoInfo, IWritableOptions<SeoInfo> writableOptionsSeoInfo)
         {
             _customerService = customerService;
             _userManager = userManager;
@@ -28,7 +30,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             _ticketService = ticketService;
             _logger = logger;
             _seoInfo = seoInfo.Value;
-            
+            _writableOptionsSeoInfo = writableOptionsSeoInfo;
         }
         [AllowAnonymous]
         public IActionResult Index()
@@ -41,7 +43,7 @@ namespace BayraktarlarWebsite.UI.Controllers
             //giriş yapan kullanıcı
             var authenticatedUser = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             //eğer giriş yapan kullanıcı admin ise userid parametresini null geç
-            var isAdmin=await _userManager.IsInRoleAsync(authenticatedUser,"Admin");
+            var isAdmin = await _userManager.IsInRoleAsync(authenticatedUser, "Admin");
             if (isAdmin)
             {
                 ViewBag.IsAdmin = true;
@@ -71,16 +73,16 @@ namespace BayraktarlarWebsite.UI.Controllers
                     UygulananTabelalar = await _customerService.CountAsync(5, authenticatedUser.Id),
                     WorkingYear = await _letService.WorkingYearAsync(authenticatedUser.Id),
                     RemainingLets = await _letService.RemainingLetAsync(authenticatedUser.Id),
-                    UsedLastYear = await _letService.UsedLetsAsync((DateTime.Now.Year-1),authenticatedUser.Id),
-                    UsedThisYear= await _letService.UsedLetsAsync(DateTime.Now.Year,authenticatedUser.Id),
+                    UsedLastYear = await _letService.UsedLetsAsync((DateTime.Now.Year - 1), authenticatedUser.Id),
+                    UsedThisYear = await _letService.UsedLetsAsync(DateTime.Now.Year, authenticatedUser.Id),
                     Done = await _ticketService.CountClosedTicketsAsync(authenticatedUser.Id),
                     Todo = await _ticketService.CountNotClosedTicketsAsync(authenticatedUser.Id),
-                    Planned= await _ticketService.CountRemainderTicketsAsync(authenticatedUser.Id)
+                    Planned = await _ticketService.CountRemainderTicketsAsync(authenticatedUser.Id)
                 };
                 return View(model);
             }
-            
-            
+
+
         }
         [AllowAnonymous]
         [HttpGet]
@@ -100,6 +102,14 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public IActionResult TestConfig()
         {
+            _writableOptionsSeoInfo.Update(s =>
+            {
+                s.SeoTags = "SeoTags Controllerdan değiştirildi";
+                s.SeoAuthor = "SeoAuthor Controllerdan değiştirildi";
+                s.MenuTitle = "MenuTitle Controllerdan değiştirildi";
+                s.Title = "Title Controllerdan değiştirildi";
+
+            });
             return View(_seoInfo);
         }
     }
