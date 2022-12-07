@@ -2,6 +2,7 @@
 {
     public class SeoInfo
     {
+        
         public string Title { get; set; }
         public string MenuTitle { get; set; }
         public string SeoDescription { get; set; }
