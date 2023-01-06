@@ -5,7 +5,6 @@ using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,19 +18,17 @@ namespace BayraktarlarWebsite.UI.Controllers
         private readonly ILetService _letService;
         private readonly UserManager<User> _userManager;
         private readonly ICustomerService _customerService;
-        private readonly ILogger<HomeController> _logger;
-        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, ILogger<HomeController> logger)
+
+        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService)
         {
             _customerService = customerService;
             _userManager = userManager;
             _letService = letService;
             _ticketService = ticketService;
-            _logger = logger;
         }
         [AllowAnonymous]
         public IActionResult Index()
         {
-            _logger.LogWarning("Test");
             return View();
         }
         public async Task<IActionResult> Dashboard()
