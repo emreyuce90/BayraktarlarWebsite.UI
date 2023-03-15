@@ -1,0 +1,72 @@
+﻿@model Entities.Entities.Hunter
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Nokta Ekle";
+}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index">Hunter Listesi</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Hunter Ekle</li>
+    </ol>
+</nav>
+
+<form method="post" class="w-75 mx-auto shadow p-3">
+
+    <div class="form-group">
+        <label>Tabela Adı:</label>
+        <input class="form-control" asp-for="TabelaAdi" />
+        <span asp-validation-for="TabelaAdi" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Kategori Adı:</label>
+        <input class="form-control" asp-for="KategoriAdi" />
+        <span asp-validation-for="KategoriAdi" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Usta Adı:</label>
+        <input class="form-control" asp-for="UstaAdi" />
+        <span asp-validation-for="UstaAdi" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Cep Telefonu:</label>
+        <input  type="number" class="form-control" asp-for="CepTelefonu" />
+        <span asp-validation-for="CepTelefonu" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>İl:</label>
+        <input class="form-control" asp-for="İl" />
+        <span asp-validation-for="İl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>İlçe:</label>
+        <input class="form-control" asp-for="İlçe" />
+        <span asp-validation-for="İlçe" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Sanayi Sitesi Adı:</label>
+        <input class="form-control" asp-for="SanayiSitesiAdi" />
+        <span asp-validation-for="SanayiSitesiAdi" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Açık Adres:</label>
+        <textarea class="form-control" asp-for="TabelaAdi"></textarea>
+        <span asp-validation-for="TabelaAdi" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Notlar:</label>
+        <textarea class="form-control" asp-for="Not"></textarea>
+        <span asp-validation-for="Not" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Görüşler:</label>
+        <textarea class="form-control" asp-for="Description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <button class="btn btn-success">Kaydet</button>
+</form>
+
+@section scripts{
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

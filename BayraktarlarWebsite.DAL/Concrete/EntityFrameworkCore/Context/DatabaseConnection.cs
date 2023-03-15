@@ -29,6 +29,7 @@ namespace BayraktarlarWebsite.DAL.Context
         public DbSet<AltMarka> AltMarkalar { get; set; }
         public DbSet<Hedef> Hedefler { get; set; }
         public DbSet<Sellout> Satislar { get; set; }
+        public DbSet<Hunter> Hunters { get; set; }
         public DatabaseConnection(DbContextOptions<DatabaseConnection> options):base(options)
         {
 

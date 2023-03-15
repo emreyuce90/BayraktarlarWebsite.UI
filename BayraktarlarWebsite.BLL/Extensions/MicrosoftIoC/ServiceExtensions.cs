@@ -38,6 +38,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             }
 
            ).AddEntityFrameworkStores<DatabaseConnection>().AddDefaultTokenProviders();
+            services.AddScoped<IHunterService,HunterManager>();
             services.AddScoped<IStatusService, StatusManager>();
             services.AddScoped<IMaterialService, MaterialManager>();
             services.AddScoped<ITabelaService, TabelaManager>();

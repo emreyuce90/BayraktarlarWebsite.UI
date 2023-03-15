@@ -28,12 +28,14 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         private readonly EfLetRepository _efLetRepository;
         private readonly EfCiroRepository _efCiroRepository;
         private readonly EfHedefRepository _efHedefRepository;
+        private readonly EfHunterRepository _efHunterRepository;
         public UnitOfWork(DatabaseConnection context)
         {
             _context = context;
             
         }
 
+        public IHunterRepository Hunters => _efHunterRepository ?? new EfHunterRepository(_context);
         public IBrandRepository Brands => _brandRepository ?? new EfBrandRepository(_context);
         public ITabelaRepository Tabelas => _tabelaRepository ?? new EfTabelaRepository(_context);
         public ITabelaImagesRepository TabelaImages => _tabelaImagesRepository ?? new EfTabelaImagesRepository(_context);
@@ -61,7 +63,6 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         public ISellRepository Sells => _sellRepository ?? new EfSellRepository(_context);
 
         public IHedefRepository Hedefler => _efHedefRepository ?? new EfHedefRepository(_context);
-
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync();
