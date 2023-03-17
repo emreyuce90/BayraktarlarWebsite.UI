@@ -2,6 +2,7 @@
 using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
+using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -34,10 +35,32 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var hunters = await _context.Hunters.Include(h=>h.Town).Include(h=>h.District).Include(h=>h.HunterProducts).ThenInclude(hp=>hp.Product).ThenInclude(sb=>sb.SubProducts).ToListAsync();
-            //var hunters = await _hunterService.GetAll();
-           
-            return View(hunters);
+            var hunters = await _context.Hunters.Include(h => h.District).Include(h => h.Town).Include(hp => hp.HunterProducts).ThenInclude(hp => hp.Product).ToListAsync();
+            //modelimiz
+            var model = new List<HunterListDto>();
+
+
+
+
+            foreach (var h in hunters)
+            {
+               
+
+                var m = new HunterListDto
+                {
+                    CepTelefonu = h.CepTelefonu,
+                    Not = h.Not,
+                    SanayiSitesiAdi = h.SanayiSitesiAdi,
+                    TabelaAdi = h.TabelaAdi,
+                    İl = h.Town.Name,
+                    İlçe = h.District.Name,
+                    UstaAdi = h.UstaAdi,
+                    HunterProducts=h.HunterProducts
+                };
+                model.Add(m);
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -64,8 +87,8 @@ namespace BayraktarlarWebsite.UI.Controllers
 
             if (hunter.Battery == true)
             {
-                var b =new HunterProduct { ProductId = 3 };
-                hunterProductList.Add(b);   
+                var b = new HunterProduct { ProductId = 3 };
+                hunterProductList.Add(b);
             }
             if (hunter.Oil == true)
             {
@@ -83,17 +106,17 @@ namespace BayraktarlarWebsite.UI.Controllers
             var h = new Hunter();
             h.CreatedDate = DateTime.Now;
             h.Adres = hunter.Adres;
-            h.CepTelefonu=hunter.CepTelefonu;
-            h.WasteBarrel=hunter.WasteBarrel;
-            h.TabelaAdi=hunter.TabelaAdi;   
-            h.ConsumptionPerYear=hunter.ConsumptionPerYear;
-            h.Description=hunter.Description;
-            h.DistrictId=hunter.DistrictId;
-            h.TownId=hunter.TownId;
+            h.CepTelefonu = hunter.CepTelefonu;
+            h.WasteBarrel = hunter.WasteBarrel;
+            h.TabelaAdi = hunter.TabelaAdi;
+            h.ConsumptionPerYear = hunter.ConsumptionPerYear;
+            h.Description = hunter.Description;
+            h.DistrictId = hunter.DistrictId;
+            h.TownId = hunter.TownId;
             h.SanayiSitesiAdi = hunter.SanayiSitesiAdi;
             h.Not = hunter.Not;
             h.UstaAdi = hunter.UstaAdi;
-            h.HunterProducts=hunterProductList;
+            h.HunterProducts = hunterProductList;
             try
             {
                 await _hunterService.AddAsync(h);
@@ -112,7 +135,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                 return View(hunter);
 
             }
-          
+
         }
 
         [HttpGet]
@@ -125,7 +148,7 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<JsonResult> GetSubProductsByProductId(int productId)
         {
-            var subProducts = await _context.SubProducts.Where(s=>s.ProductId == productId).ToListAsync();  
+            var subProducts = await _context.SubProducts.Where(s => s.ProductId == productId).ToListAsync();
             return Json(subProducts);
         }
     }

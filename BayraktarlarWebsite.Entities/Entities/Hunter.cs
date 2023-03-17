@@ -47,7 +47,9 @@ namespace BayraktarlarWebsite.Entities.Entities
         public int? TownId { get; set; }
         public District District { get; set; }
         public int? DistrictId { get; set; }
+
         public List<HunterProduct> HunterProducts{ get; set; }
+
 
     }
 }

@@ -1,4 +1,4 @@
-﻿@model List<Entities.Entities.Hunter>
+﻿@model List<HunterListDto>
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Eklenenler";
@@ -17,10 +17,7 @@
                 <th scope="col">İlçe</th>
                 <th scope="col">Sanayi Sitesi Adı</th>
                 <th scope="col">Kategori</th>
-                <th scope="col">Yıllık Ort.Tüketimi</th>
-                <th scope="col">1 Fıçıyı Kaç Ayda Doldurur</th>
                 <th scope="col">Not</th>
-                <th scope="col">Detay</th>
                 <th scope="col">İşlemler</th>
             </tr>
         </thead>
@@ -33,29 +30,26 @@
                     <td>@item.TabelaAdi</td>
                     <td>@item.UstaAdi</td>
                     <td>@item.CepTelefonu</td>
-                    <td>@item.Town.Name</td>
-                    <td>@item.District.Name</td>
+                    <td>@item.İl</td>
+                    <td>@item.İlçe</td>
                     <td>@item.SanayiSitesiAdi</td>
                     <td>
-                        
-                    @if (item.HunterProducts.Count > 0)
-                    {
-                        @foreach (var p in item.HunterProducts)
-                        {
-                            <div>
-                                    @p.Product.Name:<i>@p.SubProduct.Name</i>
-                            </div>
-                                                       
 
+                        @if (item.HunterProducts.Count > 0)
+                        {
+                            @foreach (var p in item.HunterProducts)
+                            {
+                                <p>
+                                    @p.Product.Name
+                                    
+                                </p>
+
+                            }
                         }
-                    }
-                        
+
                     </td>
-                    <td>@item.ConsumptionPerYear</td>
-                    <td>@item.WasteBarrel</td>
                     <td>@item.Not</td>
-                    <td>@item.Description</td>
-                    <td><button class="btn btn-warning text-white">Düzenle</button></td>
+                    <td><button class="btn btn-success text-white">Detaya Git</button></td>
                 </tr>
             }
 

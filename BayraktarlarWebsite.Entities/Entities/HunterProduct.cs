@@ -7,7 +7,6 @@
         public int ProductId { get; set; }
         public Hunter Hunter { get; set; }
         public int HunterId { get; set; }
-        public SubProduct SubProduct { get; set; }
-        public int SubProductId { get; set; }
+
     }
 }

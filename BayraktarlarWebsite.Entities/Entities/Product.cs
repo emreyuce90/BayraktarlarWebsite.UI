@@ -7,6 +7,6 @@ namespace BayraktarlarWebsite.Entities.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public List<HunterProduct> HunterProducts{ get; set; }
-        public List<SubProduct> SubProducts { get; set; }
+      
     }
 }
