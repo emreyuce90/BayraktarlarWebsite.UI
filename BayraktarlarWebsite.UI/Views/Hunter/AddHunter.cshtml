@@ -1,0 +1,239 @@
+﻿@model HunterAddDto
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Nokta Ekle";
+}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mt-4">
+        <li class="breadcrumb-item"><a asp-action="Index">Hunter Listesi</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Hunter Ekle</li>
+    </ol>
+</nav>
+
+<form method="post" class="w-100 mx-auto shadow p-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Tabela Adı:</label>
+                <input class="form-control" asp-for="TabelaAdi" />
+                <span asp-validation-for="TabelaAdi" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Usta Adı:</label>
+                <input class="form-control" asp-for="UstaAdi" />
+                <span asp-validation-for="UstaAdi" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Cep Telefonu:</label>
+                <input type="number" class="form-control" asp-for="CepTelefonu" />
+                <span asp-validation-for="CepTelefonu" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>İl Seçiniz:</label>
+                <select asp-for="TownId" asp-items="@(new SelectList(Model.Towns,"Id","Name"))" class="form-control" name="townId" id="TownId">
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>İlçe Seçiniz:</label>
+                <select asp-for="DistrictId" asp-items="@(new SelectList(Model.Districts,"Id","Name"))" class="form-control" name="districtId" id="districtId">
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Sanayi Sitesi Adı:</label>
+        <input class="form-control" asp-for="SanayiSitesiAdi" />
+        <span asp-validation-for="SanayiSitesiAdi" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><b>Kategoriler:</b></label>
+                            <div>
+
+
+                                <p>
+                                    <input asp-for="Oil" type="checkbox" name="oil" id="oilCheck" />
+                                    <label>Yağ</label>
+                                </p>
+                                <p>
+                                    <input asp-for="Filter" type="checkbox" name="filter" id="filterCheck" />
+                                    <label>Filtre</label>
+                                </p>
+                                <p>
+                                    <input asp-for="Battery" type="checkbox" name="battery" id="batteryCheck" />
+                                    <label>Akü</label>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" id="oilSelect">
+                            <label>Yağ Markası Seçiniz:</label>
+                            <select class="form-control" id="oil" multiple>
+                            </select>
+                        </div><div class="form-group" id="filterSelect" >
+                            <label>Filtre Markası Seçiniz:</label>
+                            <select class="form-control" id="filter" multiple>
+                            </select>
+                        </div><div class="form-group" id="batterySelect" >
+                            <label>Akü Markası Seçiniz:</label>
+                            <select class="form-control" id="battery" multiple>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <label>Açık Adres(*İsteğe bağlı):</label>
+                <textarea rows="5" cols="5" class="form-control" asp-for="TabelaAdi"></textarea>
+                <span asp-validation-for="TabelaAdi" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Yıllık Ort Tüketimi(LT):</label>
+                <input class="form-control" asp-for="ConsumptionPerYear" type="number" min="0" />
+                <span asp-validation-for="ConsumptionPerYear" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>1 Fıçıyı Kaç Ayda Doldurur:</label>
+                <input class="form-control" asp-for="WasteBarrel" type="number" min="0" />
+                <span asp-validation-for="WasteBarrel" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label>Notlar:</label>
+        <textarea class="form-control" asp-for="Not"></textarea>
+        <span asp-validation-for="Not" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Görüşler:</label>
+        <textarea class="form-control" asp-for="Description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <button class="btn btn-success">Kaydet</button>
+</form>
+
+@section scripts{
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#oilSelect').hide();
+            $('#oilCheck').change(function(){
+                if(!this.checked){
+                    $('#oilSelect').hide();
+                    $('#oil').empty();
+
+                }else{
+                    $('#oilSelect').show();
+                    $('#oil').empty();
+                    $.ajax({
+                        method:'get',
+                        url: '/Hunter/GetSubProductsByProductId',
+                        data: { productId :1},
+                        success:function(res){
+                            $.each(res,function(i,res){
+                                $('#oil').append($('<option></option>').val(res.id).html(res.name))
+                            })
+                        }
+                    })
+                }
+            })
+
+            $('#filterSelect').hide();
+            $('#filterCheck').change(function () {
+                if (!this.checked) {
+                    $('#filterSelect').hide();
+                } else {
+                    $('#filterSelect').show();
+                    $('#filter').empty();
+                    $.ajax({
+                        method:'get',
+                        url: '/Hunter/GetSubProductsByProductId',
+                        data:{productId:2},
+                        success:function(res){
+                            $.each(res,function(index,res){
+                                $('#filter').append($('<option></option>').val(res.id).html(res.name))
+                            });
+                        }
+                    })
+
+                }
+            })
+
+            $('#batterySelect').hide();
+            $('#batteryCheck').change(function () {
+                if (!this.checked) {
+                    $('#batterySelect').hide();
+                } else {
+                    $('#batterySelect').show();
+                    $('#battery').empty();
+                    $.ajax({
+                        method:'get',
+                        url: '/Hunter/GetSubProductsByProductId',
+                        data:{productId:3},
+                        success:function(res){
+                            $.each(res,function(index,res){
+                                $('#battery').append($('<option></option>').val(res.id).html(res.name))
+                            });
+                        }
+                    })
+                }
+            })
+        })
+
+
+        $('#TownId').change(function () {
+            var townId = $(this).val();
+            $.ajax({
+                type: 'get',
+                url: '/Hunter/GetDistrictsByTownId',
+                data: { townId: townId },
+                success: function (res) {
+                    console.log(res);
+                    $('#districtId').empty();
+                    //res ile cevabı sunucudan aldık ve i nin üzerinden propertyleri yazdırdık
+                    $.each(res, function (index, i) {
+                        $('#districtId').append($('<option></option>').val(i.id).html(i.name))
+
+                    });
+                }
+            })
+        })
+    </script>
+}

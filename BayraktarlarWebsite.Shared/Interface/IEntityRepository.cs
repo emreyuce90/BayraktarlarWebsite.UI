@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,6 +11,7 @@ namespace BayraktarlarWebsite.Shared.Interface
 {
     public interface IEntityRepository<T> where T:class,IEntity,new()
     {
+        DbSet<T> Table { get; }
         //repository.GetAsync(I=>I.Name == "XXX",I=>I.Comment)
         Task<T> GetAsync(Expression<Func<T, bool>> predicate=null, params Expression<Func<T, object>>[] includeProperties);
         //repository.GetAllAsync();
