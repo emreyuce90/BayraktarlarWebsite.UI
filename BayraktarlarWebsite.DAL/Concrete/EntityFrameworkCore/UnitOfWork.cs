@@ -12,6 +12,8 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private readonly EfDistrictRepository _efDistrictRepository;
+        
         private readonly EfSellRepository _sellRepository;
         private readonly EfTahsilatRepository _tahsilatRepository;
         private readonly EfUrgencyRepository _urgencyRepository;
@@ -29,12 +31,14 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         private readonly EfCiroRepository _efCiroRepository;
         private readonly EfHedefRepository _efHedefRepository;
         private readonly EfHunterRepository _efHunterRepository;
+        private readonly EfTownRepository _efTownRepository;
         public UnitOfWork(DatabaseConnection context)
         {
             _context = context;
             
         }
 
+        public ITownRepository Towns => _efTownRepository ?? new EfTownRepository(_context);
         public IHunterRepository Hunters => _efHunterRepository ?? new EfHunterRepository(_context);
         public IBrandRepository Brands => _brandRepository ?? new EfBrandRepository(_context);
         public ITabelaRepository Tabelas => _tabelaRepository ?? new EfTabelaRepository(_context);
@@ -63,6 +67,9 @@ namespace BayraktarlarWebsite.DAL.Concrete.EntityFrameworkCore
         public ISellRepository Sells => _sellRepository ?? new EfSellRepository(_context);
 
         public IHedefRepository Hedefler => _efHedefRepository ?? new EfHedefRepository(_context);
+
+        public IDistrictRepository Districts => _efDistrictRepository ?? new EfDistrictRepository(_context);
+
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync();

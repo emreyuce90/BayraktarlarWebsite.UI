@@ -30,6 +30,12 @@ namespace BayraktarlarWebsite.DAL.Context
         public DbSet<Hedef> Hedefler { get; set; }
         public DbSet<Sellout> Satislar { get; set; }
         public DbSet<Hunter> Hunters { get; set; }
+        public DbSet<Town> Towns { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<HunterProduct> HunterProducts{ get; set; }
+        public DbSet<SubProduct> SubProducts { get; set; }
+
         public DatabaseConnection(DbContextOptions<DatabaseConnection> options):base(options)
         {
 

@@ -16,33 +16,49 @@
                 <th scope="col">İl</th>
                 <th scope="col">İlçe</th>
                 <th scope="col">Sanayi Sitesi Adı</th>
-          @*      <th scope="col">Açık Adres</th>*@
                 <th scope="col">Kategori</th>
+                <th scope="col">Yıllık Ort.Tüketimi</th>
+                <th scope="col">1 Fıçıyı Kaç Ayda Doldurur</th>
                 <th scope="col">Not</th>
                 <th scope="col">Detay</th>
                 <th scope="col">İşlemler</th>
             </tr>
         </thead>
         <tbody>
-           
-                @foreach (var item in Model)
-                {
+
+            @foreach (var item in Model)
+            {
                 <tr>
 
                     <td>@item.TabelaAdi</td>
                     <td>@item.UstaAdi</td>
                     <td>@item.CepTelefonu</td>
-                    <td>@item.İl</td>
-                    <td>@item.İlçe</td>
+                    <td>@item.Town.Name</td>
+                    <td>@item.District.Name</td>
                     <td>@item.SanayiSitesiAdi</td>
-                    @*<td>@item.Adres</td>*@
-                    <td>@item.KategoriAdi</td>
+                    <td>
+                        
+                    @if (item.HunterProducts.Count > 0)
+                    {
+                        @foreach (var p in item.HunterProducts)
+                        {
+                            <div>
+                                    @p.Product.Name:<i>@p.SubProduct.Name</i>
+                            </div>
+                                                       
+
+                        }
+                    }
+                        
+                    </td>
+                    <td>@item.ConsumptionPerYear</td>
+                    <td>@item.WasteBarrel</td>
                     <td>@item.Not</td>
                     <td>@item.Description</td>
                     <td><button class="btn btn-warning text-white">Düzenle</button></td>
                 </tr>
-                }
-            
+            }
+
 
         </tbody>
     </table>

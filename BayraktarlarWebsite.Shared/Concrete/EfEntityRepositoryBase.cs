@@ -18,6 +18,15 @@ namespace BayraktarlarWebsite.Shared.Concrete
         {
             _context = context;
         }
+
+        public System.Data.Entity.DbSet<Tentity> Table
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public async Task AddAsync(Tentity t)
         {
             await _context.Set<Tentity>().AddAsync(t);

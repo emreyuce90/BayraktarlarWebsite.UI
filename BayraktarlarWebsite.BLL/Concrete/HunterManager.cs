@@ -2,6 +2,7 @@
 using BayraktarlarWebsite.DAL.Interfaces;
 using BayraktarlarWebsite.Entities.Entities;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace BayraktarlarWebsite.BLL.Concrete
@@ -23,7 +24,7 @@ namespace BayraktarlarWebsite.BLL.Concrete
 
         public async Task<List<Hunter>> GetAll()
         {
-            return await _unitOfWork.Hunters.GetAllAsync();
+            return await _unitOfWork.Hunters.GetAllAsync(null,t=>t.Town,d=>d.District,s=>s.HunterProducts);
         }
     }
 }

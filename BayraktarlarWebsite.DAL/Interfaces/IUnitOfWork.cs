@@ -8,6 +8,8 @@ namespace BayraktarlarWebsite.DAL.Interfaces
 {
     public interface IUnitOfWork: IAsyncDisposable
     {
+        IDistrictRepository Districts { get; }
+        ITownRepository Towns { get; }
         IHunterRepository Hunters { get; }
         IHedefRepository Hedefler { get; }
         ISellRepository Sells { get; }

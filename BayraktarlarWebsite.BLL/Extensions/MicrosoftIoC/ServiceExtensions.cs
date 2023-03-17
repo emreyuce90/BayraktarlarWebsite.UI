@@ -55,6 +55,8 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddScoped<ITahsilatService, TahsilatManager>();
             services.AddScoped<ISellService, SellManager>();
             services.AddScoped<IHedefService, HedefManager>();
+            services.AddScoped<ITownService, TownManager>();
+            services.AddScoped<IDistrictService, DistrictManager>();
             return services;
         }
     }
