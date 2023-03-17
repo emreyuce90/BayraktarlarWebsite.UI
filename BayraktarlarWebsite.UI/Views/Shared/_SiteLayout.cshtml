@@ -1,4 +1,11 @@
-﻿<!doctype html>
+﻿@*@using Microsoft.Extensions.Options*@
+@using BayraktarlarWebsite.UI.Models
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<SeoInfo> WebsiteInfo
+@{
+    var websiteInfo = WebsiteInfo.Value;
+}
+<!doctype html>
 <html lang="tr">
 
 <head>
@@ -7,6 +14,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="@websiteInfo.SeoDescription"/>
+    <meta name="author" content="@websiteInfo.SeoAuthor"/>
+    <meta name="keywords" content="@websiteInfo.SeoTags" />
+   
     @await Html.PartialAsync("_WebsiteCssPartialView")
 
     @RenderSection("css",false)

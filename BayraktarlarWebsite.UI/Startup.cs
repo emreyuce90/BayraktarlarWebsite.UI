@@ -5,12 +5,15 @@ using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Helpers.Abstract;
 using BayraktarlarWebsite.UI.Helpers.Concrete;
 using BayraktarlarWebsite.UI.Mappings.AutoMapper;
+using BayraktarlarWebsite.UI.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProgrammersBlog.Shared.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -33,8 +36,13 @@ namespace BayraktarlarWebsite.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<SmtpSettings>(_configuration.GetSection("SmtpSettings"));
+            services.Configure<SeoInfo>(_configuration.GetSection("SeoInfo"));
+            services.ConfigureWritable<SeoInfo>(_configuration.GetSection("SeoInfo"));
             services.AddDependencies(_configuration.GetConnectionString("db2"));
-            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNToastNotifyToastr().AddFluentValidation(config =>
+            {
+                config.RegisterValidatorsFromAssemblyContaining<Startup>();
+            });
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<ILetTimeCalculator, LetTimeCalculator>();
             services.AddAutoMapper(typeof(BrandMap),typeof(CustomerMap),typeof(TabelaImagesMap),typeof(TabelaViewModelMap),typeof(MaterialMap),typeof(TabelaMap),typeof(RolesMapping),typeof(TicketMap));

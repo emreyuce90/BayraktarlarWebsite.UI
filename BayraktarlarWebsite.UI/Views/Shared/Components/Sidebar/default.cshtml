@@ -93,6 +93,17 @@
                             <a asp-controller="Roles" asp-action="UserWithRoles" class="nav-link">Rol Atama</a>
                         </nav>
                     </div>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayoutasdf" aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tools"></i></div>
+                        Ayarlar
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayoutasdf" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" asp-action="About" asp-controller="Options">Seo Bilgilerini Değiştir</a>
+                        
+                        </nav>
+                    </div>
                 }
                 else
                 {
