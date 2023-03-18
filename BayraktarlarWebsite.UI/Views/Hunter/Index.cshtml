@@ -1,0 +1,60 @@
+﻿@model List<HunterListDto>
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Eklenenler";
+}
+<div class="mt-4">
+    <a class="btn btn-success" asp-controller="Hunter" asp-action="AddHunter"> Yeni Kayıt Ekle</a>
+
+    <table class="table table-hover mt-2">
+        <thead class="thead-dark">
+            <tr>
+
+                <th scope="col">Tabela Adı</th>
+                <th scope="col">Usta Adı</th>
+                <th scope="col">Cep Telefonu</th>
+                <th scope="col">İl</th>
+                <th scope="col">İlçe</th>
+                <th scope="col">Sanayi Sitesi Adı</th>
+                <th scope="col">Kategori</th>
+                <th scope="col">Not</th>
+                <th scope="col">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.TabelaAdi</td>
+                    <td>@item.UstaAdi</td>
+                    <td>@item.CepTelefonu</td>
+                    <td>@item.İl</td>
+                    <td>@item.İlçe</td>
+                    <td>@item.SanayiSitesiAdi</td>
+                    <td>
+
+                        @if (item.HunterProducts.Count > 0)
+                        {
+                            @foreach (var p in item.HunterProducts)
+                            {
+                                <p>
+                                    @p.Product.Name
+                                    
+                                </p>
+
+                            }
+                        }
+
+                    </td>
+                    <td>@item.Not</td>
+                    <td><button class="btn btn-success text-white">Detaya Git</button></td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+
+</div>

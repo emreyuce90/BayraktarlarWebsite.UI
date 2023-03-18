@@ -38,6 +38,7 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             }
 
            ).AddEntityFrameworkStores<DatabaseConnection>().AddDefaultTokenProviders();
+            services.AddScoped<IHunterService,HunterManager>();
             services.AddScoped<IStatusService, StatusManager>();
             services.AddScoped<IMaterialService, MaterialManager>();
             services.AddScoped<ITabelaService, TabelaManager>();
@@ -54,6 +55,8 @@ namespace BayraktarlarWebsite.BLL.Extensions.MicrosoftIoC
             services.AddScoped<ITahsilatService, TahsilatManager>();
             services.AddScoped<ISellService, SellManager>();
             services.AddScoped<IHedefService, HedefManager>();
+            services.AddScoped<ITownService, TownManager>();
+            services.AddScoped<IDistrictService, DistrictManager>();
             return services;
         }
     }

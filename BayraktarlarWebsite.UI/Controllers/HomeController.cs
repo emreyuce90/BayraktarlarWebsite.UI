@@ -4,7 +4,9 @@ using BayraktarlarWebsite.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.Web.CodeGeneration;
 using ProgrammersBlog.Shared.Utilities.Helpers.Abstract;
 using System;
 using System.Threading.Tasks;
@@ -23,13 +25,13 @@ namespace BayraktarlarWebsite.UI.Controllers
 
 
 
-        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService, IOptionsSnapshot<SeoInfo> seoInfo, IWritableOptions<SeoInfo> writableOptionsSeoInfo)
+        public HomeController(ICustomerService customerService, UserManager<User> userManager, ILetService letService, ITicketService ticketService,  IOptionsSnapshot<SeoInfo> seoInfo, IWritableOptions<SeoInfo> writableOptionsSeoInfo)
         {
             _customerService = customerService;
             _userManager = userManager;
             _letService = letService;
             _ticketService = ticketService;
-
+            
             _seoInfo = seoInfo.Value;
             _writableOptionsSeoInfo = writableOptionsSeoInfo;
         }
