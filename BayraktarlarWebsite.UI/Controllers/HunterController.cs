@@ -111,7 +111,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                             hunterProductList.Add(hp);
                         }
                         //Filtre kategorisidir
-                    }else if(selectedCategory[0] == 2)
+                    }else if(selectedCategory.Contains("2"))
                     {
                         for (int i = 0; i < hunter.SelectedFilterCategories.Count; i++)
                         {
