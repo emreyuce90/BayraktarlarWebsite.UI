@@ -43,10 +43,18 @@ namespace BayraktarlarWebsite.Entities.Dtos
         public List<District> Districts { get; set; }
         public int DistrictId { get; set; }
 
+        public int MyProperty { get; set; }
 
         public bool Oil { get; set; }
         public bool Filter { get; set; }
         public bool Battery { get; set; }
 
+        //Seçilen kategoriler
+        public List<string> SelectedOilCategories { get; set; }
+        public List<string> SelectedFilterCategories { get; set; }
+        public List<string> SelectedBatteryCategories { get; set; }
+        //Seçilen alt kategoriler
+        public List<string> SelectedCategories { get; set; }
     }
 }
+

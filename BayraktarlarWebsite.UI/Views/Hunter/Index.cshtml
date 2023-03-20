@@ -35,15 +35,15 @@
                     <td>@item.SanayiSitesiAdi</td>
                     <td>
 
-                        @if (item.HunterProducts.Count > 0)
+                        @if (item.HunterProduct.Count > 0)
                         {
-                            @foreach (var p in item.HunterProducts)
+                            @foreach (var p in item.HunterProduct)
                             {
                                 <p>
                                     @p.Product.Name
-                                    
-                                </p>
+                                    @p.SubProduct.Name
 
+                               </p>
                             }
                         }
 

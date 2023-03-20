@@ -1,7 +1,13 @@
 ﻿@model HunterAddDto
+@using BayraktarlarWebsite.Entities.Dtos;
+@using BayraktarlarWebsite.Entities.Entities;
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Nokta Ekle";
+}
+@{
+    var categories = ViewBag.Categories as List<Product>;
+
 }
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mt-4">
@@ -69,37 +75,29 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label><b>Kategoriler:</b></label>
-                            <div>
-
-
-                                <p>
-                                    <input asp-for="Oil" type="checkbox" name="oil" id="oilCheck" />
-                                    <label>Yağ</label>
-                                </p>
-                                <p>
-                                    <input asp-for="Filter" type="checkbox" name="filter" id="filterCheck" />
-                                    <label>Filtre</label>
-                                </p>
-                                <p>
-                                    <input asp-for="Battery" type="checkbox" name="battery" id="batteryCheck" />
-                                    <label>Akü</label>
-                                </p>
-
+                         
+                                @foreach (var category in categories)
+                                {
+                                    <div>
+                                    <input id="category_@category.Id" type="checkbox" name="SelectedCategories" value="@category.Id" />
+                                    <label>@category.Name</label>
+                                    </div>
+                                }
                             </div>
-                        </div>
+                        
                     </div>
                     <div class="col-md-6">
                         <div class="form-group" id="oilSelect">
                             <label>Yağ Markası Seçiniz:</label>
-                            <select class="form-control" id="oil" multiple>
+                            <select class="form-control" id="oil" multiple name="SelectedOilCategories">
                             </select>
                         </div><div class="form-group" id="filterSelect" >
                             <label>Filtre Markası Seçiniz:</label>
-                            <select class="form-control" id="filter" multiple>
+                            <select class="form-control" id="filter" multiple name="SelectedFilterCategories">
                             </select>
                         </div><div class="form-group" id="batterySelect" >
                             <label>Akü Markası Seçiniz:</label>
-                            <select class="form-control" id="battery" multiple>
+                            <select class="form-control" id="battery" multiple name="SelectedBatteryCategories">
                             </select>
                         </div>
                     </div>
@@ -154,7 +152,7 @@
     <script>
         $(document).ready(function () {
             $('#oilSelect').hide();
-            $('#oilCheck').change(function(){
+            $('#category_1').change(function () {
                 if(!this.checked){
                     $('#oilSelect').hide();
                     $('#oil').empty();
@@ -176,7 +174,7 @@
             })
 
             $('#filterSelect').hide();
-            $('#filterCheck').change(function () {
+            $('#category_2').change(function () {
                 if (!this.checked) {
                     $('#filterSelect').hide();
                 } else {
@@ -197,7 +195,7 @@
             })
 
             $('#batterySelect').hide();
-            $('#batteryCheck').change(function () {
+            $('#category_3').change(function () {
                 if (!this.checked) {
                     $('#batterySelect').hide();
                 } else {

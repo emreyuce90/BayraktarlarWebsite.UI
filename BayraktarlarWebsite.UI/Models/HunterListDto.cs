@@ -12,6 +12,6 @@ namespace BayraktarlarWebsite.UI.Models
         public string CepTelefonu { get; set; }
         public string İl { get; set; }
         public string İlçe { get; set; }
-        public List<HunterProduct> HunterProducts { get; set; }
+        public List<HunterProduct> HunterProduct { get; set; }
     }
 }

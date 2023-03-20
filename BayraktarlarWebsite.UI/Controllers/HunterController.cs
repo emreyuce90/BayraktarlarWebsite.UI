@@ -3,6 +3,7 @@ using BayraktarlarWebsite.DAL.Context;
 using BayraktarlarWebsite.Entities.Dtos;
 using BayraktarlarWebsite.Entities.Entities;
 using BayraktarlarWebsite.UI.Models;
+using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -35,16 +36,14 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var hunters = await _context.Hunters.Include(h => h.District).Include(h => h.Town).Include(hp => hp.HunterProducts).ThenInclude(hp => hp.Product).ToListAsync();
+            var hunters = await _context.Hunters.Include(h => h.District).Include(h => h.Town).Include(hp => hp.HunterProducts).ThenInclude(hp => hp.Product).Include(sp => sp.HunterProducts).ThenInclude(sp => sp.SubProduct).ToListAsync();
             //modelimiz
             var model = new List<HunterListDto>();
 
 
 
-
             foreach (var h in hunters)
             {
-               
 
                 var m = new HunterListDto
                 {
@@ -55,7 +54,7 @@ namespace BayraktarlarWebsite.UI.Controllers
                     İl = h.Town.Name,
                     İlçe = h.District.Name,
                     UstaAdi = h.UstaAdi,
-                    HunterProducts=h.HunterProducts
+                    HunterProduct = h.HunterProducts,
                 };
                 model.Add(m);
             }
@@ -66,6 +65,9 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> AddHunter()
         {
+            ViewBag.Categories = await _context.Products.ToListAsync();
+            
+
             var town = await _townService.GetAllAsync();
             var ds = await _districtService.GetAllAsync();
             var pd = await _context.Products.ToListAsync();
@@ -75,33 +77,82 @@ namespace BayraktarlarWebsite.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddHunter(HunterAddDto hunter)
         {
+            ViewBag.Categories = await _context.Products.ToListAsync();
+
             if (!ModelState.IsValid)
             {
                 _toastNotification.AddErrorToastMessage("Ekleme işlemi başarısız", new ToastrOptions
                 {
                     Title = "Hata"
                 });
+                ViewBag.Categories = await _context.Products.ToListAsync();
+
+                var town = await _townService.GetAllAsync();
+                var ds = await _districtService.GetAllAsync();
+                var pd = await _context.Products.ToListAsync();
                 return View(hunter);
             }
             var hunterProductList = new List<HunterProduct>();
 
-            if (hunter.Battery == true)
+            if (hunter.SelectedCategories.Count>0)
             {
-                var b = new HunterProduct { ProductId = 3 };
-                hunterProductList.Add(b);
-            }
-            if (hunter.Oil == true)
-            {
-                var bo = new HunterProduct { ProductId = 1 };
-                hunterProductList.Add(bo);
+                foreach (var selectedCategory in hunter.SelectedCategories)
+                {
+                    //Yağ kategorisidir
+                    if (selectedCategory.Contains("1"))
+                    {
+                        for (int i = 0; i < hunter.SelectedOilCategories.Count; i++)
+                        {
+                            var hp = new HunterProduct()
+                            {
+                                ProductId = 1,
+                                SubProductId = (int)Convert.ToInt64(hunter.SelectedOilCategories[i])
+                            };
+                            hunterProductList.Add(hp);
+                        }
+                        //Filtre kategorisidir
+                    }else if(selectedCategory[0] == 2)
+                    {
+                        for (int i = 0; i < hunter.SelectedFilterCategories.Count; i++)
+                        {
+                            var hp = new HunterProduct()
+                            {
+                                ProductId = 2,
+                                SubProductId = (int)Convert.ToInt64(hunter.SelectedFilterCategories[i])
+                            };
+                            hunterProductList.Add(hp);
+                        }
+                    }
+                    //aküdür
+                    else
 
+                    {
+                        for (int i = 0; i < hunter.SelectedBatteryCategories.Count; i++)
+                        {
+                            var hp = new HunterProduct()
+                            {
+                                ProductId = 3,
+                                SubProductId = (int)Convert.ToInt64(hunter.SelectedBatteryCategories[i])
+                            };
+                            hunterProductList.Add(hp);
+                        }
+                    }
+                }
             }
-            if (hunter.Filter == true)
+            else
             {
-                var f = new HunterProduct { ProductId = 2 };
-                hunterProductList.Add(f);
-
+                _toastNotification.AddErrorToastMessage("Hiç bir kategori seçmediniz", new ToastrOptions
+                {
+                    Title = "Hata"
+                });
+                var town = await _townService.GetAllAsync();
+                var ds = await _districtService.GetAllAsync();
+                var pd = await _context.Products.ToListAsync();
+                return View(hunter);
             }
+
+
+ 
 
             var h = new Hunter();
             h.CreatedDate = DateTime.Now;
